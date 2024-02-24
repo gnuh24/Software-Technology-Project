@@ -18,7 +18,7 @@
 
 ## SQL Design :
 ### v1.0 : Initial Design 
-test
+
 
 ## Essay :
 ### v1.0 : Initial Design 
