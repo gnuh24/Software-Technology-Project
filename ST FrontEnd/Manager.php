@@ -109,6 +109,14 @@ if (isset($_GET['action'])) {
           <td>Vang Ý Moscato Dolce Guarini</td><td>Nó là người Ý</td><td><img src="./img/VangY.jpg" width="100"></td>
           <td><a href="sua.php?id=2">Sửa</a> <br> <a href="xoa.php?id=2">Xóa</a></td>
           </tr>
+          <tr>
+          <td>Whisky Liqueurs</td><td>Nó là người Pháp</td><td><img src="./img/Whisky.jpg" width="100"></td>
+          <td><a href="sua.php?id=2">Sửa</a> <br> <a href="xoa.php?id=2">Xóa</a></td>
+          </tr>
+          <tr>
+          <td>Cognac Tesseron Composition Fine Champagne</td><td>Nó sang</td><td><img src="./img/Cognac.jpg" width="100"></td>
+          <td><a href="sua.php?id=2">Sửa</a> <br> <a href="xoa.php?id=2">Xóa</a></td>
+          </tr>
         </table> 
     </div>
 
