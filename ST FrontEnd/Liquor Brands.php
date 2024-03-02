@@ -80,7 +80,7 @@ if (isset($_GET['action'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Liquor brands</title>
+    <title>Liquor Brands</title>
     <link rel="stylesheet" href="./bootstrap-5.3.2-dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="./Liquor Brands.css">
 <body> 
@@ -98,7 +98,7 @@ if (isset($_GET['action'])) {
           <th scope="col">Tên loại sản phẩm</th>
           <th scope="col">Mô tả</th>
           <th scope="col">Hình ảnh</th>
-          <th scope="col">Hành động</th>
+          <th scope="col">Chỉnh sửa</th>
           </tr>
           </thead>
           <tr>
