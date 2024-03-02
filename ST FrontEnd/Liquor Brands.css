@@ -35,7 +35,7 @@ th {
 }
 .containbox
 {
-    height: 300px;
+    height: 350px;
     border-bottom: 0 solid black;
     border-collapse: collapse;
     align-content: center;
@@ -50,7 +50,7 @@ th {
     width: 50%;
     float: right;
     border: 2px solid black;
-    margin-top: -300px;
+    margin-top: -550px;
     margin-right: -900px;
     background-color: #930000;
     backdrop-filter: blur(20px);
