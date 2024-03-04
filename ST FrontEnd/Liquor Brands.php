@@ -90,7 +90,7 @@ if (isset($_GET['action'])) {
       <br><br><br><br>
 
       <!-- Bảng hiển thị các loại sản phẩm rượu --> 
-        <table border="1">
+        <table>
           <thead>
           <tr>
           <th class="text-center">Tên loại sản phẩm</th>
