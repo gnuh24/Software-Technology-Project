@@ -84,13 +84,11 @@ if (isset($_GET['action'])) {
     <link rel="stylesheet" href="./Liquor Brands.css">
 <body> 
 <div class="container">
-    
-
     <div class="col-lg-5">
     <div class="headerad"> DANH SÁCH LOẠI SẢN PHẨM RƯỢU</div>
       <br><br><br><br>
 
-      <!-- Bảng hiển thị các loại sản phẩm rượu -->
+      <!-- Bảng hiển thị các loại sản phẩm rượu --> 
         <table border="1">
           <thead>
           <tr>
@@ -101,19 +99,19 @@ if (isset($_GET['action'])) {
           </tr>
           </thead>
           <tr>
-          <td>Vang Đỏ Vistana Cabernet Sauvignon</td><td>Nó màu đỏ</td><td><img src="./img/VangDo.jpg" width="100"></td>
+          <td>Vang Đỏ Vistana Cabernet Sauvignon</td><td>Nó là rượu</td><td><img src="./img/VangDo.jpg" width="100"></td>
           <td><a href="sua.php?id=1">Sửa</a> <br> <a href="xoa.php?id=1">Xóa</a></td>
           </tr>
           <tr>
-          <td>Vang Ý Moscato Dolce Guarini</td><td>Nó là người Ý</td><td><img src="./img/VangY.jpg" width="100"></td>
+          <td>Vang Ý Moscato Dolce Guarini</td><td>Nó là rượu</td><td><img src="./img/VangY.jpg" width="100"></td>
           <td><a href="sua.php?id=2">Sửa</a> <br> <a href="xoa.php?id=2">Xóa</a></td>
           </tr>
           <tr>
-          <td>Whisky Liqueurs</td><td>Nó là người Pháp</td><td><img src="./img/Whisky.jpg" width="100"></td>
+          <td>Whisky Liqueurs</td><td>Nó là rượu</td><td><img src="./img/Whisky.jpg" width="100"></td>
           <td><a href="sua.php?id=2">Sửa</a> <br> <a href="xoa.php?id=2">Xóa</a></td>
           </tr>
           <tr>
-          <td>Cognac Tesseron Composition Fine Champagne</td><td>Nó sang</td><td><img src="./img/Cognac.jpg" width="100"></td>
+          <td>Cognac Tesseron Composition Fine Champagne</td><td>Nó là rượu</td><td><img src="./img/Cognac.jpg" width="100"></td>
           <td><a href="sua.php?id=2">Sửa</a> <br> <a href="xoa.php?id=2">Xóa</a></td>
           </tr>
         </table> 
@@ -142,7 +140,7 @@ if (isset($_GET['action'])) {
         </div>
       </form>
     </div>
-  </div>
+  
 
 
 
