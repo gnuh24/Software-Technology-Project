@@ -82,6 +82,7 @@ if (isset($_GET['action'])) {
     <title>Liquor Brands</title>
     <link rel="stylesheet" href="./bootstrap-5.3.2-dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="./Liquor Brands.css">
+</head>
 <body> 
 <div class="container">
     <div class="col-lg-5">
@@ -92,27 +93,46 @@ if (isset($_GET['action'])) {
         <table border="1">
           <thead>
           <tr>
-          <th scope="col">Tên loại sản phẩm</th>
-          <th scope="col">Mô tả</th>
-          <th scope="col">Hình ảnh</th>
-          <th scope="col">Chỉnh sửa</th>
+          <th class="text-center">Tên loại sản phẩm</th>
+          <th class="text-center">Mô tả</th>
+          <th class="text-center">Hình ảnh</th>
+          <th class="text-center">Chỉnh sửa</th>
           </tr>
           </thead>
           <tr>
-          <td>Vang Đỏ Vistana Cabernet Sauvignon</td><td>Nó là rượu</td><td><img src="./img/VangDo.jpg" width="100"></td>
-          <td><a href="sua.php?id=1">Sửa</a> <br> <a href="xoa.php?id=1">Xóa</a></td>
+          <td class="text-center">Vang Đỏ Vistana Cabernet Sauvignon</td>
+          <td class="text-center">Nó là rượu</td>
+          <td><img src="./img/VangDo.jpg" width="100"></td>
+          <td class="align-middle"><a href="sua.php?id=1">Sửa</a>  
+          <a href="xoa.php?id=1">Xóa</a></td>
           </tr>
           <tr>
-          <td>Vang Ý Moscato Dolce Guarini</td><td>Nó là rượu</td><td><img src="./img/VangY.jpg" width="100"></td>
-          <td><a href="sua.php?id=2">Sửa</a> <br> <a href="xoa.php?id=2">Xóa</a></td>
+          <td class="text-center">Vang Trắng Moscato Dolce Guarini</td>
+          <td class="text-center">Nó là rượu</td>
+          <td><img src="./img/VangY.jpg" width="100"></td>
+          <td class="align-middle"><a href="sua.php?id=2">Sửa</a>  
+          <a href="xoa.php?id=2">Xóa</a></td>
           </tr>
           <tr>
-          <td>Whisky Liqueurs</td><td>Nó là rượu</td><td><img src="./img/Whisky.jpg" width="100"></td>
-          <td><a href="sua.php?id=2">Sửa</a> <br> <a href="xoa.php?id=2">Xóa</a></td>
+          <td class="text-center">Whisky Liqueurs</td>
+          <td class="text-center">Nó là rượu</td>
+          <td><img src="./img/Whisky.jpg" width="100"></td>
+          <td class="align-middle"><a href="sua.php?id=2">Sửa</a>  
+          <a href="xoa.php?id=2">Xóa</a></td>
           </tr>
           <tr>
-          <td>Cognac Tesseron Composition Fine Champagne</td><td>Nó là rượu</td><td><img src="./img/Cognac.jpg" width="100"></td>
-          <td><a href="sua.php?id=2">Sửa</a> <br> <a href="xoa.php?id=2">Xóa</a></td>
+          <td class="text-center">Cognac Tesseron Composition Fine Champagne</td>
+          <td class="text-center">Nó là rượu</td>
+          <td><img src="./img/Cognac.jpg" width="100"></td>
+          <td class="align-middle"><a href="sua.php?id=2">Sửa</a>  
+          <a href="xoa.php?id=2">Xóa</a></td>
+          </tr>
+          <tr>
+          <td class="text-center">Bowmans Virginia Vodka</td>
+          <td class="text-center">Nó là rượu</td>
+          <td><img src="./img/vodka.jpg" width="100"></td>
+          <td class="align-middle"><a href="sua.php?id=2">Sửa</a>  
+          <a href="xoa.php?id=2">Xóa</a></td>
           </tr>
         </table> 
     </div>

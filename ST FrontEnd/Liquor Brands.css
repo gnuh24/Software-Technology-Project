@@ -14,6 +14,13 @@
     box-shadow: 0 0 30px black;
     color: yellow;
 }
+a{
+    display: block;
+    width: 100%;
+    text-decoration: none;
+    text-align: center;
+    padding: 15px 0;
+}
 table {
     border-collapse: collapse;
     width: 100%;
