@@ -13,6 +13,7 @@
     backdrop-filter: blur(20px);  
     box-shadow: 0 0 30px black;
     color: yellow;
+    margin-left: 100px;
 }
 a{
     display: block;
@@ -42,7 +43,7 @@ th {
 }
 .containbox
 {
-    height: 350px;
+    height: 469px;
     border-bottom: 0 solid black;
     border-collapse: collapse;
     align-content: center;
@@ -54,15 +55,16 @@ th {
     color: black;
 }
 #frmnhapsp {
-    width: 50%;
+    width: 65%;
     float: right;
     border: 2px solid black;
-    margin-top: -590px;
+    margin-top: -600px;
     margin-right: -900px;
     background-color: #930000;
     backdrop-filter: blur(20px);
     color: yellow;
-    height: auto;
+    height: 575px;
+    padding: 10px;
     }
     .model {
         display: none;
@@ -85,6 +87,10 @@ th {
         border: 1px solid #888;
         width: 40%;
         height: auto;
-        justify-self: center;
-        text-align: center;
+    }
+    label{
+        font-weight: bold;
+    }
+    button{
+        width: 50%;
     }
