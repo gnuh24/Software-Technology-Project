@@ -144,19 +144,29 @@ if (isset($_GET['action'])) {
       <form action="them.php" method="post" id="frmnhapsp">
       <h3>Tạo mới loại sản phẩm rượu</h3>
         <div class="containbox">
-        <label for="productType">
-        Tên loại sản phẩm: <input type="text" name="tenloai" id="productType">
-      </label>
+
+        <!-- Nhập tên loại sản phẩm -->
+        <div data-mdb-input-init class="form-outline mb-4">
+          <label class="form-label" for="form4Example1">Tên loại sản phẩm</label>
+          <input type="text" id="form4Example1" class="form-control" />
+        </div>
         
-        <label for="describe">
-        Mô tả: <textarea name="mota" id="describe"></textarea>
-      </label>
+        <!-- Nhập mô tả loại sản phẩm -->
+        <div data-mdb-input-init class="form-outline mb-4">
+          <label class="form-label" for="form4Example3">Mô tả</label>
+          <textarea class="form-control" id="form4Example3" rows="4"></textarea>
+        </div> 
         
-        <label for="img">
-        Hình ảnh: <input type="file" name="hinh" id="img" value="Chọn hình">
-        </label>
+        <!-- Thêm vào hình ảnh minh hoạ cho loại sản phẩm -->
+        <div data-mdb-input-init class="form-outline mb-4">
+          <label class="form-label" for="form4Example2">Hình ảnh</label>
+          <input type="file" id="form4Example2" class="form-control" />
+        </div> 
         <br><br>
-        <input type="submit" value="Thêm mới">
+
+        <div class="d-flex justify-content-center">
+        <button style="background-color: #930000; border: solid 2px black;" data-mdb-ripple-init type="button" class="btn btn-primary btn-block mb-4">Thêm mới</button>
+        </div>
         </div>
       </form>
     </div>
@@ -170,22 +180,28 @@ if (isset($_GET['action'])) {
       <form action="sua.php?id=1" method="post">
       <h1>Sửa loại sản phẩm rượu</h1>
       <div class="containbox">
-          <label for="productType">
-          Tên loại sản phẩm: <br> <input type="text" name="tenloai" id="productType">
-        </label>
-          <br>
+         <!-- Nhập tên loại sản phẩm -->
+        <div data-mdb-input-init class="form-outline mb-4">
+          <label class="form-label" for="form4Example1">Tên loại sản phẩm</label>
+          <input type="text" id="form4Example1" class="form-control" />
+        </div>
 
-          <label for="describe">
-          Mô tả: <br> <textarea name="mota" id="describe"></textarea>
-        </label>
-          <br>
+           <!-- Nhập mô tả loại sản phẩm -->
+        <div data-mdb-input-init class="form-outline mb-4">
+          <label class="form-label" for="form4Example3">Mô tả</label>
+          <textarea class="form-control" id="form4Example3" rows="4"></textarea>
+        </div> 
 
-          <label for="img">
-          Hình ảnh: <br> <input type="file" name="hinh" id="img" value="Chọn hình">
-          </label>
-          <br><br>
+          <!-- Thêm vào hình ảnh minh hoạ cho loại sản phẩm -->
+        <div data-mdb-input-init class="form-outline mb-4">
+          <label class="form-label" for="form4Example2">Hình ảnh</label>
+          <input type="file" id="form4Example2" class="form-control" />
+        </div> 
+        <br><br>
 
-          <input type="submit" value="Cập nhật"><br>
+        <div class="d-flex justify-content-center">
+        <button style="background-color: #930000; border: solid 2px black;" data-mdb-ripple-init type="button" class="btn btn-primary btn-block mb-4">Cập nhật</button>
+        </div>
           </div>
       </form>
     </div>
