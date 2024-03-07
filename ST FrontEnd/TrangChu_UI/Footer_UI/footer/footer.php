@@ -16,7 +16,7 @@
             <!--Grid column-->
             <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
                 <h1 style="color: #ae0808;">Thông tin chủ quán</h1>
-                <div><a href="#"><img src="../imag/logo.png" alt="Rượu ngon"></a></div>
+                <div><a href="#"><img src="C:\xampp\htdocs\Software-Technology-Project\ST FrontEnd\TrangChu_UI\src\imag\logo.png" alt="Rượu ngon"></a></div>
                 <div><img src="../imag/no-wine-footer.png" ></div>
                 <p>Trụ sở chính: Số 10 dãy B7- TT Học viện CTQG Hồ Chí Minh, Phường Trung Liệt, Quận Đống Đa, Thành phố Hà Nội, Việt Nam.
                 </p>

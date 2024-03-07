@@ -5,9 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="slick.css">
-    <link rel="stylesheet" href="bootstrap.min.css">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="./TrangChuCSS/slick.css">
+    <link rel="stylesheet" href="../bootstrap-5.3.2-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./TrangChuCSS/style.css">
     <title>Document</title>
 </head>
 
@@ -318,7 +318,7 @@
                 <div class="col-sm-3">
                     <div class="product_inner">
                         <div class="card" style="width: 18rem;">
-                            <img src="4708-4.jpg" class="card-img-top" alt="...">
+                            <img src=".jpg" class="card-img-top" alt="...">
                             <div class="card-body">
                                 <p class="card-text">Rượu Champagne Moet & Chandon Brut Imperial</p>
                                 <span class="pro_price">
@@ -332,7 +332,7 @@
                 <div class="col-sm-3">
                     <div class="product_inner">
                         <div class="card" style="width: 18rem;">
-                            <img src="4708-4.jpg" class="card-img-top" alt="...">
+                            <img src=".jpg" class="card-img-top" alt="...">
                             <div class="card-body">
                                 <p class="card-text">Rượu Champagne Moet & Chandon Brut Imperial</p>
                                 <span class="pro_price">
@@ -346,7 +346,7 @@
                 <div class="col-sm-3">
                     <div class="product_inner">
                         <div class="card" style="width: 18rem;">
-                            <img src="4708-4.jpg" class="card-img-top" alt="...">
+                            <img src=".jpg" class="card-img-top" alt="...">
                             <div class="card-body">
                                 <p class="card-text">Rượu Champagne Moet & Chandon Brut Imperial</p>
                                 <span class="pro_price">
@@ -360,7 +360,7 @@
                 <div class="col-sm-3">
                     <div class="product_inner">
                         <div class="card" style="width: 18rem;">
-                            <img src="4708-4.jpg" class="card-img-top" alt="...">
+                            <img src=".jpg" class="card-img-top" alt="...">
                             <div class="card-body">
                                 <p class="card-text">Rượu Champagne Moet & Chandon Brut Imperial</p>
                                 <span class="pro_price">
@@ -374,7 +374,7 @@
                 <div class="col-sm-3">
                     <div class="product_inner">
                         <div class="card" style="width: 18rem;">
-                            <img src="4708-4.jpg" class="card-img-top" alt="...">
+                            <img src=".jpg" class="card-img-top" alt="...">
                             <div class="card-body">
                                 <p class="card-text">Rượu Champagne Moet & Chandon Brut Imperial</p>
                                 <span class="pro_price">
@@ -388,7 +388,7 @@
                 <div class="col-sm-3">
                     <div class="product_inner">
                         <div class="card" style="width: 18rem;">
-                            <img src="4708-4.jpg" class="card-img-top" alt="...">
+                            <img src="" class="card-img-top" alt="...">
                             <div class="card-body">
                                 <p class="card-text">Rượu Champagne Moet & Chandon Brut Imperial</p>
                                 <span class="pro_price">
@@ -402,7 +402,7 @@
                 <div class="col-sm-3">
                     <div class="product_inner">
                         <div class="card" style="width: 18rem;">
-                            <img src="4708-4.jpg" class="card-img-top" alt="...">
+                            <img src=".jpg" class="card-img-top" alt="...">
                             <div class="card-body">
                                 <p class="card-text">Rượu Champagne Moet & Chandon Brut Imperial</p>
                                 <span class="pro_price">
@@ -416,7 +416,7 @@
                 <div class="col-sm-3">
                     <div class="product_inner">
                         <div class="card" style="width: 18rem;">
-                            <img src="4708-4.jpg" class="card-img-top" alt="...">
+                            <img src=".jpg" class="card-img-top" alt="...">
                             <div class="card-body">
                                 <p class="card-text">Rượu Champagne Moet & Chandon Brut Imperial</p>
                                 <span class="pro_price">
@@ -431,10 +431,14 @@
         </div>
     </div>
 
-    <script src="jquery-3.7.1.min.js"></script>
-    <script src="slick.min.js"></script>
-    <script src="script.js"></script>
-    <script src="newjs.js"></script>
+    <footer>
+        <?php  include 'C:\xampp\htdocs\Software-Technology-Project\ST FrontEnd\TrangChu_UI\Footer_UI\footer\footer.php'; ?>
+    </footer>
+
+    <script src="./TrangChuJS/jquery-3.7.1.min.js"></script>
+    <script src="./TrangChuJS/slick.min.js"></script>
+    <script src="./TrangChuJS/script.js"></script>
+    <script src="./TrangChuJS/newjs.js"></script>
 </body>
 
 </html>`
