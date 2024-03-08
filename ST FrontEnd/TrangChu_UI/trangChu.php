@@ -17,32 +17,32 @@
         <div class="container">
             <div class="slick-slider">
                 <div class="card" style="width: 18rem;">
-                    <a href="#"><img src="featured-6283f651777094363278ef571.jpeg" class="card-img-top"
+                    <a href="#"><img src="./TrangChuImg/featured-6283f651777094363278ef571.jpeg" class="card-img-top"
                             alt="115029674_p0.jpg">
                         <span class="text_widget"><strong>goto</strong></span></a>
                 </div>
                 <div class="card" style="width: 18rem;">
-                    <a href="#"><img src="featured-6283f682038fb56c1f13d6b91.jpeg" class="card-img-top"
+                    <a href="#"><img src="./TrangChuImg/featured-6283f682038fb56c1f13d6b91.jpeg" class="card-img-top"
                             alt="115029674_p0.jpg">
                         <span class="text_widget"><strong>goto</strong></span></a>
                 </div>
                 <div class="card" style="width: 18rem;">
-                    <a href="#"><img src="featured-6283f682038fb56c1f13d6d31.jpeg" class="card-img-top"
+                    <a href="#"><img src="./TrangChuImg/featured-6283f682038fb56c1f13d6d31.jpeg" class="card-img-top"
                             alt="115029674_p0.jpg">
                         <span class="text_widget"><strong>goto</strong></span></a>
                 </div>
                 <div class="card" style="width: 18rem;">
-                    <a href="#"><img src="featured-6283f683038fb56c1f13d7691.jpeg" class="card-img-top"
+                    <a href="#"><img src="./TrangChuImg/featured-6283f683038fb56c1f13d7691.jpeg" class="card-img-top"
                             alt="115029674_p0.jpg">
                         <span class="text_widget"><strong>goto</strong></span></a>
                 </div>
                 <div class="card" style="width: 18rem;">
-                    <a href="#"><img src="featured-6283f685038fb56c1f13d8741.jpeg" class="card-img-top"
+                    <a href="#"><img src="./TrangChuImg/featured-6283f685038fb56c1f13d8741.jpeg" class="card-img-top"
                             alt="115029674_p0.jpg">
                         <span class="text_widget"><strong>goto</strong></span></a>
                 </div>
                 <div class="card" style="width: 18rem;">
-                    <a href="#"><img src="featured-6283f688038fb56c1f13da811.jpeg" class="card-img-top"
+                    <a href="#"><img src="./TrangChuImg/featured-6283f688038fb56c1f13da811.jpeg" class="card-img-top"
                             alt="115029674_p0.jpg">
                         <span class="text_widget"><strong>goto</strong></span></a>
                 </div>
@@ -304,7 +304,7 @@
                 <div class="col-sm-3">
                     <div class="product_inner">
                         <div class="card" style="width: 18rem;">
-                            <img src="4708-4.jpg" class="card-img-top" alt="...">
+                            <img src="./TrangChuImg/4708-4.jpg" class="card-img-top" alt="...">
                             <div class="card-body">
                                 <p class="card-text">Rượu Champagne Moet & Chandon Brut Imperial</p>
                                 <span class="pro_price">
@@ -318,7 +318,7 @@
                 <div class="col-sm-3">
                     <div class="product_inner">
                         <div class="card" style="width: 18rem;">
-                            <img src=".jpg" class="card-img-top" alt="...">
+                            <img src="./TrangChuImg/4708-4.jpg" class="card-img-top" alt="...">
                             <div class="card-body">
                                 <p class="card-text">Rượu Champagne Moet & Chandon Brut Imperial</p>
                                 <span class="pro_price">
@@ -332,7 +332,7 @@
                 <div class="col-sm-3">
                     <div class="product_inner">
                         <div class="card" style="width: 18rem;">
-                            <img src=".jpg" class="card-img-top" alt="...">
+                            <img src="./TrangChuImg/4708-4.jpg" class="card-img-top" alt="...">
                             <div class="card-body">
                                 <p class="card-text">Rượu Champagne Moet & Chandon Brut Imperial</p>
                                 <span class="pro_price">
@@ -346,7 +346,7 @@
                 <div class="col-sm-3">
                     <div class="product_inner">
                         <div class="card" style="width: 18rem;">
-                            <img src=".jpg" class="card-img-top" alt="...">
+                            <img src="./TrangChuImg/4708-4.jpg" class="card-img-top" alt="...">
                             <div class="card-body">
                                 <p class="card-text">Rượu Champagne Moet & Chandon Brut Imperial</p>
                                 <span class="pro_price">
@@ -360,7 +360,7 @@
                 <div class="col-sm-3">
                     <div class="product_inner">
                         <div class="card" style="width: 18rem;">
-                            <img src=".jpg" class="card-img-top" alt="...">
+                            <img src="./TrangChuImg/4708-4.jpg" class="card-img-top" alt="...">
                             <div class="card-body">
                                 <p class="card-text">Rượu Champagne Moet & Chandon Brut Imperial</p>
                                 <span class="pro_price">
@@ -374,7 +374,7 @@
                 <div class="col-sm-3">
                     <div class="product_inner">
                         <div class="card" style="width: 18rem;">
-                            <img src=".jpg" class="card-img-top" alt="...">
+                            <img src="./TrangChuImg/4708-4.jpg" class="card-img-top" alt="...">
                             <div class="card-body">
                                 <p class="card-text">Rượu Champagne Moet & Chandon Brut Imperial</p>
                                 <span class="pro_price">
@@ -388,7 +388,7 @@
                 <div class="col-sm-3">
                     <div class="product_inner">
                         <div class="card" style="width: 18rem;">
-                            <img src="" class="card-img-top" alt="...">
+                            <img src="./TrangChuImg/4708-4.jpg" class="card-img-top" alt="...">
                             <div class="card-body">
                                 <p class="card-text">Rượu Champagne Moet & Chandon Brut Imperial</p>
                                 <span class="pro_price">
@@ -402,7 +402,7 @@
                 <div class="col-sm-3">
                     <div class="product_inner">
                         <div class="card" style="width: 18rem;">
-                            <img src=".jpg" class="card-img-top" alt="...">
+                            <img src="./TrangChuImg/4708-4.jpg" class="card-img-top" alt="...">
                             <div class="card-body">
                                 <p class="card-text">Rượu Champagne Moet & Chandon Brut Imperial</p>
                                 <span class="pro_price">
@@ -416,7 +416,7 @@
                 <div class="col-sm-3">
                     <div class="product_inner">
                         <div class="card" style="width: 18rem;">
-                            <img src=".jpg" class="card-img-top" alt="...">
+                            <img src="./TrangChuImg/4708-4.jpg" class="card-img-top" alt="...">
                             <div class="card-body">
                                 <p class="card-text">Rượu Champagne Moet & Chandon Brut Imperial</p>
                                 <span class="pro_price">
@@ -432,7 +432,7 @@
     </div>
 
     <footer>
-        <?php  include 'C:\xampp\htdocs\Software-Technology-Project\ST FrontEnd\TrangChu_UI\Footer_UI\footer\footer.php'; ?>
+        <?php  include './Footer_UI/footer/footer.php'; ?>
     </footer>
 
     <script src="./TrangChuJS/jquery-3.7.1.min.js"></script>
@@ -441,4 +441,4 @@
     <script src="./TrangChuJS/newjs.js"></script>
 </body>
 
-</html>`
+</html>
