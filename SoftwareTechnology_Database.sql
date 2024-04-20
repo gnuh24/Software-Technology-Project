@@ -226,6 +226,16 @@ VALUES					(1,      		'HaKu Vodka',                                             
 						(29, 	 		'Rượu Johnnie Walker Double Black (Phiên bản 2021)',                   		'Scotland',     750,        "Johnnie Walker"	,                   40,             920000,     00,                 3,                false       , "data:image/jpeg;base64"),
 						(30, 	 		'Rượu Johnnie Walker Red Label - 3000ml',                              		'Scotland',     3000,       "Johnnie Walker"	,                   40,             1650000,    00,                 3,                false       , "data:image/jpeg;base64");
 
+INSERT INTO `GioHang` (`MaSanPham`, `MaTaiKhoan`, `DonGia`, `SoLuong`, `ThanhTien`)
+VALUES
+				(1, 1, 12, 1, 0),
+				(2, 2, 12, 1, 0),
+				(2, 3, 12, 1, 0),
+				(2, 4, 12, 1, 0),
+				(3, 3, 12, 1, 0),
+				(4, 4, 12, 1, 0);
+
+
 
 INSERT INTO `NhaCungCap`    (`MaNCC`,   `TenNCC`,                                               `SoDienThoai`,           `Email`)
 VALUES                      (1,         'Các nhà cung cấp khác ',             					'024.3826.7824',         'others@haprogroup.vn'),
