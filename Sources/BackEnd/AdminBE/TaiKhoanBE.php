@@ -1,12 +1,12 @@
 <?php 
-    require "../../Configure/MysqlConfig.php";
+    require_once "../../Configure/MysqlConfig.php";
 
     function getAllTaiKhoan($page, $search, $quyen, $trangThai){
         //Chuẩn bị trước biến $connection
         $connection = null;
 
         //Chuẩn bị câu truy vấn gốc
-        $query = "SELECT * FROM `TaiKhoan`";
+        $query = "SELECT * FROM `TaiKhoan` JOIN `NguoiDung` ON `TaiKhoan`.`MaTaiKhoan` = `NguoiDung`.`MaNguoiDung` ";
 
         //Mảng chứa điều kiện
         $where_conditions=[];
@@ -34,7 +34,9 @@
         // Lọc theo search
         if (!empty($search)) {
             $empty = false;
-            $where_conditions[] .= "`TenDangNhap` LIKE '%" . $search . "%'";
+            $where_conditions[] .= "(`TenDangNhap`  LIKE '%" . $search . "%' OR 
+                                    `Email`         LIKE '%" . $search . "%')";
+
         }
 
         // Thêm điều kiện về quyền
@@ -52,7 +54,7 @@
             $query .= " WHERE " . implode(" AND ", $where_conditions);
         }
 
-    
+        echo "$query";
         // Khởi tạo kết nối
         $connection = MysqlConfig::getConnection();
     

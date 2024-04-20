@@ -1,37 +1,32 @@
 <?php 
     require_once "../../BackEnd/AdminBE/TaiKhoanBE.php";
+    require_once "../../BackEnd/AdminBE/NguoiDungBE.php";
 
-    //$result = getAllTaiKhoan(1, "custom", "Member", 0); // Lấy dữ liệu
-    // $result = getTaiKhoanByMaTaiKhoan(1); // Lấy dữ liệu
-    // $result = getTaiKhoanByTenDangNhap("Thug24"); // Lấy dữ liệu
-    $result = isTenDangNhapExists("Thug25"); // Lấy dữ liệu
-
-    if ($result->status == 200) {
-        echo "$result->isExists";
-
-    } else {
-        echo "Lỗi: " . $result->message; // Xử lý thông báo lỗi
-    }
+    // Lấy dữ liệu
+    //$result = getAllTaiKhoan(1, "nt", null, null); 
+    //$result = getNguoiDungByMaNguoiDung(1); 
 
     // if ($result->status == 200) {
-    //     $Object = $result->data;
-    //     $totalPages = $result->totalPages;
+    //     // In ra số lượng kết quả
+    //     echo "Tổng số tài khoản: " . count($result->data) . "<br>";
 
+    //     // Hiển thị dữ liệu trong bảng
     //     echo "<table border='1'>";
-    //     echo "<tr><th>MaTaiKhoan</th><th>TenDangNhap</th><th>MatKhau</th><th>TrangThai</th><th>NgayTao</th><th>Quyen</th></tr>";
+    //     echo "<tr><th>MaTaiKhoan</th><th>TenDangNhap</th><th>MatKhau</th><th>TrangThai</th><th>NgayTao</th><th>Quyen</th><th>HoTen</th><th>Email</th><th>GioiTinh</th></tr>";
 
     //     // In ra dữ liệu
-    //     foreach ($Object as $row) {
-    //         // Hiển thị dữ liệu
-    //             echo "<tr>";
-    //             echo "<td>" . $row['MaTaiKhoan'] . "</td>";
-    //             echo "<td>" . $row['TenDangNhap'] . "</td>";
-    //             echo "<td>" . $row['MatKhau'] . "</td>";
-    //             echo "<td>" . ($row['TrangThai'] ? 'true' : 'false') . "</td>";
-    //             echo "<td>" . $row['NgayTao'] . "</td>";
-    //             echo "<td>" . $row['Quyen'] . "</td>";
-    //             echo "</tr>";
-          
+    //     foreach ($result->data as $row) {
+    //         echo "<tr>";
+    //         echo "<td>" . $row['MaTaiKhoan'] . "</td>";
+    //         echo "<td>" . $row['TenDangNhap'] . "</td>";
+    //         echo "<td>" . $row['MatKhau'] . "</td>";
+    //         echo "<td>" . ($row['TrangThai'] ? 'true' : 'false') . "</td>";
+    //         echo "<td>" . $row['NgayTao'] . "</td>";
+    //         echo "<td>" . $row['Quyen'] . "</td>";
+    //         echo "<td>" . $row['HoTen'] . "</td>";
+    //         echo "<td>" . $row['Email'] . "</td>";
+    //         echo "<td>" . $row['GioiTinh'] . "</td>";
+    //         echo "</tr>";
     //     }
     //     echo "</table>";
 
@@ -39,12 +34,12 @@
     //     echo "Lỗi: " . $result->message; // Xử lý thông báo lỗi
     // }
 
-   // Kiểm tra kết quả của hàm createTaiKhoan
-    $result = updateTaiKhoan(25, false, "Manager");
-    // if ($result->status == 200) {
-    //     echo "ID: $result->data";
-    // } else if ($result->status === 400) {
-    //     echo "Lỗi: $result->message";
-    // }
+    $result = updateNguoiDung(12, "THug16 ", "2004-02-05", "Male", "0938", "email@gmail", "123 Nguyễn CHí THanh");
 
+    if ($result->status == 200) {
+      //echo "$result->data";
+            echo "Done :3";
+    } else {
+        echo "Lỗi: " . $result->message; // Xử lý thông báo lỗi
+    }
 ?>
