@@ -255,17 +255,17 @@ function deletePhuongThuc($maPhuongThuc) {
         $connection->beginTransaction();
 
         // Lấy danh sách các hóa đơn thuộc phương thức thanh toán cần xóa
-        $query_select_HoaDon = "SELECT `MaPhuongThuc` FROM `HoaDon` WHERE `MaPhuongThuc` = :maPhuongThuc";
-        $statement_select_HoaDon = $connection->prepare($query_select_HoaDon);
-        $statement_select_HoaDon->bindValue(':maPhuongThuc', $maPhuongThuc, PDO::PARAM_INT);
-        $statement_select_HoaDon->execute();
-        $HoaDon = $statement_select_HoaDon->fetchAll(PDO::FETCH_ASSOC);
+        $query_select_DonHang = "SELECT `MaPhuongThuc` FROM `DonHang` WHERE `MaPhuongThuc` = :maPhuongThuc";
+        $statement_select_DonHang = $connection->prepare($query_select_DonHang);
+        $statement_select_DonHang->bindValue(':maPhuongThuc', $maPhuongThuc, PDO::PARAM_INT);
+        $statement_select_DonHang->execute();
+        $DonHang = $statement_select_DonHang->fetchAll(PDO::FETCH_ASSOC);
 
         // Cập nhật mã phương thức thanh toán của các hóa đơn đó sang mã phương thức thanh toán mặc định (id = 1)
-        $query_update_HoaDon = "UPDATE `HoaDon` SET `MaPhuongThuc` = 1 WHERE `MaPhuongThuc` = :maPhuongThuc";
-        $statement_update_HoaDon = $connection->prepare($query_update_HoaDon);
-        $statement_update_HoaDon->bindValue(':maPhuongThuc', $maPhuongThuc, PDO::PARAM_INT);
-        $statement_update_HoaDon->execute();
+        $query_update_DonHang = "UPDATE `DonHang` SET `MaPhuongThuc` = 1 WHERE `MaPhuongThuc` = :maPhuongThuc";
+        $statement_update_DonHang = $connection->prepare($query_update_DonHang);
+        $statement_update_DonHang->bindValue(':maPhuongThuc', $maPhuongThuc, PDO::PARAM_INT);
+        $statement_update_DonHang->execute();
 
         // Xóa phương thức thanh toán
         $query_delete_nha_cung_cap = "DELETE FROM `PhuongThuc` WHERE `MaPhuongThuc` = :maPhuongThuc";
