@@ -135,6 +135,54 @@
         }
     }
 
+    function isTenDangNhapExists($tenDangNhap){
+        //Chuẩn bị trước biến $connection
+        $connection = null;
+
+        //Chuẩn bị câu truy vấn gốc
+        $query = "SELECT * FROM `TaiKhoan` WHERE `TenDangNhap` = :tenDangNhap";
+    
+        // Khởi tạo kết nối
+        $connection = MysqlConfig::getConnection();
+    
+        // Khởi tạo kết nối đến cơ sở dữ liệu
+        try {
+
+            $statement = $connection->prepare($query);
+    
+            if ($statement !== false) {
+    
+
+
+                $statement->bindValue(':tenDangNhap', $tenDangNhap, PDO::PARAM_STR);
+          
+
+                $statement->execute();
+
+                $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+
+                $isExists = !empty($result) ? 1: 0;
+
+
+                return (object) [
+                    "status" => 200,
+                    "message" => "Truy vấn thành công !!",
+                    "isExists" => $isExists
+                ];
+            } else {
+            throw new PDOException();
+            }
+        } catch (PDOException $e) {
+            return (object) [
+                "status" => 400,
+                "message" => "Lỗi không thể lấy Tài khoản",
+            ];
+        } finally {
+            $connection = null;
+        }
+    }
+
     function getTaiKhoanByMaTaiKhoan($maTaiKhoan){
         //Chuẩn bị trước biến $connection
         $connection = null;
@@ -177,6 +225,143 @@
         }
     }
 
+    function getTaiKhoanByTenDangNhap($tenDangNhap){
+        //Chuẩn bị trước biến $connection
+        $connection = null;
 
+        //Chuẩn bị câu truy vấn gốc
+        $query = "SELECT * FROM `TaiKhoan` WHERE `TenDangNhap` = :tenDangNhap";
+    
+        // Khởi tạo kết nối
+        $connection = MysqlConfig::getConnection();
+    
+    
+        // Khởi tạo kết nối đến cơ sở dữ liệu
+        try {
+
+            $statement = $connection->prepare($query);
+    
+            if ($statement !== false) {
+    
+                $statement->bindValue(':tenDangNhap', $tenDangNhap, PDO::PARAM_STR);
+    
+                $statement->execute();
+    
+                $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+    
+                return (object) [
+                    "status" => 200,
+                    "message" => "Thành công",
+                    "data" => $result,
+                ];
+            } else {
+            throw new PDOException();
+            }
+        } catch (PDOException $e) {
+            return (object) [
+                "status" => 400,
+                "message" => "Lỗi không thể lấy Tài khoản",
+            ];
+        } finally {
+            $connection = null;
+        }
+    }
+
+    function createTaiKhoan($tenDangNhap, $matKhau, $quyen) {
+    
+        // Khởi tạo kết nối
+        $connection = MysqlConfig::getConnection();
+
+        $query = "INSERT INTO `TaiKhoan` (`TenDangNhap`, `MatKhau`, `Quyen`) 
+                                    VALUES (:tenDangNhap, :matKhau, :quyen)";
+    
+    
+        try {
+    
+            $statement = $connection->prepare($query);
+        
+            if ($statement  !== false) {
+        
+                // Bind giá trị vào tham số :tenTaiKhoan trong câu truy vấn
+                $statement->bindValue(':tenDangNhap', $tenDangNhap,        PDO::PARAM_STR);
+                $statement->bindValue(':matKhau'    , $matKhau,            PDO::PARAM_STR);
+                $statement->bindValue(':quyen'      , $quyen,              PDO::PARAM_STR);
+        
+                // Thực hiện truy vấn
+                $statement = $statement->execute();
+        
+                //Mã tài khoản vừa khởi tạo
+                $id = $connection->lastInsertId();
+
+
+                if ($statement !== false) {
+                    // Trả về ID của bản ghi vừa chèn
+                    return (object) [
+                        "status" => 200,
+                        "message" => "Thành công",
+                        "data" => $id
+                    ];
+                } else {
+                    // Trả về false nếu không thành công
+                    throw new PDOException();
+                }
+            }
+        } catch (PDOException $e) {
+            return (object) [
+                "status" => 400,
+                "message" => $e->getMessage()
+            ];
+        } finally {
+            $connection = null;
+        }
+    }
+
+    function updateTaiKhoan($maTaiKhoan, $trangThai, $quyen) {
+
+        $query = "UPDATE `TaiKhoan` SET 
+                        `Quyen`     = :quyen,
+                        `TrangThai`   = :trangThai
+                         WHERE `MaTaiKhoan` = :maTaiKhoan";
+    
+        // Khởi tạo kết nối
+        $connection = MysqlConfig::getConnection();
+    
+        try {
+    
+            $statement = $connection->prepare($query);
+        
+            if ($statement  !== false) {
+                // Bind giá trị vào tham số :tenTaiKhoan trong câu truy vấn
+                $statement->bindValue(':maTaiKhoan', $maTaiKhoan, PDO::PARAM_INT);
+                $statement->bindValue(':trangThai', $trangThai, PDO::PARAM_INT);
+                $statement->bindValue(':quyen', $quyen, PDO::PARAM_STR);
+        
+        
+                // Thực hiện truy vấn
+                $statement = $statement->execute();
+        
+            
+        
+        
+                if ($statement !== false) {
+                    // Trả về ID của bản ghi vừa chèn
+                    return (object) [
+                        "status" => 200,
+                        "message" => "Thành công",
+                    ];
+                } else {
+                    // Trả về false nếu không thành công
+                    throw new PDOException();
+                }
+            }
+        } catch (PDOException $e) {
+            return (object) [
+                "status" => 400,
+                "message" => $e->getMessage()
+            ];
+        } finally {
+            $connection = null;
+        }
+    }
 
 ?>

@@ -169,7 +169,7 @@ INSERT INTO `TaiKhoan` (`TenDangNhap`, `MatKhau`, `Quyen`, `TrangThai`) VALUES
 						('customer3', '123456', "Member", true), -- Customer
 						('customer4', '123456', "Member", false), -- Customer
 						('customer5', '123456', "Member", false); -- Customer
-SELECT * FROM `TaiKhoan` WHERE `TrangThai` = 'true';
+
 -- Dữ liệu mẫu cho bảng NguoiDung
 INSERT INTO `NguoiDung` (`HoTen`, 			`NgaySinh`, `GioiTinh`, `SoDienThoai`, `Email`, `DiaChi`,  `MaNguoiDung`) VALUES
 						('Ngô Tuấn Hưng', 	'1990-01-01', 'Male', '0123456789', 'hungnt.020404@example.com', '123 Admin Street', 1),
