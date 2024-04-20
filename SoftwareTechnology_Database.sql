@@ -119,7 +119,7 @@ CREATE TABLE IF NOT EXISTS `DichVuVanChuyen`(
 DROP TABLE IF EXISTS `DonHang`;
 CREATE TABLE IF NOT EXISTS `DonHang`(
 	`MaDonHang`  			INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-    `NgayDat` 				DATETIME NOT NULL, 
+    `NgayDat` 				DATETIME NOT NULL							DEFAULT NOW(), 
     `TongGiaTri` 			INT UNSIGNED NOT NULL,
     `MaKH` 					INT UNSIGNED NOT NULL,
     `DiaChiGiaoHang`		NVARCHAR(255) NOT NULL,
@@ -136,11 +136,24 @@ CREATE TABLE IF NOT EXISTS `TrangThaiDonHang`(
     `TrangThai` 	        ENUM ("ChoDuyet", "DaDuyet", "Huy", "DangGiao" , "GiaoThanhCong") NOT NULL,
     `NgayCapNhat` 	        DATETIME DEFAULT NOW(), -- Ngày này sẽ được cập nhật dựa theo sự thay đổi của TrangThai
 	`MaDonHang`  		    INT UNSIGNED,
-    `MaNguoiCapNhat`	    INT UNSIGNED,
 	FOREIGN KEY (`MaDonHang`) REFERENCES `DonHang`(`MaDonHang`),
     PRIMARY KEY(`MaDonHang`, `TrangThai`)
 );
 
+SELECT dh.*, ttdh.TrangThai FROM DonHang dh JOIN (SELECT MaDonHang, TrangThai
+                            FROM TrangThaiDonHang
+                            WHERE (MaDonHang, NgayCapNhat) IN (
+                                SELECT MaDonHang, MAX(NgayCapNhat)
+                                FROM TrangThaiDonHang
+                                GROUP BY MaDonHang
+                            )) ttdh
+                ON dh.MaDonHang = ttdh.MaDonHang;
+SELECT * FROM `DonHang` dh JOIN `TrangThaiDonHang` tt ON dh.`MaDonHang` = tt.`MaDonHang`
+
+WHERE        tt.`NgayCapNhat` = (
+			SELECT MAX(`NgayCapNhat`) FROM `TrangThaiDonHang` subtt 
+            WHERE dh.`MaDonHang` = subtt.`MaDonHang`
+        );
 
 DROP TABLE IF EXISTS `CTDH`;
 CREATE TABLE IF NOT EXISTS  `CTDH` (
