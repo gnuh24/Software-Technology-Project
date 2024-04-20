@@ -52,12 +52,11 @@ CREATE TABLE IF NOT EXISTS `SanPham` (
     `Gia` 			INT UNSIGNED 			NOT NULL,
     `SoLuongConLai` INT UNSIGNED 			NOT NULL 	DEFAULT 0,
     `AnhMinhHoa` 	LONGTEXT,
-	`TrangThai` 	BOOLEAN NOT NULL,
+	`TrangThai` 	BOOLEAN NOT NULL					DEFAULT false,
 	
     `MaLoaiSanPham` INT UNSIGNED 			NOT NULL,
     FOREIGN KEY (`MaLoaiSanPHam`) REFERENCES `LoaiSanPham`(`MaLoaiSanPham`)
 );
-
 /* _____________________________________________________________________ CÁC BẢNG LIÊN QUAN TỚI NGHIEP VU NHAP KHO _________________________________________________________*/
 DROP TABLE IF EXISTS `NhaCungCap`;
 CREATE TABLE IF NOT EXISTS  `NhaCungCap` (
