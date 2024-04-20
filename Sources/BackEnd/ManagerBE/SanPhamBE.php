@@ -104,6 +104,45 @@ require_once "../../Configure/MysqlConfig.php";
         }
     }
 
+    function getSanPhamByMaSanPham($maSanPham) {
+        // Khởi tạo kết nối
+        $connection = null;
+    
+        // Chuẩn bị câu truy vấn gốc
+        $query = "SELECT * FROM `SanPham` WHERE `MaSanPham` = :maSanPham";
+    
+        // Khởi tạo kết nối
+        $connection = MysqlConfig::getConnection();
+    
+        try {
+            $statement = $connection->prepare($query);
+    
+            if ($statement !== false) {
+                $statement->bindValue(':maSanPham', $maSanPham, PDO::PARAM_INT);
+    
+                $statement->execute();
+    
+                $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+    
+                return (object) [
+                    "status" => 200,
+                    "message" => "Truy vấn thành công!",
+                    "data" => $result
+                ];
+            } else {
+                throw new PDOException();
+            }
+        } catch (PDOException $e) {
+            return (object) [
+                "status" => 400,
+                "message" => "Lỗi không thể lấy thông tin sản phẩm",
+            ];
+        } finally {
+            $connection = null;
+        }
+    }
+    
+
     function isTenSanPhamExists($tenSanPham) {
         // Khởi tạo kết nối
         $connection = null;

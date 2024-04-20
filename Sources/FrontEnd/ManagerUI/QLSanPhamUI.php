@@ -12,34 +12,32 @@ $minNongDo = 40;
 $maxNongDo = 50;
 $trangThai = null;
 $maLoaiSanPham = null;
-$result = getAllSanPham($page, $search, $minTheTich, $maxTheTich, $minGia, $maxGia, $minNongDo, $maxNongDo, $trangThai, $maLoaiSanPham);
+
+// $result = getAllSanPham($page, $search, $minTheTich, $maxTheTich, $minGia, $maxGia, $minNongDo, $maxNongDo, $trangThai, $maLoaiSanPham);
+$result = getSanPhamByMaSanPham(1);
 
 // Check if data exists
 if ($result->status === 200) {
     // Retrieve data
     $data = $result->data;
 
-    // Display data in table format
-    echo "<table border='1'>";
-    echo "<tr><th>MaSanPham</th><th>TenSanPham</th><th>XuatXu</th><th>ThuongHieu</th><th>TheTich</th><th>NongDoCon</th><th>Gia</th><th>SoLuongConLai</th><th>AnhMinhHoa</th><th>TrangThai</th><th>MaLoaiSanPham</th></tr>";
+    if (isset($data) && is_array($data)) {
+        foreach ($data as $row) {
+            if (isset($row["TenSanPham"])) {
+                echo $row["TenSanPham"];
+            } else {
+                echo "Không có dữ liệu TenSanPham";
+            }
+        }
+    } else {
+        echo "Không có dữ liệu";
+    }
     
-    foreach ($data as $row) {
-        echo "<tr>";
-        echo "<td>" . $row['MaSanPham'] . "</td>";
-        echo "<td>" . $row['TenSanPham'] . "</td>";
-        echo "<td>" . $row['XuatXu'] . "</td>";
-        echo "<td>" . $row['ThuongHieu'] . "</td>";
-        echo "<td>" . $row['TheTich'] . "</td>";
-        echo "<td>" . $row['NongDoCon'] . "</td>";
-        echo "<td>" . $row['Gia'] . "</td>";
-        echo "<td>" . $row['SoLuongConLai'] . "</td>";
-        echo "<td>" . $row['AnhMinhHoa'] . "</td>";
-        echo "<td>" . ($row['TrangThai'] == 1 ? 'Hoạt động' : 'Không hoạt động') . "</td>";
-        echo "<td>" . $row['MaLoaiSanPham'] . "</td>";
-        echo "</tr>";
+
+    foreach ($data as $row){
+        echo $row["TenSanPham"];
     }
 
-    echo "</table>";
 } else {
     echo "Không có dữ liệu";
 }
@@ -80,8 +78,8 @@ if ($result->status === 200) {
 // echo "<br><br>";
 
 //$r = isTenSanPhamExists("Tequila Maestro Dobel 50 Cristalino");
-$r = isTenSanPhamBelongToMaSanPham(19, "Tequila Maestro Dobel 50 Cristalino");
+// $r = isTenSanPhamBelongToMaSanPham(19, "Tequila Maestro Dobel 50 Cristalino");
 
-echo "Test: $r->isExists";
+// echo "Test: $r->isExists";
 
 ?>
