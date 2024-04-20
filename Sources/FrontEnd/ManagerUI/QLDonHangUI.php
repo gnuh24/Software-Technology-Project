@@ -161,11 +161,64 @@ require_once "../../BackEnd/ManagerBE/DonHangBE.php";
 // $maDonHang = 14;
 // testAndDisplayTrangThaiDonHangByMaDonHang($maDonHang);
 
-
-
-
-
-
 ?>
+
+<?php 
+require_once "../../BackEnd/ManagerBE/ChiTietDonHangBE.php";
+
+// Function to display data in a table
+function displayDataInTable($data, $columns) {
+    echo "<table border='1'>";
+    echo "<tr>";
+    foreach ($columns as $column) {
+        echo "<th>$column</th>";
+    }
+    echo "</tr>";
+    foreach ($data as $row) {
+        echo "<tr>";
+        foreach ($row as $cell) {
+            echo "<td>$cell</td>";
+        }
+        echo "</tr>";
+    }
+    echo "</table>";
+}
+
+// Case test và hiển thị danh sách chi tiết đơn hàng theo mã đơn hàng
+function testAndDisplayChiTietDonHangByMaDonHang($maDonHang) {
+    $result = getChiTietDonHangByMaDonHang($maDonHang);
+    if ($result->status == 200) {
+        $data = $result->data;
+        $columns = array_keys($data[0]);
+        echo "<h2>Danh sách chi tiết đơn hàng của đơn hàng có mã $maDonHang</h2>";
+        displayDataInTable($data, $columns);
+    } else {
+        echo "Lỗi khi lấy danh sách chi tiết đơn hàng!";
+    }
+}
+
+// Case test và hiển thị thông tin đã tạo mới chi tiết đơn hàng
+function testAndDisplayCreateChiTietDonHang($maDonHang, $maSanPham, $donGia, $soLuong, $thanhTien) {
+    $result = createChiTietDonHang($maDonHang, $maSanPham, $donGia, $soLuong, $thanhTien);
+    if ($result->status == 200) {
+        echo "<h2>Chi tiết đơn hàng mới đã được tạo thành công!</h2>";
+        echo "<p>Mã chi tiết đơn hàng: {$result->data}</p>";
+    } else {
+        echo $result->message;
+    }
+}
+
+// Chạy case test và hiển thị kết quả
+$maDonHang = 2;
+testAndDisplayChiTietDonHangByMaDonHang($maDonHang);
+
+// $maDonHang = 2;
+// $maSanPham = 5;
+// $donGia = 150000;
+// $soLuong = 2;
+// $thanhTien = $donGia * $soLuong;
+// testAndDisplayCreateChiTietDonHang($maDonHang, $maSanPham, $donGia, $soLuong, $thanhTien);
+?>
+
 
 

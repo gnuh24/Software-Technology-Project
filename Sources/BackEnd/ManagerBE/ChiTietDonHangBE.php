@@ -4,7 +4,7 @@ require_once "../../Configure/MysqlConfig.php";
 function getChiTietDonHangByMaDonHang($maDonHang) {
     $connection = null;
 
-    $query = "SELECT * FROM `ChiTietDonHang` WHERE `MaDonHang` = :maDonHang";
+    $query = "SELECT * FROM `CTDH` WHERE `MaDonHang` = :maDonHang";
 
     $connection = MysqlConfig::getConnection();
 
@@ -39,7 +39,7 @@ function getChiTietDonHangByMaDonHang($maDonHang) {
 function createChiTietDonHang($maDonHang, $maSanPham, $donGia, $soLuong, $thanhTien) {
     $connection = null;
 
-    $query = "INSERT INTO `ChiTietDonHang` (`MaDonHang`, `MaSanPham`, `DonGia`, `SoLuong`, `ThanhTien`) 
+    $query = "INSERT INTO `CTDH` (`MaDonHang`, `MaSanPham`, `DonGia`, `SoLuong`, `ThanhTien`) 
                 VALUES (:maDonHang, :maSanPham, :donGia, :soLuong, :thanhTien)";
 
     $connection = MysqlConfig::getConnection();
