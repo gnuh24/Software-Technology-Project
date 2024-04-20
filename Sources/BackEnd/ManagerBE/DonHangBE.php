@@ -195,5 +195,4 @@ function createDonHang($tongGiaTri, $maKH, $diaChiGiaoHang, $maPhuongThuc, $maDi
     }
 }
 
-
 ?>

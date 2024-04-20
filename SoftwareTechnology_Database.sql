@@ -140,20 +140,7 @@ CREATE TABLE IF NOT EXISTS `TrangThaiDonHang`(
     PRIMARY KEY(`MaDonHang`, `TrangThai`)
 );
 
-SELECT dh.*, ttdh.TrangThai FROM DonHang dh JOIN (SELECT MaDonHang, TrangThai
-                            FROM TrangThaiDonHang
-                            WHERE (MaDonHang, NgayCapNhat) IN (
-                                SELECT MaDonHang, MAX(NgayCapNhat)
-                                FROM TrangThaiDonHang
-                                GROUP BY MaDonHang
-                            )) ttdh
-                ON dh.MaDonHang = ttdh.MaDonHang;
-SELECT * FROM `DonHang` dh JOIN `TrangThaiDonHang` tt ON dh.`MaDonHang` = tt.`MaDonHang`
 
-WHERE        tt.`NgayCapNhat` = (
-			SELECT MAX(`NgayCapNhat`) FROM `TrangThaiDonHang` subtt 
-            WHERE dh.`MaDonHang` = subtt.`MaDonHang`
-        );
 
 DROP TABLE IF EXISTS `CTDH`;
 CREATE TABLE IF NOT EXISTS  `CTDH` (
