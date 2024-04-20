@@ -1,15 +1,37 @@
-<?php 
+<?php
 require_once "../../Configure/MysqlConfig.php";
 
-function getAllNhaCungCap(){
+function getAllNhaCungCap($page)
+{
+        
     // Chuẩn bị trước biến $connection
     $connection = null;
 
     // Chuẩn bị câu truy vấn gốc
     $query = "SELECT * FROM `NhaCungCap`";
-
+    // Số phần tử mỗi trang
+    $entityPerPage = 20;
+    // Tổng số trang
+    $totalPages = null;
     // Khởi tạo kết nối
-    $connection = MysqlConfig::getConnection();
+    $connection = MysqlConfig::getConnection();       
+    // Tính toán tổng số trang
+    if ($totalPages === null) {
+
+        // Query dùng để tính tổng số trang của các data trả về
+        $query_total_row = "SELECT COUNT(*) FROM `NhaCungCap`";
+        $statement_total_row = $connection->prepare($query_total_row);
+        $statement_total_row->execute();
+
+        // Làm tròn lên -> Tính ra tổng số trang
+        $totalPages = ceil($statement_total_row->fetchColumn() / $entityPerPage);
+    }
+
+    // Kiểm tra tham số phân trang
+    $current_page = isset($page) ? $page : 1;
+    $start_from = ($current_page - 1) * $entityPerPage;
+
+    $query .= " LIMIT $entityPerPage OFFSET $start_from";
 
     try {
         $statement = $connection->prepare($query);
@@ -21,7 +43,8 @@ function getAllNhaCungCap(){
             return (object) [
                 "status" => 200,
                 "message" => "Thành công",
-                "data" => $result
+                "data" => $result,
+                "totalPages" => $totalPages
             ];
         } else {
             throw new PDOException();
@@ -29,14 +52,15 @@ function getAllNhaCungCap(){
     } catch (PDOException $e) {
         return (object) [
             "status" => 400,
-            "message" => "Lỗi không thể lấy danh sách loại sản phẩm",
+            "message" => "Lỗi không thể lấy danh sách phương thức thanh toán",
         ];
     } finally {
         $connection = null;
     }
 }
 
-function getNhaCungCapByID($maNhaCungCap) {
+function getNhaCungCapByID($maNhaCungCap)
+{
     // Khởi tạo kết nối
     $connection = null;
 
@@ -73,7 +97,8 @@ function getNhaCungCapByID($maNhaCungCap) {
         $connection = null;
     }
 }
-function getNhaCungCapBySDT($SoDienThoai) {
+function getNhaCungCapBySDT($SoDienThoai)
+{
     // Khởi tạo kết nối
     $connection = null;
 
@@ -110,7 +135,8 @@ function getNhaCungCapBySDT($SoDienThoai) {
         $connection = null;
     }
 }
-function isTenNhaCungCapExists($tenNhaCungCap) {
+function isTenNhaCungCapExists($tenNhaCungCap)
+{
     // Khởi tạo kết nối
     $connection = null;
 
@@ -150,7 +176,8 @@ function isTenNhaCungCapExists($tenNhaCungCap) {
     }
 }
 
-function isTenNhaCungCapBelongToMaNhaCungCap($maNhaCungCap, $tenNhaCungCap) {
+function isTenNhaCungCapBelongToMaNhaCungCap($maNhaCungCap, $tenNhaCungCap)
+{
     // Khởi tạo kết nối
     $connection = null;
 
@@ -191,12 +218,13 @@ function isTenNhaCungCapBelongToMaNhaCungCap($maNhaCungCap, $tenNhaCungCap) {
     }
 }
 
-function createNhaCungCap($tenNhaCungCap,$SoDienThoai,$Email) {
+function createNhaCungCap($tenNhaCungCap, $SoDienThoai, $Email)
+{
     // Khởi tạo kết nối
     $connection = MysqlConfig::getConnection();
 
     $query = "INSERT INTO `NhaCungCap` (`TenNCC`,`SoDienThoai`,`Email`) VALUES (:tenLoaiSanPham,:SoDienThoai,:Email)";
-    
+
     try {
         $statement = $connection->prepare($query);
 
@@ -225,7 +253,8 @@ function createNhaCungCap($tenNhaCungCap,$SoDienThoai,$Email) {
     }
 }
 
-function updateNhaCungCap($maNhaCungCap, $tenNhaCungCap,$SoDienThoai,$Email) {
+function updateNhaCungCap($maNhaCungCap, $tenNhaCungCap, $SoDienThoai, $Email)
+{
     // Khởi tạo kết nối
     $connection = MysqlConfig::getConnection();
 
@@ -266,7 +295,8 @@ function updateNhaCungCap($maNhaCungCap, $tenNhaCungCap,$SoDienThoai,$Email) {
     }
 }
 
-function deleteNhaCungCap($maNhaCungCap) {
+function deleteNhaCungCap($maNhaCungCap)
+{
     // Khởi tạo kết nối
     $connection = MysqlConfig::getConnection();
 
@@ -289,7 +319,7 @@ function deleteNhaCungCap($maNhaCungCap) {
 
         // Xóa loại nhà cung cáp
         $query_delete_nha_cung_cap = "DELETE FROM `NhaCungCap` WHERE `MaNCC` = :maNhaCungCap";
-        $statement_delete_nha_cung_cap= $connection->prepare($query_delete_nha_cung_cap);
+        $statement_delete_nha_cung_cap = $connection->prepare($query_delete_nha_cung_cap);
         $statement_delete_nha_cung_cap->bindValue(':maNhaCungCap', $maNhaCungCap, PDO::PARAM_INT);
         $statement_delete_nha_cung_cap->execute();
 
@@ -300,7 +330,6 @@ function deleteNhaCungCap($maNhaCungCap) {
             "status" => 200,
             "message" => "Thành công",
         ];
-
     } catch (PDOException $e) {
         // Rollback transaction nếu có lỗi xảy ra
         $connection->rollBack();
@@ -313,6 +342,3 @@ function deleteNhaCungCap($maNhaCungCap) {
         $connection = null;
     }
 }
-
-
-?>
