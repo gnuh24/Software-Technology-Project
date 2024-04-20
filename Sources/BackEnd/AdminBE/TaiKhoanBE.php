@@ -34,7 +34,7 @@
         // Lọc theo search
         if (!empty($search)) {
             $empty = false;
-            $where_conditions[] .= "`TenDangNhap` LIKE '%" . $search . "%' ";
+            $where_conditions[] .= "`TenDangNhap` LIKE '%" . $search . "%'";
         }
 
         // Thêm điều kiện về quyền
@@ -71,7 +71,7 @@
                         $query_total_row = substr_replace($query, "COUNT(*)", 7, 1);
                         -> $query_total_row = "SELECT COUNT(*) FROM `TaiKhoan`"
     
-                    */
+            */
 
             //fetchColumn ( <Cột thứ n> ) : Lấy row đầu tiên của cột thứ n - 1
             $query_total_row = substr_replace($query, "COUNT(*)", 7, 1);
@@ -80,7 +80,7 @@
             $statement_total_row = $connection->prepare($query_total_row);
             $statement_total_row->execute();
     
-            //Làm tròn lên
+            //Làm tròn lên -> Tính ra tổng số trang
             $totalPages = ceil($statement_total_row->fetchColumn() / $entityPerPage);
         }
     
@@ -177,6 +177,6 @@
         }
     }
 
-    
+
 
 ?>

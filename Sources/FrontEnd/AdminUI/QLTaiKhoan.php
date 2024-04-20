@@ -1,8 +1,8 @@
 <?php 
     require_once "../../BackEnd/AdminBE/TaiKhoanBE.php";
 
-    // $result = getAllTaiKhoan(1, "", null, 0); // Lấy dữ liệu
-    $result = getTaiKhoanByMaTaiKhoan(1); // Lấy dữ liệu
+    $result = getAllTaiKhoan(1, "custom", "Member", 0); // Lấy dữ liệu
+    // $result = getTaiKhoanByMaTaiKhoan(1); // Lấy dữ liệu
 
     if ($result->status == 200) {
         $Object = $result->data;
