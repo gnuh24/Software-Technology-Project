@@ -1,12 +1,13 @@
 <?php
 require_once "../../Configure/MysqlConfig.php";
 
-function getAllNhaCungCap($page)
+function getAllNhaCungCap($page,$search)
 {
         
     // Chuẩn bị trước biến $connection
     $connection = null;
-
+    // Mảng chứa điều kiện
+    $where_conditions = [];
     // Chuẩn bị câu truy vấn gốc
     $query = "SELECT * FROM `NhaCungCap`";
     // Số phần tử mỗi trang
@@ -14,7 +15,16 @@ function getAllNhaCungCap($page)
     // Tổng số trang
     $totalPages = null;
     // Khởi tạo kết nối
-    $connection = MysqlConfig::getConnection();       
+    $connection = MysqlConfig::getConnection();   
+     // Lọc theo search
+     if (!empty($search)) {
+        $where_conditions[] = "`TenNCC` LIKE '%" . $search . "%'";
+    }   
+    // Kết nối các điều kiện lại với nhau (Nếu không có thì skip)
+    if (!empty($where_conditions)) {
+        $query .= " WHERE " . implode(" AND ", $where_conditions);
+    }
+     
     // Tính toán tổng số trang
     if ($totalPages === null) {
 
