@@ -1,7 +1,56 @@
 <?php 
     require_once "../../Configure/MysqlConfig.php";
 
+    //Dùng để call List Tài khoản
+    if(isset($_GET['page'])) {
+        $page = $_GET['page'];
+        $search = isset($_GET['search']) ? $_GET['search'] : "";
+        $quyen = isset($_GET['quyen']) ? $_GET['quyen'] : "";
+
+        // Gọi hàm PHP bạn muốn thực thi và trả về kết quả dưới dạng JSON
+        // $result = getAllTaiKhoan($page, $search, $quyen);
+        $result = getAllTaiKhoan($page, $search, $quyen, null);
+
+        echo json_encode($result);
+
+    }
+
+    //Dùng để tại tài khoản
+    if(isset($_POST['tenDangNhap']) && isset($_POST['matKhau']) && isset($_POST['quyen'])) {
+        $tenDangNhap = $_POST['tenDangNhap'];
+        $matKhau = $_POST['matKhau'];
+        $quyen = $_POST['quyen'];
+
+        // Gọi hàm createTaiKhoan và trả về kết quả dưới dạng JSON
+        $result = createTaiKhoan($tenDangNhap, $matKhau, $quyen);
+
+        echo json_encode($result);
+    }
+
+    //Dùng để update tài khoản
+    if(isset($_POST['maTaiKhoan']) && isset($_POST['trangThai']) && isset($_POST['quyen'])) {
+        $maTaiKhoan = $_POST['maTaiKhoan'];
+        $trangThai = $_POST['trangThai'];
+        $quyen = $_POST['quyen'];
+
+        // Gọi hàm updateTaiKhoan và trả về kết quả dưới dạng JSON
+        $result = updateTaiKhoan($maTaiKhoan, $trangThai, $quyen);
+
+        echo json_encode($result);
+    }
+
+    //Dùng để kiểm tra xem TenDangNhap có tồn tại hay không ?
+    if(isset($_GET['tenDangNhap'])) {
+        $tenDangNhap = $_GET['tenDangNhap'];
+
+        $result = isTenDangNhapExists($tenDangNhap);
+
+        echo json_encode($result);
+
+    }
+
     function getAllTaiKhoan($page, $search, $quyen, $trangThai){
+
         //Chuẩn bị trước biến $connection
         $connection = null;
 
@@ -12,7 +61,7 @@
         $where_conditions=[];
         
         //Số phần tử mỗi trang
-        $entityPerPage = 5;
+        $entityPerPage = 6;
 
         //Tổng số trang
         $totalPages = null;
@@ -40,12 +89,12 @@
         }
 
         // Thêm điều kiện về quyền
-        if (isset($quyen)) {
+        if (!empty($quyen)) {
             $where_conditions[] = "`Quyen` = '$quyen' ";
         }
 
         // Thêm điều kiện về trạng thái
-        if (isset($trangThai)) {
+        if (!empty($trangThai)) {
             $where_conditions[] = "`TrangThai` = $trangThai";
         }
         
@@ -54,7 +103,6 @@
             $query .= " WHERE " . implode(" AND ", $where_conditions);
         }
 
-        echo "$query";
         // Khởi tạo kết nối
         $connection = MysqlConfig::getConnection();
     
@@ -131,6 +179,7 @@
             return (object) [
                 "status" => 400,
                 "message" => "Lỗi không thể lấy danh sách tài khoản",
+                "data" => []
             ];
         } finally {
             $connection = null;

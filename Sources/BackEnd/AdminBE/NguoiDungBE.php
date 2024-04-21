@@ -1,6 +1,38 @@
 <?php 
     require_once "../../Configure/MysqlConfig.php";
 
+    //Dùng để kiểm tra xem TenDangNhap có tồn tại hay không ?
+    if(isset($_GET['email'])) {
+        $email = $_GET['email'];
+
+        // Gọi hàm PHP bạn muốn thực thi và trả về kết quả dưới dạng JSON
+        // $result = getAllTaiKhoan($page, $search, $quyen);
+        $result = isEmailExists($email);
+
+        echo json_encode($result);
+
+    }
+
+    // Tạo người dùng
+    if(isset($_POST['hoTen']) && isset($_POST['ngaySinh']) && isset($_POST['gioiTinh']) 
+        && isset($_POST['soDienThoai']) && isset($_POST['email']) && isset($_POST['diaChi'])) {
+        
+        // Lấy các giá trị từ POST request
+        $hoTen = $_POST['hoTen'];
+        $ngaySinh = $_POST['ngaySinh'];
+        $gioiTinh = $_POST['gioiTinh'];
+        $soDienThoai = $_POST['soDienThoai'];
+        $email = $_POST['email'];
+        $diaChi = $_POST['diaChi'];
+        
+        // Gọi hàm tạo người dùng và nhận kết quả
+        $result = createNguoiDung($hoTen, $ngaySinh, $gioiTinh, $soDienThoai, $email, $diaChi);
+
+        // Trả về kết quả dưới dạng JSON
+        echo json_encode($result);
+    }
+
+
     function getNguoiDungByMaNguoiDung($maNguoiDung){
         //Chuẩn bị trước biến $connection
         $connection = null;
@@ -42,6 +74,57 @@
             $connection = null;
         }
     }
+
+    function isEmailExists($email) {
+        // Chuẩn bị biến kết nối
+        $connection = null;
+    
+        // Chuẩn bị câu truy vấn gốc
+        $query = "SELECT * FROM `NguoiDung` WHERE `Email` = :email";
+    
+        try {
+            // Khởi tạo kết nối đến cơ sở dữ liệu
+            $connection = MysqlConfig::getConnection();
+    
+            // Chuẩn bị câu truy vấn
+            $statement = $connection->prepare($query);
+    
+            // Kiểm tra câu truy vấn
+            if ($statement !== false) {
+                // Bind giá trị vào tham số của câu truy vấn
+                $statement->bindValue(':email', $email, PDO::PARAM_STR);
+    
+                // Thực thi câu truy vấn
+                $statement->execute();
+    
+                // Lấy kết quả
+                $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+    
+                // Kiểm tra xem email có tồn tại hay không
+                $isExists = !empty($result) ? true : false;
+    
+                // Trả về kết quả dưới dạng object
+                return (object) [
+                    "status" => 200,
+                    "message" => "Truy vấn thành công !!",
+                    "isExists" => $isExists
+                ];
+            } else {
+                throw new PDOException();
+            }
+        } catch (PDOException $e) {
+            // Xử lý ngoại lệ PDOException
+            return (object) [
+                "status" => 400,
+                "message" => "Lỗi không thể lấy dữ liệu từ cơ sở dữ liệu",
+                "isExists" => false
+            ];
+        } finally {
+            // Đóng kết nối
+            $connection = null;
+        }
+    }
+    
 
     function createNguoiDung(   $hoTen,
                                 $ngaySinh, 
