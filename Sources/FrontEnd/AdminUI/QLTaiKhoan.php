@@ -371,7 +371,7 @@
 
     // Hàm update với các tham số maTaiKhoan, quyen, hoTen, gioiTinh, email, ngaySinh, diaChi, soDienThoai
     function update(maTaiKhoan, quyen, hoTen, gioiTinh, email, ngaySinh, diaChi, soDienThoai) {
-        alert();
+        alert("Hello");
         // Thực hiện các hành động cần thiết khi nút "Sửa" được nhấn
         // Ví dụ: Chuyển hướng sang trang FormUpdateTaiKhoan.php và truyền các tham số
         window.location.href = `FormUpdateTaiKhoan.php?maTaiKhoan=${maTaiKhoan}&quyen=${quyen}&hoTen=${hoTen}&gioiTinh=${gioiTinh}&email=${email}&ngaySinh=${ngaySinh}&diaChi=${diaChi}&soDienThoai=${soDienThoai}`;
