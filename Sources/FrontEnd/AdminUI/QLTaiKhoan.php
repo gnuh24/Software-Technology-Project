@@ -371,6 +371,7 @@
 
     // Hàm update với các tham số maTaiKhoan, quyen, hoTen, gioiTinh, email, ngaySinh, diaChi, soDienThoai
     function update(maTaiKhoan, quyen, hoTen, gioiTinh, email, ngaySinh, diaChi, soDienThoai) {
+        console.log(":3:3");
         alert("Hello");
         // Thực hiện các hành động cần thiết khi nút "Sửa" được nhấn
         // Ví dụ: Chuyển hướng sang trang FormUpdateTaiKhoan.php và truyền các tham số
