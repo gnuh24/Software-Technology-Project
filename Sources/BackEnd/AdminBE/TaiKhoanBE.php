@@ -38,8 +38,18 @@
         echo json_encode($result);
     }
 
+     //Dùng để login
+     if(isset($_GET['tenDangNhap']) && isset($_GET['isLogin'])) {
+        $tenDangNhap = $_GET['tenDangNhap'];
+        
+        $result = getTaiKhoanByTenDangNhap($tenDangNhap);
+
+        echo json_encode($result);
+
+    }
+
     //Dùng để kiểm tra xem TenDangNhap có tồn tại hay không ?
-    if(isset($_GET['tenDangNhap'])) {
+    if(isset($_GET['tenDangNhap']) && !isset($_GET['isLogin'])) {
         $tenDangNhap = $_GET['tenDangNhap'];
 
         $result = isTenDangNhapExists($tenDangNhap);
@@ -47,6 +57,8 @@
         echo json_encode($result);
 
     }
+
+   
 
     function getAllTaiKhoan($page, $search, $quyen, $trangThai){
 
@@ -255,7 +267,7 @@
       
                 $statement->execute();
       
-                $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+                $result = $statement->fetch(PDO::FETCH_ASSOC);
       
                 return (object) [
                     "status" => 200,
@@ -297,15 +309,16 @@
     
                 $statement->execute();
     
-                $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+                $result = $statement->fetch(PDO::FETCH_ASSOC);
+
     
                 return (object) [
                     "status" => 200,
-                    "message" => "Thành công",
+                    "message" => "Thành công tìm tài khoản :3",
                     "data" => $result,
                 ];
             } else {
-            throw new PDOException();
+                throw new PDOException();
             }
         } catch (PDOException $e) {
             return (object) [
@@ -316,6 +329,7 @@
             $connection = null;
         }
     }
+
 
     function createTaiKhoan($tenDangNhap, $matKhau, $quyen) {
     
