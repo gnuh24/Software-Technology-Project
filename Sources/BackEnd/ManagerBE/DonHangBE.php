@@ -1,7 +1,21 @@
-<?php 
+<?php
 require_once "../../Configure/MysqlConfig.php";
 
-function getAllDonHang($page, $minNgayTao, $maxNgayTao, $trangThai) {
+if (isset($_GET['page'])) {
+    $page = $_GET['page'];
+    $minNgayTao = isset($_GET['minNgayTao']) ? $_GET['minNgayTao'] : "";
+    $maxNgayTao = isset($_GET['maxNgayTao']) ? $_GET['maxNgayTao'] : "";
+    $trangThai = isset($_GET['trangThai']) ? $_GET['trangThai'] : "";
+
+    // Gọi hàm PHP bạn muốn thực thi và trả về kết quả dưới dạng JSON
+    // $result = getAllTaiKhoan($page, $search, $quyen);
+    $result = getAllDonHang($page, $minNgayTao, $maxNgayTao, $trangThai);
+
+    echo json_encode($result);
+}
+
+function getAllDonHang($page, $minNgayTao, $maxNgayTao, $trangThai)
+{
     $connection = null;
     $query = "SELECT * FROM `DonHang` dh 
                 JOIN `TrangThaiDonHang` tt ON dh.`MaDonHang` = tt.`MaDonHang`
@@ -12,7 +26,7 @@ function getAllDonHang($page, $minNgayTao, $maxNgayTao, $trangThai) {
                 )";
 
     $where_conditions = [];
-    
+
     $entityPerPage = 20;
     $totalPages = null;
 
@@ -23,13 +37,13 @@ function getAllDonHang($page, $minNgayTao, $maxNgayTao, $trangThai) {
     if (isset($trangThai)) {
         $where_conditions[] = "tt.TrangThai = '$trangThai'";
     }
-    
+
     if (!empty($where_conditions)) {
         $query .= " AND " . implode(" AND ", $where_conditions);
     }
 
     $connection = MysqlConfig::getConnection();
-    
+
     if ($totalPages === null) {
         $query_total_row = "SELECT COUNT(*) FROM DonHang";
         $statement_total_row = $connection->prepare($query_total_row);
@@ -69,7 +83,8 @@ function getAllDonHang($page, $minNgayTao, $maxNgayTao, $trangThai) {
     }
 }
 
-function getAllDonHangByMaKH($maKH) {
+function getAllDonHangByMaKH($maKH)
+{
     $connection = null;
     $query = "SELECT * FROM `DonHang` dh 
                 JOIN `TrangThaiDonHang` tt ON dh.`MaDonHang` = tt.`MaDonHang`
@@ -107,7 +122,8 @@ function getAllDonHangByMaKH($maKH) {
     }
 }
 
-function getDonHangByMaDonHang($maDonHang) {
+function getDonHangByMaDonHang($maDonHang)
+{
     $connection = null;
     $query = "SELECT * FROM `DonHang` dh 
                 JOIN `TrangThaiDonHang` tt ON dh.`MaDonHang` = tt.`MaDonHang`
@@ -141,9 +157,10 @@ function getDonHangByMaDonHang($maDonHang) {
     }
 }
 
-function createDonHang($tongGiaTri, $maKH, $diaChiGiaoHang, $maPhuongThuc, $maDichVu) {
+function createDonHang($tongGiaTri, $maKH, $diaChiGiaoHang, $maPhuongThuc, $maDichVu)
+{
     $connection = null;
-    
+
     $query_insert_donhang = "INSERT INTO `DonHang` (`TongGiaTri`, `MaKH`, `DiaChiGiaoHang`, `MaPhuongThuc`, `MaDichVu`) 
                                 VALUES (:tongGiaTri, :maKH, :diaChiGiaoHang, :maPhuongThuc, :maDichVu)";
 
@@ -194,5 +211,3 @@ function createDonHang($tongGiaTri, $maKH, $diaChiGiaoHang, $maPhuongThuc, $maDi
         $connection = null;
     }
 }
-
-?>
