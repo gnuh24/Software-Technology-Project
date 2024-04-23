@@ -12,7 +12,6 @@
         $result = getAllTaiKhoan($page, $search, $quyen, null);
 
         echo json_encode($result);
-
     }
 
     //Dùng để tại tài khoản

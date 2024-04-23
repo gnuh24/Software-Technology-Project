@@ -333,7 +333,6 @@
     }
 
 
-
     // Hàm xử lý sự kiện khi select Quyen thay đổi
     document.querySelector('#selectQuyen').addEventListener('change', function() {
         var searchValue = document.querySelector('.Admin_input__LtEE-').value;

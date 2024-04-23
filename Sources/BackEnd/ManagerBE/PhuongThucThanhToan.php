@@ -179,6 +179,7 @@ require_once "../../Configure/MysqlConfig.php";
     }
 
     function createPhuongThucThanhToan($TenPhuongThuc) {
+        
         // Khởi tạo kết nối
         $connection = MysqlConfig::getConnection();
 
