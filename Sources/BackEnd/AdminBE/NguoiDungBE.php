@@ -1,5 +1,5 @@
 <?php 
-    require_once "../../Configure/MysqlConfig.php";
+    require_once __DIR__ . "/../../Configure/MysqlConfig.php";
 
     //Dùng để kiểm tra xem TenDangNhap có tồn tại hay không ?
     if(isset($_GET['email'])) {
@@ -12,11 +12,8 @@
         echo json_encode($result);
 
     }
-
-    // Tạo người dùng
-    if(isset($_POST['hoTen']) && isset($_POST['ngaySinh']) && isset($_POST['gioiTinh']) 
-        && isset($_POST['soDienThoai']) && isset($_POST['email']) && isset($_POST['diaChi'])) {
-        
+    // Kiểm tra xem các khóa cần thiết đã tồn tại trong $_POST hay không
+    if(isset($_POST['hoTen']) && isset($_POST['ngaySinh']) && isset($_POST['gioiTinh']) && isset($_POST['soDienThoai']) && isset($_POST['email']) && isset($_POST['diaChi'])) {
         // Lấy các giá trị từ POST request
         $hoTen = $_POST['hoTen'];
         $ngaySinh = $_POST['ngaySinh'];
@@ -24,13 +21,26 @@
         $soDienThoai = $_POST['soDienThoai'];
         $email = $_POST['email'];
         $diaChi = $_POST['diaChi'];
-        
-        // Gọi hàm tạo người dùng và nhận kết quả
-        $result = createNguoiDung($hoTen, $ngaySinh, $gioiTinh, $soDienThoai, $email, $diaChi);
+
+        if (isset($_POST['maNguoiDung'])){
+            // Nếu tồn tại mã người dùng, gọi hàm updateNguoiDung
+            $maNguoiDung = $_POST['maNguoiDung'];
+            $result = updateNguoiDung($maNguoiDung, $hoTen, $ngaySinh, $gioiTinh, $soDienThoai, $email, $diaChi);
+        } else {
+            // Nếu không tồn tại mã người dùng, gọi hàm createNguoiDung
+            $result = createNguoiDung($hoTen, $ngaySinh, $gioiTinh, $soDienThoai, $email, $diaChi);
+        }
 
         // Trả về kết quả dưới dạng JSON
         echo json_encode($result);
+    } else {
+        // Hiển thị thông báo hoặc xử lý lỗi ở đây nếu cần
+        echo "Các trường bắt buộc không được bỏ trống!";
     }
+
+
+
+
 
 
     function getNguoiDungByMaNguoiDung($maNguoiDung){

@@ -394,3 +394,15 @@ VALUES              (1 ,        16,     1280000     ,10      ,       12800000),
                     (10 ,        3,     1100000     ,5      ,       5500000),
                     (10 ,        4,     650000      ,5      ,       3250000), 
                     (10 ,        5,     850000      ,5      ,       4250000);
+
+SELECT DATE(dh.NgayDat) AS ngayLapDon, tdh.TrangThai AS trangThai, COUNT(*) AS soLuongDon
+FROM TrangThaiDonHang tdh
+INNER JOIN DonHang dh ON tdh.MaDH = dh.MaDH
+WHERE DATE(dh.NgayDat) BETWEEN COALESCE(NULL, '2010-01-01') AND COALESCE(NULL, CURRENT_DATE())
+AND tdh.NgayCapNhat = (
+    SELECT MAX(tdh2.NgayCapNhat)
+    FROM TrangThaiDonHang tdh2
+    WHERE tdh2.MaDH = tdh.MaDH
+)
+GROUP BY DATE(dh.NgayDat), tdh.TrangThai
+ORDER BY DATE(dh.NgayDat);

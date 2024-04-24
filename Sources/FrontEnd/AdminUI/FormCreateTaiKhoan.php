@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="UserUpdate.css" />
     <link rel="stylesheet" href="oneForAll.css" />
 
-    <title>CRUD Tài khoản</title>
+    <title>Tạo tài khoản</title>
 </head>
 
 <body>
@@ -19,106 +19,46 @@
                     <div class="StaffHeader_wrapper__IQw-U">
                         <p class="StaffHeader_title__QxjW4">Dekanta</p>
                         <button class="StaffHeader_signOut__i2pcu">
-                            <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="arrow-right-from-bracket" class="svg-inline--fa fa-arrow-right-from-bracket" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 2rem; height: 2rem; color: white">
-                            </svg>
+                            <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="arrow-right-from-bracket" class="svg-inline--fa fa-arrow-right-from-bracket" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 2rem; height: 2rem; color: white"></svg>
                         </button>
                     </div>
                     <div>
                         <div>
                             <div class="Manager_wrapper__vOYy">
-                          
                                 <div style="padding-left: 3%; width: 100%; padding-right: 2rem">
                                     <div class="wrapper">
-                                        <div style="
-                          display: flex;
-                          padding-top: 1rem;
-                          align-items: center;
-                          gap: 1rem;
-                          padding-bottom: 1rem;
-                        "></div>
+                                        <div style="display: flex; padding-top: 1rem; align-items: center; gap: 1rem; padding-bottom: 1rem;"></div>
                                         <form id="submit-form" method="post">
                                             <input type="hidden" name="action" value="createUser">
                                             <div class="boxFeature">
                                                 <div>
                                                     <h2 style="font-size: 2.3rem">Tạo tài khoản người dùng</h2>
-
                                                 </div>
                                                 <div>
-                                                    <a style="
-                                                    font-family: Arial;
-                                                    font-size: 1.5rem;
-                                                    font-weight: 700;
-                                                    border: 1px solid rgb(140, 140, 140);
-                                                    background-color: white;
-                                                    color: rgb(80, 80, 80);
-                                                    padding: 1rem 2rem 1rem 2rem;
-                                                    border-radius: 0.6rem;
-                                                    cursor: pointer;
-                                                    " href="QLTaiKhoan.php">
-                                                        Hủy
-                                                    </a>
-                                                    <button id="updateUser_save" style="
-                              margin-left: 1rem;
-                              font-family: Arial;
-                              font-size: 1.5rem;
-                              font-weight: 700;
-                              color: white;
-                              background-color: rgb(65, 64, 64);
-                              padding: 1rem 2rem 1rem 2rem;
-                              border-radius: 0.6rem;
-                              cursor: pointer;
-                            ">
-                                                        Lưu
-                                                    </button>
+                                                    <a style="font-family: Arial; font-size: 1.5rem; font-weight: 700; border: 1px solid rgb(140, 140, 140); background-color: white; color: rgb(80, 80, 80); padding: 1rem 2rem 1rem 2rem; border-radius: 0.6rem; cursor: pointer;" href="QLTaiKhoan.php">Hủy</a>
+                                                    <button id="updateUser_save" style="margin-left: 1rem; font-family: Arial; font-size: 1.5rem; font-weight: 700; color: white; background-color: rgb(65, 64, 64); padding: 1rem 2rem 1rem 2rem; border-radius: 0.6rem; cursor: pointer;">Lưu</button>
                                                 </div>
                                             </div>
                                             <div class="boxTable">
-
-                                                <div style="
-                            display: flex;
-                            padding: 0rem 1rem 0rem 1rem;
-                            justify-content: space-between;
-                          ">
+                                                <div style="display: flex; padding: 0rem 1rem 0rem 1rem; justify-content: space-between;">
                                                     <div>
-                                                   
                                                         <div style="padding-left: 1rem">
                                                             <p class="text">Tên đăng nhập</p>
                                                             <input id="tenDangNhap" class="input" type="text" name="tenDangNhap" style="width: 40rem" />
-                                                            <span style="
-                                                            margin-left: 1rem;
-                                                            font-weight: 700;
-                                                            color: rgb(150, 150, 150);
-                                                            ">*</span>
-
+                                                            <span style="margin-left: 1rem; font-weight: 700; color: rgb(150, 150, 150);">*</span>
                                                             <p class="text">Mật khẩu</p>
                                                             <input id="matKhau" class="input" type="password" name="matKhau" style="width: 40rem" />
-                                                            <span style="
-                                                            margin-left: 1rem;
-                                                            font-weight: 700;
-                                                            color: rgb(150, 150, 150);
-                                                            ">*</span>
-
+                                                            <span style="margin-left: 1rem; font-weight: 700; color: rgb(150, 150, 150);">*</span>
                                                             <p class="text">Xác nhận mật khẩu</p>
                                                             <input id="xacNhanMatKhau" class="input" type="password" name="xacNhanMatKhau" style="width: 40rem" />
-                                                            <span style="
-                                                            margin-left: 1rem;
-                                                            font-weight: 700;
-                                                            color: rgb(150, 150, 150);
-                                                            ">*</span>
-
+                                                            <span style="margin-left: 1rem; font-weight: 700; color: rgb(150, 150, 150);">*</span>
                                                             <p class="text">Họ Tên</p>
                                                             <input id="hoTen" class="input" type="text" name="hoTen" style="width: 40rem" />
-                                                            <span style="
-                                                            margin-left: 1rem;
-                                                            font-weight: 700;
-                                                            color: rgb(150, 150, 150);
-                                                            ">*</span>
-
+                                                            <span style="margin-left: 1rem; font-weight: 700; color: rgb(150, 150, 150);">*</span>
                                                             <div style="display: flex; gap: 2rem">
                                                                 <div>
                                                                     <p class="text">Email</p>
                                                                     <input id="email" type="text" class="input" name="email" />
-
                                                                 </div>
                                                                 <div>
                                                                     <p class="text">Địa chỉ</p>
@@ -127,7 +67,6 @@
                                                             </div>
                                                             <div id="Emailtontai"></div>
                                                             <div style="display: flex; gap: 4rem">
-
                                                                 <div style="display: flex; gap: 2rem ; align-items: center; text-align: center;">
                                                                     <p class="text">Giới Tính</p>
                                                                     <input type="radio" id="gioiTinhMale" name="gender" value="Male">
@@ -135,7 +74,6 @@
                                                                     <input type="radio" id="gioiTinhFemale" name="gender" value="Female" />
                                                                     <label for="css">Female</label><br>
                                                                 </div>
-
                                                                 <div>
                                                                     <p class="text">Ngày sinh</p>
                                                                     <input id="ngaySinh" type="date" class="input" name="ngaySinh" />
@@ -146,7 +84,6 @@
                                                                     <p class="text">Số điện thoại</p>
                                                                     <input id="sdt" class="input" style="width: 30rem" name="sdt" />
                                                                 </div>
-                                                
                                                                 <div>
                                                                     <p class="text">Quyền</p>
                                                                     <select name="quyen" id="quyen" class="input">
@@ -155,16 +92,10 @@
                                                                         <option value="Member" selected>Member</option>
                                                                     </select>
                                                                 </div>
-
-
                                                             </div>
                                                         </div>
-
                                                     </div>
-                                                    <div>
-
-
-                                                    </div>
+                                                    <div></div>
                                                 </div>
                                             </div>
                                         </form>
@@ -177,8 +108,8 @@
             </div>
         </div>
     </div>
-    </div>
 </body>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     document.getElementById("submit-form").addEventListener('submit', function check(event) {

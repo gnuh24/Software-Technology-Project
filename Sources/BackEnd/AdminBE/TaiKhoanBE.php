@@ -1,5 +1,5 @@
 <?php 
-    require_once "../../Configure/MysqlConfig.php";
+    require_once __DIR__ . "/../../Configure/MysqlConfig.php";
 
     //Dùng để call List Tài khoản
     if(isset($_GET['page'])) {
@@ -26,17 +26,21 @@
         echo json_encode($result);
     }
 
-    //Dùng để update tài khoản
-    if(isset($_POST['maTaiKhoan']) && isset($_POST['trangThai']) && isset($_POST['quyen'])) {
+    //Dùng để update thông tin tài khoản
+    if(isset($_POST['maTaiKhoan']) && isset($_POST['quyen'])) {
         $maTaiKhoan = $_POST['maTaiKhoan'];
-        $trangThai = $_POST['trangThai'];
         $quyen = $_POST['quyen'];
-
-        // Gọi hàm updateTaiKhoan và trả về kết quả dưới dạng JSON
-        $result = updateTaiKhoan($maTaiKhoan, $trangThai, $quyen);
-
+    
+        if(isset($_POST['trangThai'])) {
+            $trangThai = $_POST['trangThai'];
+            $result = updateTaiKhoan($maTaiKhoan, $trangThai, $quyen);
+        } else {
+            $result = updatePhanQuyenTaiKhoan($maTaiKhoan, $quyen);
+        }
+    
         echo json_encode($result);
     }
+    
 
      //Dùng để login
      if(isset($_GET['tenDangNhap']) && isset($_GET['isLogin'])) {
@@ -398,6 +402,52 @@
                 // Bind giá trị vào tham số :tenTaiKhoan trong câu truy vấn
                 $statement->bindValue(':maTaiKhoan', $maTaiKhoan, PDO::PARAM_INT);
                 $statement->bindValue(':trangThai', $trangThai, PDO::PARAM_INT);
+                $statement->bindValue(':quyen', $quyen, PDO::PARAM_STR);
+        
+        
+                // Thực hiện truy vấn
+                $statement = $statement->execute();
+        
+            
+        
+        
+                if ($statement !== false) {
+                    // Trả về ID của bản ghi vừa chèn
+                    return (object) [
+                        "status" => 200,
+                        "message" => "Thành công",
+                    ];
+                } else {
+                    // Trả về false nếu không thành công
+                    throw new PDOException();
+                }
+            }
+        } catch (PDOException $e) {
+            return (object) [
+                "status" => 400,
+                "message" => $e->getMessage()
+            ];
+        } finally {
+            $connection = null;
+        }
+    }
+
+    function updatePhanQuyenTaiKhoan($maTaiKhoan,  $quyen) {
+
+        $query = "UPDATE `TaiKhoan` SET 
+                        `Quyen`     = :quyen
+                         WHERE `MaTaiKhoan` = :maTaiKhoan";
+    
+        // Khởi tạo kết nối
+        $connection = MysqlConfig::getConnection();
+    
+        try {
+    
+            $statement = $connection->prepare($query);
+        
+            if ($statement  !== false) {
+                // Bind giá trị vào tham số :tenTaiKhoan trong câu truy vấn
+                $statement->bindValue(':maTaiKhoan', $maTaiKhoan, PDO::PARAM_INT);
                 $statement->bindValue(':quyen', $quyen, PDO::PARAM_STR);
         
         

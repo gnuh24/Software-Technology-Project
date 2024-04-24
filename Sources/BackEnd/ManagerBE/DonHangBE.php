@@ -1,5 +1,6 @@
 <?php 
-require_once "../../Configure/MysqlConfig.php";
+require_once __DIR__ . "/../../Configure/MysqlConfig.php";
+
 
 function getAllDonHang($page, $minNgayTao, $maxNgayTao, $trangThai) {
     $connection = null;

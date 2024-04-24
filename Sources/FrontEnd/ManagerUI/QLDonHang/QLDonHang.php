@@ -30,6 +30,11 @@
           </div>
           <div>
             <div>
+              <?php 
+                require_once "../../../BackEnd/ManagerBE/DonHangBE.php";
+                require_once "../../../BackEnd/ManagerBE/TrangThaiDonHangBE.php";
+                require_once "../../../BackEnd/ManagerBE/PhuongThucThanhToan.php";
+              ?>
               <div class="Manager_wrapper__vOYy">
                 <div class="Sidebar_sideBar__CC4MK">
                     <a class="MenuItemSidebar_menuItem__56b1m" href="../QLLoaiSanPham/QLLoaiSanPham.php">
