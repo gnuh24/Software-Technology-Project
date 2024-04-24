@@ -413,3 +413,16 @@ WHERE  tt.`NgayCapNhat` = (
 			SELECT MAX(`NgayCapNhat`) FROM `TrangThaiDonHang` subtt 
             WHERE dh.`MaDonHang` = subtt.`MaDonHang`
         );
+        
+        SELECT DATE(pnk.ngayNhapKho) AS ngayNhap,
+                            ls.tenLoaiSanPham AS tenLoaiSanPham,
+                            SUM(ct.SoLuong) AS SoLuongNhap,
+                            SUM(ct.ThanhTien) AS TongChi
+                        FROM PhieuNhapKho pnk
+                        JOIN CTPNK ct ON pnk.MaPhieu = ct.MaPhieu
+                        JOIN SanPham sp ON ct.MaSP = sp.MaSP
+                        JOIN LoaiSanPham ls ON ls.maLoaiSanPham = sp.MaLoaiSanPham
+                        WHERE DATE(pnk.ngayNhapKho) BETWEEN COALESCE(NULL, '2010-01-01') AND COALESCE(NULL, CURRENT_DATE())
+                        AND ls.maLoaiSanPham IN (:maLoaiSanPhams)
+                        GROUP BY DATE(pnk.ngayNhapKho), ls.tenLoaiSanPham
+                        ORDER BY DATE(pnk.ngayNhapKho)
