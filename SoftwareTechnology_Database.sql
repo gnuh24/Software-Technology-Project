@@ -397,12 +397,19 @@ VALUES              (1 ,        16,     1280000     ,10      ,       12800000),
 
 SELECT DATE(dh.NgayDat) AS ngayLapDon, tdh.TrangThai AS trangThai, COUNT(*) AS soLuongDon
 FROM TrangThaiDonHang tdh
-INNER JOIN DonHang dh ON tdh.MaDH = dh.MaDH
+INNER JOIN DonHang dh ON tdh.MaDonHang = dh.MaDonHang
 WHERE DATE(dh.NgayDat) BETWEEN COALESCE(NULL, '2010-01-01') AND COALESCE(NULL, CURRENT_DATE())
 AND tdh.NgayCapNhat = (
     SELECT MAX(tdh2.NgayCapNhat)
     FROM TrangThaiDonHang tdh2
-    WHERE tdh2.MaDH = tdh.MaDH
+    WHERE tdh2.MaDonHang = tdh.MaDonHang
 )
 GROUP BY DATE(dh.NgayDat), tdh.TrangThai
 ORDER BY DATE(dh.NgayDat);
+
+-- Truy vấn lấy đơn hàng (Kèm với trạng thái mới nhât)
+SELECT * FROM `DonHang` dh JOIN `TrangThaiDonHang` tt ON dh.`MaDonHang` = tt.`MaDonHang`
+WHERE  tt.`NgayCapNhat` = (
+			SELECT MAX(`NgayCapNhat`) FROM `TrangThaiDonHang` subtt 
+            WHERE dh.`MaDonHang` = subtt.`MaDonHang`
+        );

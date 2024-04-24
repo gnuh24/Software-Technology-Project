@@ -58,7 +58,7 @@
                     <a class="MenuItemSidebar_menuItem__56b1m" href="./thongkechitieu.html">
                         <span class="MenuItemSidebar_title__LLBtx">Thống Kê Chi Tiêu</span>
                     </a>
-                    <a class="MenuItemSidebar_menuItem__56b1m" href="../ThongKe/ThongKe.php">
+                    <a class="MenuItemSidebar_menuItem__56b1m" href="../ThongKe/ThongKeDonHang.php">
                         <span class="MenuItemSidebar_title__LLBtx">Thống Kê Đơn Hàng</span>
                     </a>
                 </div>

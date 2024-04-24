@@ -66,48 +66,13 @@
                                                     </thead>
 
                                                     <tbody id="tableBody">
-                                                        <?php
-                                                            require_once "../../BackEnd/AdminBE/TaiKhoanBE.php";
-                                                            require_once "../../BackEnd/AdminBE/NguoiDungBE.php";
-
-                                                            $result = getAllTaiKhoan(1, "", null, null);
-                                                            $totalPage = $result->totalPages;
-                                                            $Ketqua = $result->data;
-
-                                                            foreach ($Ketqua as $record) {
-                                                                $trangThai = $record['TrangThai'] == 0 ? "Khóa" : "Hoạt động";
-                                                                $ngayTao = date('H:i:s d/m/Y', strtotime($record['NgayTao']));
-                                                                $buttonText = $record['TrangThai'] == 0 ? "Mở khóa" : "Khóa";
-                                                                $buttonClass = $record['TrangThai'] == 0 ? "unlock" : "block";
-                                                                $buttonData = $record['TrangThai'] == 0 ? "unlock" : "block";
-                                                                echo ' 
-                                                                    <form id="updateForm" method="post" action="FormUpdateTaiKhoan.php?maTaiKhoan=' . $record['MaTaiKhoan'] . '&quyen=' . $record['Quyen'] . '&hoTen=' . $record['HoTen'] . '&gioiTinh=' . $record['GioiTinh'] . '&email=' . $record['Email'] . '&ngaySinh=' . $record['NgaySinh'] . '&diaChi=' . $record['DiaChi'] . '&soDienThoai=' . $record['SoDienThoai'] . '">
-                                                                        <tr>
-                                                                            <td class="Table_data_quyen_' . ((int)$record['MaTaiKhoan'] % 2 !== 0 ? '1' : '2') . '" style="width: 130px;">' . $record['MaTaiKhoan'] . '</td>
-                                                                            <td class="Table_data_quyen_' . ((int)$record['MaTaiKhoan'] % 2 !== 0 ? '1' : '2') . '">' . $record['TenDangNhap'] . '</td>
-                                                                            <td class="Table_data_quyen_' . ((int)$record['MaTaiKhoan'] % 2 !== 0 ? '1' : '2') . '">' . $record['Email'] . '</td>
-                                                                            <td class="Table_data_quyen_' . ((int)$record['MaTaiKhoan'] % 2 !== 0 ? '1' : '2') . '">' . $ngayTao . '</td>
-                                                                            <td class="Table_data_quyen_' . ((int)$record['MaTaiKhoan'] % 2 !== 0 ? '1' : '2') . '">' . $trangThai . '</td>
-                                                                            <td class="Table_data_quyen_' . ((int)$record['MaTaiKhoan'] % 2 !== 0 ? '1' : '2') . '">' . $record['Quyen'] . '</td>
-                                                                            <td class="Table_data_quyen_' . ((int)$record['MaTaiKhoan'] % 2 !== 0 ? '1' : '2') . '">
-                                                                                <button class="edit" onclick="update(' . $record['MaTaiKhoan'] . ', \'' . $record['Quyen'] . '\', \'' . $record['HoTen'] . '\', \'' . $record['GioiTinh'] . '\', \'' . $record['Email'] . '\', \'' . $record['NgaySinh'] . '\', \'' . $record['DiaChi'] . '\', \'' . $record['SoDienThoai'] . '\')">Sửa</button>
-                                                                                <button class="' . $buttonClass . '" data-action="' . $buttonData . '">' . $buttonText . '</button>
-                                                                            </td>
-                                                                        </tr>
-                                                                    </form>';
-                                                            
-                                                            }
-                                                        ?>
+                                                    
                                                     </tbody>
                                                     
                                                 </table>
                                         
                                             <div class="pagination">
-                                                <?php
-                                                    for ($i = 1; $i <= $totalPage; $i++) {
-                                                        echo '<button class="pageButton" onclick="fetchDataAndUpdateTable(' . $i . ')">' . $i . '</button>';
-                                                    }
-                                                ?>
+                                               
                                             </div>
 
 
@@ -172,20 +137,20 @@
                     var buttonData = (record.TrangThai === 0) ? "unlock" : "block";
 
                     var trContent = `
-                    <form id="updateForm" method="post" action="FormUpdateTaiKhoan.php?maTaiKhoan=${record.MaTaiKhoan}&quyen=${record.Quyen}&hoTen=${record.HoTen}&gioiTinh=${record.GioiTinh}&email=${record.Email}&ngaySinh=${record.NgaySinh}&diaChi=${record.DiaChi}&soDienThoai=${record.SoDienThoai}">
-                        <tr>
-                            <td class="${trClass}" style="width: 130px;">${record.MaTaiKhoan}</td>
-                            <td class="${trClass}">${record.TenDangNhap}</td>
-                            <td class="${trClass}">${record.Email}</td>
-                            <td class="${trClass}">${ngayTaoFormatted}</td>
-                            <td class="${trClass}">${record.TrangThai === 0 ? "Khóa" : "Hoạt động"}</td>
-                            <td class="${trClass}">${record.Quyen}</td>
-                            <td class="${trClass}">
-                                <button class="edit" onclick="update(${record.MaTaiKhoan}, '${record.Quyen}', '${record.HoTen}', '${record.GioiTinh}', '${record.Email}', '${record.NgaySinh}', '${record.DiaChi}', '${record.SoDienThoai}')">Sửa</button>
-                                <button class="${buttonClass}" data-action="${buttonData}" onclick="handleLockUnlock(${record.MaTaiKhoan}, ${record.TrangThai}, '${record.Quyen}')">${buttonText}</button>
-                            </td>
-                        </tr>
-                    </form>`
+                        <form id="updateForm" method="post" action="FormUpdateTaiKhoan.php?maTaiKhoan=${record.MaTaiKhoan}&quyen=${record.Quyen}&hoTen=${record.HoTen}&gioiTinh=${record.GioiTinh}&email=${record.Email}&ngaySinh=${record.NgaySinh}&diaChi=${record.DiaChi}&soDienThoai=${record.SoDienThoai}">
+                            <tr>
+                                <td class="${trClass}" style="width: 130px;">${record.MaTaiKhoan}</td>
+                                <td class="${trClass}">${record.TenDangNhap}</td>
+                                <td class="${trClass}">${record.Email}</td>
+                                <td class="${trClass}">${ngayTaoFormatted}</td>
+                                <td class="${trClass}">${record.TrangThai === 0 ? "Khóa" : "Hoạt động"}</td>
+                                <td class="${trClass}">${record.Quyen}</td>
+                                <td class="${trClass}">
+                                    <button class="edit" onclick="update(${record.MaTaiKhoan}, '${record.Quyen}', '${record.HoTen}', '${record.GioiTinh}', '${record.Email}', '${record.NgaySinh}', '${record.DiaChi}', '${record.SoDienThoai}')">Sửa</button>
+                                    <button class="${buttonClass}" data-action="${buttonData}" onclick="handleLockUnlock(${record.MaTaiKhoan}, ${record.TrangThai}, '${record.Quyen}')">${buttonText}</button>
+                                </td>
+                            </tr>
+                        </form>`
 
                     tableContent += trContent; // Thêm nội dung của hàng vào chuỗi tableContent
                 });

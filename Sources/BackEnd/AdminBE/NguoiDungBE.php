@@ -33,15 +33,7 @@
 
         // Trả về kết quả dưới dạng JSON
         echo json_encode($result);
-    } else {
-        // Hiển thị thông báo hoặc xử lý lỗi ở đây nếu cần
-        echo "Các trường bắt buộc không được bỏ trống!";
-    }
-
-
-
-
-
+    } 
 
     function getNguoiDungByMaNguoiDung($maNguoiDung){
         //Chuẩn bị trước biến $connection
