@@ -1,253 +1,268 @@
-<?php 
-require_once "../../Configure/MysqlConfig.php";
+<?php
+require_once __DIR__ . "/../../Configure/MysqlConfig.php";
 
-    function getAllPhuongThucThanhToan($page){
-        
-        // Chuẩn bị trước biến $connection
-        $connection = null;
+if (isset($_GET['MaPhuongThuc'])) {
+    $MaPhuongThuc = $_GET['MaPhuongThuc'];
 
-        // Chuẩn bị câu truy vấn gốc
-        $query = "SELECT * FROM `PhuongThucThanhToan`";
-        // Số phần tử mỗi trang
-        $entityPerPage = 20;
-        // Tổng số trang
-        $totalPages = null;
-        // Khởi tạo kết nối
-        $connection = MysqlConfig::getConnection();       
-        // Tính toán tổng số trang
-        if ($totalPages === null) {
+    // Gọi hàm PHP bạn muốn thực thi và trả về kết quả dưới dạng JSON
+    $result = getPhuongThucThanhToanByMaPhuongThuc($MaPhuongThuc);
 
-            // Query dùng để tính tổng số trang của các data trả về
-            $query_total_row = "SELECT COUNT(*) FROM `PhuongThucThanhToan`";
-            $statement_total_row = $connection->prepare($query_total_row);
-            $statement_total_row->execute();
+    echo json_encode($result);
+}
+function getAllPhuongThucThanhToan($page)
+{
 
-            // Làm tròn lên -> Tính ra tổng số trang
-            $totalPages = ceil($statement_total_row->fetchColumn() / $entityPerPage);
-        }
+    // Chuẩn bị trước biến $connection
+    $connection = null;
 
-        // Kiểm tra tham số phân trang
-        $current_page = isset($page) ? $page : 1;
-        $start_from = ($current_page - 1) * $entityPerPage;
+    // Chuẩn bị câu truy vấn gốc
+    $query = "SELECT * FROM `PhuongThucThanhToan`";
+    // Số phần tử mỗi trang
+    $entityPerPage = 20;
+    // Tổng số trang
+    $totalPages = null;
+    // Khởi tạo kết nối
+    $connection = MysqlConfig::getConnection();
+    // Tính toán tổng số trang
+    if ($totalPages === null) {
 
-        $query .= " LIMIT $entityPerPage OFFSET $start_from";
+        // Query dùng để tính tổng số trang của các data trả về
+        $query_total_row = "SELECT COUNT(*) FROM `PhuongThucThanhToan`";
+        $statement_total_row = $connection->prepare($query_total_row);
+        $statement_total_row->execute();
 
-        try {
-            $statement = $connection->prepare($query);
-
-            if ($statement !== false) {
-                $statement->execute();
-                $result = $statement->fetchAll(PDO::FETCH_ASSOC);
-
-                return (object) [
-                    "status" => 200,
-                    "message" => "Thành công",
-                    "data" => $result,
-                    "totalPages" => $totalPages
-                ];
-            } else {
-                throw new PDOException();
-            }
-        } catch (PDOException $e) {
-            return (object) [
-                "status" => 400,
-                "message" => "Lỗi không thể lấy danh sách phương thức thanh toán",
-            ];
-        } finally {
-            $connection = null;
-        }
+        // Làm tròn lên -> Tính ra tổng số trang
+        $totalPages = ceil($statement_total_row->fetchColumn() / $entityPerPage);
     }
 
-    function getPhuongThucThanhToanByMaPhuongThuc($MaPhuongThuc) {
-        // Khởi tạo kết nối
-        $connection = null;
-    
-        // Chuẩn bị câu truy vấn gốc
-        $query = "SELECT * FROM `PhuongThucThanhToan` WHERE `MaPhuongThuc` = :MaPhuongThuc";
-    
-        // Khởi tạo kết nối
-        $connection = MysqlConfig::getConnection();
-    
-        try {
-            $statement = $connection->prepare($query);
-    
-            if ($statement !== false) {
-                $statement->bindValue(':MaPhuongThuc', $MaPhuongThuc, PDO::PARAM_INT);
-    
-                $statement->execute();
-    
-                $result = $statement->fetchAll(PDO::FETCH_ASSOC);
-    
-                return (object) [
-                    "status" => 200,
-                    "message" => "Truy vấn thành công!",
-                    "data" => $result
-                ];
-            } else {
-                throw new PDOException();
-            }
-        } catch (PDOException $e) {
+    // Kiểm tra tham số phân trang
+    $current_page = isset($page) ? $page : 1;
+    $start_from = ($current_page - 1) * $entityPerPage;
+
+    $query .= " LIMIT $entityPerPage OFFSET $start_from";
+
+    try {
+        $statement = $connection->prepare($query);
+
+        if ($statement !== false) {
+            $statement->execute();
+            $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+
             return (object) [
-                "status" => 400,
-                "message" => "Lỗi không thể lấy thông tin phương thức thanh toán",
+                "status" => 200,
+                "message" => "Thành công",
+                "data" => $result,
+                "totalPages" => $totalPages
             ];
-        } finally {
-            $connection = null;
+        } else {
+            throw new PDOException();
         }
-    }
-    
-
-    function isTenPhuongThucExists($TenPhuongThuc) {
-        // Khởi tạo kết nối
+    } catch (PDOException $e) {
+        return (object) [
+            "status" => 400,
+            "message" => "Lỗi không thể lấy danh sách phương thức thanh toán",
+        ];
+    } finally {
         $connection = null;
-    
-        // Chuẩn bị câu truy vấn gốc
-        $query = "SELECT * FROM `PhuongThucThanhToan` WHERE `TenPhuongThuc` = :TenPhuongThuc";
-    
-        // Khởi tạo kết nối
-        $connection = MysqlConfig::getConnection();
-    
-        try {
-            $statement = $connection->prepare($query);
-    
-            if ($statement !== false) {
-                $statement->bindValue(':TenPhuongThuc', $TenPhuongThuc, PDO::PARAM_STR);
-    
-                $statement->execute();
-    
-                $result = $statement->fetchAll(PDO::FETCH_ASSOC);
-    
-                $isExists = !empty($result) ? 1 : 0;
-    
-                return (object) [
-                    "status" => 200,
-                    "message" => "Truy vấn thành công!",
-                    "isExists" => $isExists
-                ];
-            } else {
-                throw new PDOException();
-            }
-        } catch (PDOException $e) {
-            return (object) [
-                "status" => 400,
-                "message" => "Lỗi không thể kiểm tra phương thức thanh toán",
-            ];
-        } finally {
-            $connection = null;
-        }
     }
+}
 
-    function isTenPhuongThucBelongToMaPhuongThuc($MaPhuongThuc, $TenPhuongThuc) {
-        // Khởi tạo kết nối
+function getPhuongThucThanhToanByMaPhuongThuc($MaPhuongThuc)
+{
+    // Khởi tạo kết nối
+    $connection = null;
+
+    // Chuẩn bị câu truy vấn gốc
+    $query = "SELECT * FROM `PhuongThucThanhToan` WHERE `MaPhuongThuc` = :MaPhuongThuc";
+
+    // Khởi tạo kết nối
+    $connection = MysqlConfig::getConnection();
+
+    try {
+        $statement = $connection->prepare($query);
+
+        if ($statement !== false) {
+            $statement->bindValue(':MaPhuongThuc', $MaPhuongThuc, PDO::PARAM_INT);
+
+            $statement->execute();
+
+            $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+            return (object) [
+                "status" => 200,
+                "message" => "Truy vấn thành công!",
+                "data" => $result
+            ];
+        } else {
+            throw new PDOException();
+        }
+    } catch (PDOException $e) {
+        return (object) [
+            "status" => 400,
+            "message" => "Lỗi không thể lấy thông tin phương thức thanh toán",
+        ];
+    } finally {
         $connection = null;
-    
-        // Chuẩn bị câu truy vấn gốc
-        $query = "SELECT * FROM `PhuongThucThanhToan` WHERE `MaPhuongThuc` = :MaPhuongThuc AND `TenPhuongThuc` = :TenPhuongThuc";
-    
-        // Khởi tạo kết nối
-        $connection = MysqlConfig::getConnection();
-    
-        try {
-            $statement = $connection->prepare($query);
-    
-            if ($statement !== false) {
-                $statement->bindValue(':MaPhuongThuc', $MaPhuongThuc, PDO::PARAM_INT);
-                $statement->bindValue(':TenPhuongThuc', $TenPhuongThuc, PDO::PARAM_STR);
-    
-                $statement->execute();
-    
-                $result = $statement->fetchAll(PDO::FETCH_ASSOC);
-    
-                $isExists = !empty($result) ? 1 : 0;
-    
-                return (object) [
-                    "status" => 200,
-                    "message" => "Truy vấn thành công!",
-                    "isExists" => $isExists
-                ];
-            } else {
-                throw new PDOException();
-            }
-        } catch (PDOException $e) {
-            return (object) [
-                "status" => 400,
-                "message" => "Lỗi không thể kiểm tra phương thức thanh toán",
-            ];
-        } finally {
-            $connection = null;
-        }
     }
+}
 
-    function createPhuongThucThanhToan($TenPhuongThuc) {
-        
-        // Khởi tạo kết nối
-        $connection = MysqlConfig::getConnection();
 
-        $query = "INSERT INTO `PhuongThucThanhToan` (`TenPhuongThuc`) 
+function isTenPhuongThucExists($TenPhuongThuc)
+{
+    // Khởi tạo kết nối
+    $connection = null;
+
+    // Chuẩn bị câu truy vấn gốc
+    $query = "SELECT * FROM `PhuongThucThanhToan` WHERE `TenPhuongThuc` = :TenPhuongThuc";
+
+    // Khởi tạo kết nối
+    $connection = MysqlConfig::getConnection();
+
+    try {
+        $statement = $connection->prepare($query);
+
+        if ($statement !== false) {
+            $statement->bindValue(':TenPhuongThuc', $TenPhuongThuc, PDO::PARAM_STR);
+
+            $statement->execute();
+
+            $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+            $isExists = !empty($result) ? 1 : 0;
+
+            return (object) [
+                "status" => 200,
+                "message" => "Truy vấn thành công!",
+                "isExists" => $isExists
+            ];
+        } else {
+            throw new PDOException();
+        }
+    } catch (PDOException $e) {
+        return (object) [
+            "status" => 400,
+            "message" => "Lỗi không thể kiểm tra phương thức thanh toán",
+        ];
+    } finally {
+        $connection = null;
+    }
+}
+
+function isTenPhuongThucBelongToMaPhuongThuc($MaPhuongThuc, $TenPhuongThuc)
+{
+    // Khởi tạo kết nối
+    $connection = null;
+
+    // Chuẩn bị câu truy vấn gốc
+    $query = "SELECT * FROM `PhuongThucThanhToan` WHERE `MaPhuongThuc` = :MaPhuongThuc AND `TenPhuongThuc` = :TenPhuongThuc";
+
+    // Khởi tạo kết nối
+    $connection = MysqlConfig::getConnection();
+
+    try {
+        $statement = $connection->prepare($query);
+
+        if ($statement !== false) {
+            $statement->bindValue(':MaPhuongThuc', $MaPhuongThuc, PDO::PARAM_INT);
+            $statement->bindValue(':TenPhuongThuc', $TenPhuongThuc, PDO::PARAM_STR);
+
+            $statement->execute();
+
+            $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+            $isExists = !empty($result) ? 1 : 0;
+
+            return (object) [
+                "status" => 200,
+                "message" => "Truy vấn thành công!",
+                "isExists" => $isExists
+            ];
+        } else {
+            throw new PDOException();
+        }
+    } catch (PDOException $e) {
+        return (object) [
+            "status" => 400,
+            "message" => "Lỗi không thể kiểm tra phương thức thanh toán",
+        ];
+    } finally {
+        $connection = null;
+    }
+}
+
+function createPhuongThucThanhToan($TenPhuongThuc)
+{
+
+    // Khởi tạo kết nối
+    $connection = MysqlConfig::getConnection();
+
+    $query = "INSERT INTO `PhuongThucThanhToan` (`TenPhuongThuc`) 
                     VALUES (:TenPhuongThuc)";
-        
-        try {
-            $statement = $connection->prepare($query);
 
-            if ($statement !== false) {
-                $statement->bindValue(':TenPhuongThuc', $TenPhuongThuc, PDO::PARAM_STR);
-                $statement->execute();
+    try {
+        $statement = $connection->prepare($query);
 
-                $id = $connection->lastInsertId();
+        if ($statement !== false) {
+            $statement->bindValue(':TenPhuongThuc', $TenPhuongThuc, PDO::PARAM_STR);
+            $statement->execute();
 
-                return (object) [
-                    "status" => 200,
-                    "message" => "Thành công",
-                    "data" => $id
-                ];
-            }
-        } catch (PDOException $e) {
+            $id = $connection->lastInsertId();
+
             return (object) [
-                "status" => 400,
-                "message" => $e->getMessage()
+                "status" => 200,
+                "message" => "Thành công",
+                "data" => $id
             ];
-        } finally {
-            $connection = null;
         }
+    } catch (PDOException $e) {
+        return (object) [
+            "status" => 400,
+            "message" => $e->getMessage()
+        ];
+    } finally {
+        $connection = null;
     }
+}
 
-    function updatePhuongThucThanhToan($MaPhuongThuc, $TenPhuongThuc) {
-        // Khởi tạo kết nối
-        $connection = MysqlConfig::getConnection();
+function updatePhuongThucThanhToan($MaPhuongThuc, $TenPhuongThuc)
+{
+    // Khởi tạo kết nối
+    $connection = MysqlConfig::getConnection();
 
-        $query = "UPDATE `PhuongThucThanhToan` SET 
+    $query = "UPDATE `PhuongThucThanhToan` SET 
                     `TenPhuongThuc` = :TenPhuongThuc,
                 WHERE `MaPhuongThuc` = :MaPhuongThuc";
 
-        try {
-            $statement = $connection->prepare($query);
+    try {
+        $statement = $connection->prepare($query);
 
-            if ($statement !== false) {
-                $statement->bindValue(':MaPhuongThuc', $MaPhuongThuc, PDO::PARAM_INT);
-                $statement->bindValue(':TenPhuongThuc', $TenPhuongThuc, PDO::PARAM_STR);
+        if ($statement !== false) {
+            $statement->bindValue(':MaPhuongThuc', $MaPhuongThuc, PDO::PARAM_INT);
+            $statement->bindValue(':TenPhuongThuc', $TenPhuongThuc, PDO::PARAM_STR);
 
-                $statement->execute();
+            $statement->execute();
 
-                if ($statement->rowCount() > 0) {
-                    return (object) [
-                        "status" => 200,
-                        "message" => "Thành công",
-                    ];
-                } else {
-                    throw new PDOException("Không có bản ghi nào được cập nhật");
-                }
+            if ($statement->rowCount() > 0) {
+                return (object) [
+                    "status" => 200,
+                    "message" => "Thành công",
+                ];
+            } else {
+                throw new PDOException("Không có bản ghi nào được cập nhật");
             }
-        } catch (PDOException $e) {
-            return (object) [
-                "status" => 400,
-                "message" => $e->getMessage()
-            ];
-        } finally {
-            $connection = null;
         }
+    } catch (PDOException $e) {
+        return (object) [
+            "status" => 400,
+            "message" => $e->getMessage()
+        ];
+    } finally {
+        $connection = null;
     }
-    
-function deletePhuongThuc($maPhuongThuc) {
+}
+
+function deletePhuongThuc($maPhuongThuc)
+{
     // Khởi tạo kết nối
     $connection = MysqlConfig::getConnection();
 
@@ -270,7 +285,7 @@ function deletePhuongThuc($maPhuongThuc) {
 
         // Xóa phương thức thanh toán
         $query_delete_nha_cung_cap = "DELETE FROM `PhuongThuc` WHERE `MaPhuongThuc` = :maPhuongThuc";
-        $statement_delete_nha_cung_cap= $connection->prepare($query_delete_nha_cung_cap);
+        $statement_delete_nha_cung_cap = $connection->prepare($query_delete_nha_cung_cap);
         $statement_delete_nha_cung_cap->bindValue(':maPhuongThuc', $maPhuongThuc, PDO::PARAM_INT);
         $statement_delete_nha_cung_cap->execute();
 
@@ -281,7 +296,6 @@ function deletePhuongThuc($maPhuongThuc) {
             "status" => 200,
             "message" => "Thành công",
         ];
-
     } catch (PDOException $e) {
         // Rollback transaction nếu có lỗi xảy ra
         $connection->rollBack();
@@ -294,4 +308,3 @@ function deletePhuongThuc($maPhuongThuc) {
         $connection = null;
     }
 }
-?>

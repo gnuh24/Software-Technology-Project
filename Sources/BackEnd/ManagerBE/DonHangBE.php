@@ -1,5 +1,5 @@
 <?php
-require_once "../../Configure/MysqlConfig.php";
+require_once __DIR__ . "/../../Configure/MysqlConfig.php";
 
 if (isset($_GET['page'])) {
     $page = $_GET['page'];
@@ -8,7 +8,6 @@ if (isset($_GET['page'])) {
     $trangThai = isset($_GET['trangThai']) ? $_GET['trangThai'] : "";
 
     // Gọi hàm PHP bạn muốn thực thi và trả về kết quả dưới dạng JSON
-    // $result = getAllTaiKhoan($page, $search, $quyen);
     $result = getAllDonHang($page, $minNgayTao, $maxNgayTao, $trangThai);
 
     echo json_encode($result);
@@ -17,8 +16,21 @@ if (isset($_GET['page'])) {
 function getAllDonHang($page, $minNgayTao, $maxNgayTao, $trangThai)
 {
     $connection = null;
-    $query = "SELECT * FROM `DonHang` dh 
+    $query = "SELECT dh.MaDonHang,
+                    dh.NgayDat,
+                    dh.TongGiaTri,
+                    dh.MaKH,
+                    dh.DiaChiGiaoHang,
+                    pt.MaPhuongThuc,
+                    dv.MaDichVu,
+                    pt.TenPhuongThuc,
+                    tt.TrangThai,
+                    tt.NgayCapNhat,
+                    dv.TenDichVu
+                 FROM `DonHang` dh 
+                JOIN `PhuongThucThanhToan` pt ON dh.`MaPhuongThuc` = pt.`MaPhuongThuc`
                 JOIN `TrangThaiDonHang` tt ON dh.`MaDonHang` = tt.`MaDonHang`
+                JOIN `dichvuvanchuyen` dv ON dh.`MaDichVu` = dv.`MaDichVu`
                 WHERE tt.`NgayCapNhat` = (
                     SELECT MAX(`NgayCapNhat`) 
                     FROM `TrangThaiDonHang` subtt 

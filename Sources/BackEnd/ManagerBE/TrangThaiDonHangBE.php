@@ -1,5 +1,14 @@
 <?php
-require_once "../../Configure/MysqlConfig.php";
+require_once __DIR__ . "/../../Configure/MysqlConfig.php";
+// TrangThai NgayCapNhat MaDonHang
+if (isset($_GET['MaDonHang'])) {
+    $MaPhuongThuc = $_GET['MaDonHang'];
+
+    // Gọi hàm PHP bạn muốn thực thi và trả về kết quả dưới dạng JSON
+    $result = getTrangThaiDonHangByMaDonHang($MaDonHang);
+
+    echo json_encode($result);
+}
 
 function getTrangThaiDonHangByMaDonHang($maDonHang) {
     $connection = null;
@@ -16,7 +25,7 @@ function getTrangThaiDonHangByMaDonHang($maDonHang) {
 
             $statement->execute();
 
-            $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+            $result = $statement->fetchALL(PDO::FETCH_ASSOC);
 
             return (object) [
                 "status" => 200,

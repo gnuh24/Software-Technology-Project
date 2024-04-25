@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="../AdminDemo.css" />
   <link rel="stylesheet" href="QLDonHang.css" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <title>Quản lý đơn hàng</title>
 </head>
 
@@ -104,6 +105,8 @@
                             <th class="Table_th__hCkcg">Mã khách</th>
                             <th class="Table_th__hCkcg">Phương thức thanh toán</th>
                             <th class="Table_th__hCkcg">Trạng thái</th>
+                            <th class="Table_th__hCkcg">Dịch vụ vận chuyển</th>
+                            <th class="Table_th__hCkcg">Hành động</th>
                           </tr>
                         </thead>
                         <tbody id="tableBody">
@@ -117,13 +120,37 @@
                           $totalPage = $result->totalPages;
                           $Ketqua = $result->data;
 
+                          $printed_orders = [];
+                          $order_statuses = [];
+
                           foreach ($Ketqua as $record) {
+
+                            $maDonHang = $record['MaDonHang'];
 
                             $ngayDat = date('H:i:s d/m/Y', strtotime($record['NgayDat']));
 
-                            $phuongThucThanhToan = getPhuongThucThanhToanByMaPhuongThuc($record['MaPhuongThuc']);
+                            if (in_array($maDonHang, $printed_orders)) {
+                              continue;
+                            }
 
-                            $trangThai = getTrangThaiDonHangByMaDonHang($record['TrangThai']);
+                            // Lưu trạng thái mới nhất của mã đơn hàng
+                            $order_statuses[$maDonHang] = $record['TrangThai'];
+                            if ($order_statuses[$maDonHang] == 'ChoDuyet') {
+                              $order_statuses[$maDonHang] = 'Chờ Duyệt';
+                            }
+                            if ($order_statuses[$maDonHang] == 'Huy') {
+                              $order_statuses[$maDonHang] = 'Đã Hủy';
+                            }
+                            if ($order_statuses[$maDonHang] == 'DaDuyet') {
+                              $order_statuses[$maDonHang] = 'Đã duyệt';
+                            }
+                            if ($order_statuses[$maDonHang] == 'DangGiao') {
+                              $order_statuses[$maDonHang] = 'Đang Giao';
+                            }
+                            if ($order_statuses[$maDonHang] == 'GiaoThanhCong') {
+                              $order_statuses[$maDonHang] = 'GiaoThanhCong';
+                            }
+                            $printed_orders[] = $maDonHang;
 
                             if ((int) $record['MaDonHang'] % 2 !== 0) {
                               echo '<tr>
@@ -131,35 +158,41 @@
                                           <td class="Table_data_quyen_1">' . $ngayDat . '</td>
                                           <td class="Table_data_quyen_1">' . $record['TongGiaTri'] . '</td>
                                           <td class="Table_data_quyen_1">' . $record['MaKH'] . '</td>
-                                          <td class="Table_data_quyen_1">' . $phuongThucThanhToan . '</td>
-                                          <td class="Table_data_quyen_1">' . $trangThai . '</td>
-                                          <td class="Table_data_quyen_1">           
-                                          <button class="delete">Xóa</button>
-                                          <button class="edit" >Đổi trạng thái</button>
-                                        </tr>';
+                                          <td class="Table_data_quyen_1">' . $record['TenDichVu'] . '</td>
+                                          <td class="Table_data_quyen_1">' . $record['TenPhuongThuc'] . '</td>
+                                          <td class="Table_data_quyen_1"><button type="button" onclick="" class="edit">' . $order_statuses[$maDonHang] . '</button></td>                                                            
+                                        ';
+                              if ($order_statuses[$maDonHang] == 'Chờ Duyệt')
+                                echo '<td class="Table_data_quyen_1"><a href="./ChiTietDonHang.php" class="edit"> chi tiết</a> <button class="delete"> hủy</button> </td></tr>';
+                              else
+                                echo '<td class="Table_data_quyen_1"><a href="./ChiTietDonHang.php" class="edit"> chi tiết</a> </td></tr>';
                             } else {
                               echo '<tr>
                                           <td class="Table_data_quyen_2">' . $record['MaDonHang'] . '</td>
-                                          <td class="Table_data_quyen_2">' . $record['NgayDat'] . '</td>
+                                          <td class="Table_data_quyen_2">' . $ngayDat . '</td>
                                           <td class="Table_data_quyen_2">' . $record['TongGiaTri'] . '</td>
                                           <td class="Table_data_quyen_2">' . $record['MaKH'] . '</td>
-                                          <td class="Table_data_quyen_2">' . $phuongThucThanhToan . '</td>
-                                          <td class="Table_data_quyen_2">' . $trangThai . '</td>
-                                          <td class="Table_data_quyen_2">           
-                                          <button class="delete">Xóa</button>
-                                          <button class="edit" >Đổi trạng thái</button>
-                                        </tr>';
+                                          <td class="Table_data_quyen_2">' . $record['TenDichVu'] . '</td>
+                                          <td class="Table_data_quyen_2">' . $record['TenPhuongThuc'] . '</td>
+                                          <td class="Table_data_quyen_2"><button type="button" onclick="" class="edit">' . $order_statuses[$maDonHang] . '</button></td>        
+                                        ';
+                              if ($order_statuses[$maDonHang] == 'Chờ Duyệt')
+                                echo '<td class="Table_data_quyen_2"><a href="./ChiTietDonHang.php" class="edit"> chi tiết</a> <button class="delete"> hủy</button> </td></tr>';
+                              else
+                                echo '<td class="Table_data_quyen_2"><a href="./ChiTietDonHang.php" class="edit"> chi tiết</a> </td></tr>';
                             }
                           }
                           ?>
+
+
                         </tbody>
                       </table>
-                      <div class="pagination">  
-                        <?php
+                      <div id="pagination">
+                        <!-- <?php
                         for ($i = 1; $i <= $totalPage; $i++) {
                           echo '<button class="pageButton" onclick="fetchDataAndUpdateTable(' . $i . ')">' . $i . '</button>';
                         }
-                        ?>
+                        ?> -->
                       </div>
                     </div>
                   </div>
@@ -180,6 +213,7 @@
   }
 
   function getAllDonHang(page, minNgayTao, maxNgayTao, trangThai) {
+    console.log("vào được đây rồi")
     $.ajax({
       url: '../../../BackEnd/ManagerBE/DonHangBE.php',
       type: 'GET',
@@ -191,45 +225,73 @@
         trangThai: trangThai
       },
       success: function(response) {
+        console.log(response.totalPages)
+        console.log(response.message)
+        console.log(response.status)
+        console.log(response.data)  
         var data = response.data;
+        data.forEach(function(record){
+          console.log(record.MaDonHang)
+          console.log(record.NgayDat)
+          console.log(record.TongGiaTri)
+          console.log(record.MaKH)
+          console.log(record.TenDichVu)
+          console.log(record.TenPhuongThuc)
+        });
         var tableBody = document.getElementById("tableBody"); // Lấy thẻ tbody của bảng
         var tableContent = ""; // Chuỗi chứa nội dung mới của tbody
-
+        var printed_orders = [];
+        var order_statuses = [];
         // Duyệt qua mảng dữ liệu và tạo các hàng mới cho tbody
         data.forEach(function(record) {
-          var trClass = (parseInt(record.MaDonHang) % 2 !== 0) ? "Table_data_quyen_1" : "Table_data_quyen_2"; // Xác định class của hàng
+          var trClass = (parseInt(record.MaDonHang) % 2 !== 0) ? "Table_data_quyen_1" : "Table_data_quyen_2";
 
-          var ngayDat = new Date(record.ngayDat);
-          var ngayDatFormatted = ngayDat.toLocaleString();
+          var maDonHang = record.MaDonHang;
 
-          // Xác định trạng thái và văn bản của nút dựa trên trạng thái của tài khoản
-          var buttonText = "Chờ duyệt";
-          // var buttonClass = (record.TrangThai === 0) ? "unlock" : "block";
-          // var buttonData = (record.TrangThai === 0) ? "unlock" : "block";
+          var ngayDat = new Date(record.NgayDat);
+          var ngayDatFormatted = ngayDat.toLocaleTimeString() + ' ' + ngayDat.toLocaleDateString();
 
-          var trContent = `
-                        <tr>
-                            <td class="${trClass}" style="width: 130px;">${record.MaDonHang}</td>
-                            <td class="${trClass}">${ngayTaoFormatted}</td>
-                            <td class="${trClass}">${record.TongGiaTri}</td>
-                            <td class="${trClass}">${ngayTaoFormatted}</td>
-                            <td class="${trClass}">${record.MaKH}</td>
-                            <td class="${trClass}">${record.MaPhuongThuc}</td>
-                            <td class="${trClass}">record.TrangThai</td>
-                            <td class="${trClass}">
-                                 <button class="edit" onclick="">Hủy</button>
-                                 <button onclick="">${buttonText}</button>
-                            </td>
-                        </tr>`;
+          if (printed_orders.includes(maDonHang)) {
+            return;
+          }
 
+          // Lưu trạng thái mới nhất của mã đơn hàng
+          order_statuses[maDonHang] = record.TrangThai;
+          switch (order_statuses[maDonHang]) {
+            case 'ChoDuyet':
+              order_statuses[maDonHang] = 'Chờ Duyệt';
+              break;
+            case 'Huy':
+              order_statuses[maDonHang] = 'Đã Hủy';
+              break;
+            case 'DaDuyet':
+              order_statuses[maDonHang] = 'Đã duyệt';
+              break;
+            case 'DangGiao':
+              order_statuses[maDonHang] = 'Đang Giao';
+              break;
+            case 'GiaoThanhCong':
+              order_statuses[maDonHang] = 'Giao Thành Công';
+              break;
+          }
+
+          printed_orders.push(maDonHang);
+
+
+          var trContent = `<tr>
+                            <td class="${trClass}"> ${record.MaDonHang}  </td>
+                            <td class="${trClass}"> ${ngayDat}  </td>
+                            <td class="${trClass}"> ${record.TongGiaTri}  </td>
+                            <td class="${trClass}"> ${record.MaKH}  </td>
+                            <td class="${trClass}"> ${record.TenDichVu}  </td>
+                            <td class="${trClass}"> ${record.TenPhuongThuc}  </td>
+                            <td class="${trClass}"><button type="button" onclick="" class="edit">  ${order_statuses[maDonHang]}  </button></td>        
+                          `;
           tableContent += trContent; // Thêm nội dung của hàng vào chuỗi tableContent
         });
 
         // Thiết lập lại nội dung của tbody bằng chuỗi tableContent
         tableBody.innerHTML = tableContent;
-
-        
-
 
       },
 
@@ -238,9 +300,10 @@
       }
     });
   }
+  // getAllDonHang(1,'','','');
 
   function createPagination(currentPage, totalPages) {
-    var paginationContainer = document.querySelector('.pagination');
+    var paginationContainer = document.querySelector('#pagination');
     // var searchValue = document.querySelector('.Admin_input__LtEE-').value;
     // var quyenValue = document.querySelector('#selectQuyen').value;
 
@@ -273,15 +336,15 @@
     clearTable();
 
     // Gọi hàm getAllTaiKhoan và truyền các giá trị tương ứng
-    getAllTaiKhoan(page, minNgayTao, maxNgayTao, trangThai);
+    getAllDonHang(page, minNgayTao, maxNgayTao, trangThai);
 
     // Tạo phân trang
-    createPagination(page);
+    // createPagination(page, totalPages);
   }
 
   // Khởi tạo trang hiện tại
-  var currentPage = 1;
-  fetchDataAndUpdateTable(currentPage, '', '', '');
+  // var currentPage = 1;
+  // fetchDataAndUpdateTable(currentPage);
 
   // // Hàm để gọi getAllTaiKhoan và cập nhật dữ liệu và phân trang
   // function fetchDataAndUpdateTable(page, minNgayTao, maxNgayTao, trangThai) {
@@ -290,6 +353,22 @@
 
   //   // Gọi hàm getAllTaiKhoan và truyền các giá trị tương ứng
   //   getAllTaiKhoan(page, minNgayTao, maxNgayTao, trangThai);
+  function in_array(maDonHang, printed_orders) {
+    found = false;
+    printed_orders.forEach(element => {
+      if (element === maDonHang) {
+        found = true;
+      }
+    });
+    return false;
+  }
+
+  function number_format_vnd(number) {
+    return Number(number).toLocaleString('vi-VN', {
+      style: 'currency',
+      currency: 'VND'
+    });
+  }
   // }
 </script>
 
