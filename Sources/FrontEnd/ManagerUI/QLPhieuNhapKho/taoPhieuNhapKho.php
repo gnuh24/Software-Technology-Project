@@ -85,29 +85,30 @@ if (isset($_GET['MaPhieu'])) {
                             </div>
                             <div class="boxFeature">
                                 <select style="height: 3rem; padding: 0.3rem; width: 50rem;" id="manhacungcap" <?php if (isset($_GET['MaPhieu'])) echo 'disabled="true"'; ?>>
-                                    <option defaultChecked style="display: block;">
-                                        Nhà Cung Cấp
-                                        <?php
-                                        require_once "../../../BackEnd/ManagerBE/NhaCungCapBE.php";
+                                    <option value="" disabled selected hidden>Chọn nhà cung cấp</option>
+                                    Nhà Cung Cấp
+                                    <?php
+                                    require_once "../../../BackEnd/ManagerBE/NhaCungCapBE.php";
 
-                                        $result = getAllNhaCungCap();
-                                        $result1 = $result->data;
-                                        foreach ($result1 as $Ketqua) {
-                                            if (isset($_GET['MaPhieu'])) {
-                                                if ($Ketqua["MaNCC"] == $MaNCC)
-                                                    echo '<option value="' . $Ketqua["MaNCC"] . '" selected>' . $Ketqua["TenNCC"] . '</option>';
-                                                else
-                                                    echo '<option value="' . $Ketqua["MaNCC"] . '">' . $Ketqua["TenNCC"] . '</option>';
-                                            } else {
+                                    $result = getAllNhaCungCap();
+                                    $result1 = $result->data;
+                                    foreach ($result1 as $Ketqua) {
+                                        if (isset($_GET['MaPhieu'])) {
+                                            if ($Ketqua["MaNCC"] == $MaNCC)
+                                                echo '<option value="' . $Ketqua["MaNCC"] . '" selected>' . $Ketqua["TenNCC"] . '</option>';
+                                            else
                                                 echo '<option value="' . $Ketqua["MaNCC"] . '">' . $Ketqua["TenNCC"] . '</option>';
-                                            }
+                                        } else {
+                                            echo '<option value="' . $Ketqua["MaNCC"] . '">' . $Ketqua["TenNCC"] . '</option>';
                                         }
-                                        ?>
-                                    </option>
+                                    }
+                                    ?>
+
                                 </select>
-                                <button style="margin-left: auto; font-family: Arial; font-size: 1.5rem; font-weight: 700; color: white; background-color: rgb(65, 64, 64); padding: 1rem; border-radius: 0.6rem; cursor: pointer;" onclick="handleSubmit()">
+                                <?php if (!isset($_GET['MaPhieu'])) echo '<button style="margin-left: auto; font-family: Arial; font-size: 1.5rem; font-weight: 700; color: white; background-color: rgb(65, 64, 64); padding: 1rem; border-radius: 0.6rem; cursor: pointer;" onclick="handleSubmit()">
                                     Lưu
-                                </button>
+                                </button>'; ?>
+
                             </div>
                             <div class="boxTable">
                                 <div style="background-color: rgb(236, 233, 233); width: 75%;">
@@ -176,7 +177,7 @@ if (isset($_GET['MaPhieu'])) {
                                     </label>
                                     <label>
                                         <p style="font-size: 1.3rem; font-weight: 700; margin-top: 1rem;">Tổng Giá Trị</p>
-                                        <input id="totalvalue" style=" height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;" value="<?php if(isset($_GET['MaPhieu'])) echo $_GET['TongTien'];?>" disabled="true" />
+                                        <input id="totalvalue" style=" height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;" value="<?php if (isset($_GET['MaPhieu'])) echo $_GET['TongTien']; ?>" disabled="true" />
                                     </label>
                                 </div>
                             </div>
@@ -231,7 +232,10 @@ if (isset($_GET['MaPhieu'])) {
         var maQuanLy = document.getElementById('maquanly').value;
         var totalValue = document.getElementById('totalvalue').value;
         var productData = [];
-
+        if (maNhaCungCap === '') {
+            alert('Vui lòng chọn nhà cung cấp.');
+            return; // Dừng hàm nếu nhà cung cấp chưa được chọn
+        }
         $('#tableBody tr').each(function() {
             var maSanPham = $(this).find('td:nth-child(1)').text().trim();
             var tenSanPham = $(this).find('td:nth-child(2)').text().trim();
@@ -247,7 +251,10 @@ if (isset($_GET['MaPhieu'])) {
 
             productData.push(productItem);
         });
-
+        if (productData.length === 0) {
+            alert('Vui lòng thêm ít nhất một sản phẩm.');
+            return false; // Dừng việc gửi form nếu productData trống
+        }
         $.ajax({
             type: 'GET',
             url: 'xulyPhieuNhapKho.php',
@@ -258,8 +265,8 @@ if (isset($_GET['MaPhieu'])) {
                 'ProductData': JSON.stringify(productData)
             },
             success: function(response) {
-                if(response.includes("Phiếu nhập kho đã được tạo thành công."))
-                window.location.href = 'QLPhieuNhapKho.php';
+                if (response.includes("Phiếu nhập kho đã được tạo thành công."))
+                    window.location.href = 'QLPhieuNhapKho.php';
 
             },
             error: function(xhr, status, error) {
@@ -312,13 +319,29 @@ if (isset($_GET['MaPhieu'])) {
                 var selectedProductHTML = '<tr style="text-align: center;">' +
                     '<td style="padding: 0.5rem; name=MaSanPham[]">' + productId + '</td>' +
                     '<td style="padding: 0.5rem;">' + productName + '</td>' +
-                    '<td style="padding: 0.5rem;"><input type="text" name="donGia[]" value="" style="height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;"></td>' +
-                    '<td style="padding: 0.5rem;"><input type="text" name="soLuong[]" value="" style="height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;"></td>' +
+                    '<td style="padding: 0.5rem;"><input type="text" name="donGia[]" onblur="validateDonGia(this)" value="0" style="height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;"></td>' +
+                    '<td style="padding: 0.5rem;"><input type="text" name="soLuong[]" value="1" onblur="validateSoLuong(this)" style="height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;"></td>' +
                     '</tr>';
                 $('#tableBody').append(selectedProductHTML);
             }
         });
     });
+
+    function validateDonGia(input) {
+        var donGia = parseFloat(input.value);
+        if (donGia < 0) {
+            alert("Đơn giá không được nhỏ hơn 0");
+            input.value = "0";
+        }
+    }
+
+    function validateSoLuong(input) {
+        var soLuong = parseInt(input.value);
+        if (soLuong < 1) {
+            alert("Số lượng phải lớn hơn hoặc bằng 1");
+            input.value = "1";
+        }
+    }
 
     // Function to load product data
     function loaddatasp() {
