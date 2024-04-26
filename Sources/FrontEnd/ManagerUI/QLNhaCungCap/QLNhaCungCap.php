@@ -136,7 +136,6 @@
     </div>
   </div>
 </body>
-
 </html>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
@@ -169,7 +168,7 @@
                             <td style="text-align:center">${record.TenNCC}</td>
                             <td style="text-align:center">${record.Email}</td>
                             <td style="text-align:center">${record.SoDienThoai}</td>
-                            <td style="text-align:center"><button style="cursor:pointer" onclick="deleteNhaCungCap(${record.MaNCC}, '${record.TenNCC}')"><i class="fa-solid fa-trash"></i></button></td>
+                            <td style="text-align:center"><button style="cursor:pointer" onclick="deleteNhaCungCap(${record.MaNCC})"><i class="fa-solid fa-trash"></i></button></td>
                         </tr>`;
 
           tableContent += trContent; // Thêm nội dung của hàng vào chuỗi tableContent
@@ -257,16 +256,16 @@
     }
   });
 
-  function deleteNhaCungCap(MaNCC, TenNCC) {
+  function deleteNhaCungCap(MaNCC) {
   // Hiển thị hộp thoại xác nhận
-  var confirmation = confirm(`Bạn có muốn xóa nhà cung cấp ${TenNCC} không?`);
+  var confirmation = confirm(`Bạn có muốn xóa nhà cung cấp ${MaNCC} không?`);
 
   // Kiểm tra xác nhận của người dùng
   if (confirmation) {
     // Gọi hàm deleteNhaCungCap bằng Ajax
     $.ajax({
       url: '../../../BackEnd/ManagerBE/NhaCungCapBE.php',
-      type: 'POST',
+      type: 'GET',
       dataType: "json",
       data: {
         MaNCC: MaNCC
