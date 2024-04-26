@@ -1,6 +1,13 @@
 <?php 
     require_once __DIR__ . "/../../Configure/MysqlConfig.php";
 
+    if (isset($_GET['isDemoHome'])) {
+
+        $result = getAllSanPham(1, "", null, null, null, null, null, null, 1, null);
+
+        echo json_encode($result);
+    }
+
     function getAllSanPham($page, $search, 
                             $minTheTich, $maxTheTich, 
                             $minGia, $maxGia, 

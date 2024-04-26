@@ -1,6 +1,14 @@
 <?php 
     require_once __DIR__ . "/../../Configure/MysqlConfig.php";
 
+    if (isset($_GET['isDemoHome'])){
+
+        $result =  getAllLoaiSanPham();
+
+        echo json_encode($result);
+    }
+
+
 function getAllLoaiSanPham(){
     // Chuẩn bị trước biến $connection
     $connection = null;

@@ -50,13 +50,13 @@
     justify-content: center;
   }
   #Home-img {
-    width: 100px;
-    height: 70px;
+    width: 110px;
+    height: 80px;
   }
   
   .input__wrapper {
     position: relative;
-    margin-left: 20%;
+    margin-left: 8%;
   }
   
   .search-input {
@@ -65,25 +65,27 @@
     background-size: 20px; /* Kích thước của icon */
     background-repeat: no-repeat;
     background-position: 5px center; /* Khoảng cách giữa icon và chữ trong input */
-    width: 600px;
-    height: 30px;
+    width: 800px;
+    height: 35px;
     border: 2px solid rgb(133, 6, 6);
     border-radius: 20px;
   }
   #Home-over-Header {
+    background-color:rgb(146, 26, 26);
     display: flex;
     flex-direction: row;
     justify-items: center;
     align-items: center;
     padding: 0 10%;
+    height: 80px;
   }
   #Home-cart {
     margin-left: auto;
   }
   #Home-login {
-    background-color: rgb(146, 26, 26);
-    color: white;
-    padding: 10px 10px;
+    background-color: white;
+    color: rgb(146, 26, 26);
+    padding: 10px 20px;
     cursor: pointer;
     border-radius: 15px;
     margin-left: 20px;
@@ -108,6 +110,24 @@
     transform: translateX(-50%);
     background-color: #7b181a;
   }
+
+  #btn-load-more {
+    margin-top: 20px;
+    width: 200px;
+    height: 50px;
+    background-color: #7b181a; /* Màu nền */
+    color: #fff; /* Màu chữ */
+    border: none; /* Loại bỏ viền */
+    padding: 10px 20px; /* Độ dày và độ rộng của nút */
+    border-radius: 5px; /* Bo tròn góc */
+    cursor: pointer; /* Biểu tượng con trỏ khi rê chuột vào */
+    transition: background-color 0.3s ease; /* Hiệu ứng chuyển đổi màu nền */
+  }
+  
+  .btn-load-more:hover {
+    background-color: #0056b3; /* Màu nền khi rê chuột vào */
+  }
+  
   
   .title_section .center-text-share {
     z-index: 1;
@@ -212,7 +232,7 @@
     position: relative;
     transform: all 0.4s;
     text-align: center;
-    height: auto;
+    height: 435px;
     border: 1px solid #eee6e6;
     overflow: hidden;
     box-shadow: 0px 2px 1.5px 0px #ccc;
@@ -301,7 +321,6 @@
     margin-top: 18px;
     white-space: nowrap;
     overflow: hidden;
-    text-transform: uppercase;
     text-overflow: ellipsis;
     padding: 0 8px;
   }
@@ -399,7 +418,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 100px;
+    margin-top: 80px;
   }
   
   .Home-lineSection-1 {
