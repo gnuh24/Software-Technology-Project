@@ -1,16 +1,21 @@
 <?php
-require "../../Configure/MysqlConfig.php";
-function getAllChiTietphieunhapkho($page, $maPhieuNhap = null, $masanpham = null)
+    require_once __DIR__ . "/../../Configure/MysqlConfig.php";
+
+
+
+
+
+    function getAllChiTietphieunhapkho($page, $maPhieuNhap = null)
 {
     //Chuẩn bị trước biến $connection
     $connection = null;
 
     //Chuẩn bị câu truy vấn gốc
-    $query = "SELECT * FROM `CTPNK`";
+    $query = "SELECT * FROM `CTPNK`,`phieunhapkho`";
 
     //Mảng chứa điều kiện
     $where_conditions = [];
-
+    $where_conditions[] = "CTPNK.MaPhieu = phieunhapkho.MaPhieu";
     //Số phần tử mỗi trang
     $entityPerPage = 5;
 
@@ -20,14 +25,9 @@ function getAllChiTietphieunhapkho($page, $maPhieuNhap = null, $masanpham = null
     // Thêm điều kiện về ngày nhập kho
     //Lọc theo mã phiếu nhập
     if (isset($maPhieuNhap)) {
-        $where_conditions[] = "`MaPhieu` = '$maPhieuNhap' ";
+        $where_conditions[] = "CTPNK.MaPhieu = '$maPhieuNhap' ";
     }
 
-    // Thêm điều kiện về giá trị đơn hàng
-    //trong khoảng giá trị
-    if (isset($masanpham)) {
-        $where_conditions[] = "`MaSanPham` = $masanpham";
-    }
 
     // Kết nối các điều kiện lại với nhau (Nếu không có thì skip)
     if (!empty($where_conditions)) {
@@ -40,7 +40,6 @@ function getAllChiTietphieunhapkho($page, $maPhieuNhap = null, $masanpham = null
     if ($totalPages === null) {
         //fetchColumn ( <Cột thứ n> ) : Lấy row đầu tiên của cột thứ n - 1
         $query_total_row = substr_replace($query, "COUNT(*)", 7, 1);
-        echo $query_total_row;
         // Chạy lệnh Query để lấy ra tổng trang
         $statement_total_row = $connection->prepare($query_total_row);
         $statement_total_row->execute();
@@ -89,7 +88,7 @@ function getChiTietPhieuNhapByMaPhieuNhap($maPhieuNhap)
     $connection = null;
 
     //Chuẩn bị câu truy vấn gốc
-    $query = "SELECT * FROM `CTPNK` WHERE `MaPhieu` = :maPhieuNhap";
+    $query = "SELECT * FROM `CTPNK` JOIN `sanpham` ON CTPNK.MaSanPham = sanpham.MaSanPham WHERE `MaPhieu` = :maPhieuNhap";
 
     // Khởi tạo kết nối
     $connection = MysqlConfig::getConnection();
@@ -102,7 +101,7 @@ function getChiTietPhieuNhapByMaPhieuNhap($maPhieuNhap)
 
         if ($statement !== false) {
 
-            $statement->bindValue(':maTaiKhoan', $maPhieuNhap, PDO::PARAM_INT);
+            $statement->bindValue(':maPhieuNhap', $maPhieuNhap, PDO::PARAM_INT);
 
             $statement->execute();
 
@@ -125,38 +124,34 @@ function getChiTietPhieuNhapByMaPhieuNhap($maPhieuNhap)
         $connection = null;
     }
 }
-function CreateChiTietPhieuNhap($SoLuong,$DonGiaNhap,$MaPhieu,$MaSanPham)
+function CreateChiTietPhieuNhap($SoLuong, $DonGiaNhap, $MaPhieu, $MaSanPham)
 {
-
     // Khởi tạo kết nối
     $connection = MysqlConfig::getConnection();
 
-    $query = "INSERT INTO `CTPNK` (`SoLuong`,`DonGiaNhap`   ,`ThanhTien`, `MaPhieu`,       `MaSanPham`)
-                                VALUES (:SoLuong, :DonGiaNhap, :ThanhTien,:MaPhieu,:MaSanPham)";
-
+    $query = "INSERT INTO `CTPNK` (`SoLuong`, `DonGiaNhap`, `ThanhTien`, `MaPhieu`, `MaSanPham`)
+                                VALUES (:SoLuong, :DonGiaNhap, :ThanhTien, :MaPhieu, :MaSanPham)";
 
     try {
-
         $statement = $connection->prepare($query);
-    
-        if ($statement  !== false) {
-    
-            // Bind giá trị vào tham số :tenTaiKhoan trong câu truy vấn
-            $statement->bindValue(':SoLuong', $SoLuong,        PDO::PARAM_INT);
-            $statement->bindValue(':DonGiaNhap'    , $DonGiaNhap,            PDO::PARAM_STR);
-            $statement->bindValue(':ThanhTien'      ,(double) $SoLuong*$DonGiaNhap,              PDO::PARAM_STR);
-            $statement->bindValue(':MaQuanLy'      , $MaPhieu,              PDO::PARAM_INT);
-            $statement->bindValue(':MaSanPham'      , $MaSanPham,              PDO::PARAM_INT);
+
+        if ($statement !== false) {
+            // Tính toán ThanhTien
+            $ThanhTien = $SoLuong * $DonGiaNhap;
+
+            // Ràng buộc giá trị vào tham số trong câu truy vấn
+            $statement->bindValue(':SoLuong', $SoLuong, PDO::PARAM_INT);
+            $statement->bindValue(':DonGiaNhap', $DonGiaNhap, PDO::PARAM_STR);
+            $statement->bindValue(':ThanhTien', $ThanhTien, PDO::PARAM_STR);
+            $statement->bindValue(':MaPhieu', $MaPhieu, PDO::PARAM_INT);
+            $statement->bindValue(':MaSanPham', $MaSanPham, PDO::PARAM_INT);
 
             // Thực hiện truy vấn
             $statement = $statement->execute();
-    
-            //Mã tài khoản vừa khởi tạo
-            $id = $connection->lastInsertId();
-
 
             if ($statement !== false) {
                 // Trả về ID của bản ghi vừa chèn
+                $id = $connection->lastInsertId();
                 return (object) [
                     "status" => 200,
                     "message" => "Thành công",

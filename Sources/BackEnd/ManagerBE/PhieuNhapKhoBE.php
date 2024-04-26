@@ -1,47 +1,39 @@
 <?php
-require "../../Configure/MysqlConfig.php";
-function getAllphieunhapkho($page, $datenhapkho1 = null, $datenhapkho2 = null, $giatritren = null, $giatriduoi = null, $maNCC = null)
+    require_once __DIR__ . "/../../Configure/MysqlConfig.php";
+        //Dùng để call List Tài khoản
+    if(isset($_GET['page'])) {
+        $page = $_GET['page'];
+        $datenhapkho = isset($_GET['datenhapkho']) ? $_GET['datenhapkho'] : "";
+        $result = getAllphieunhapkho($page, $datenhapkho);
+        echo json_encode($result);
+    }
+
+   
+    function getAllphieunhapkho($page, $datenhapkho = null)
 {
     //Chuẩn bị trước biến $connection
     $connection = null;
 
     //Chuẩn bị câu truy vấn gốc
-    $query = "SELECT * FROM `PhieuNhapKho`";
+    $query = "SELECT * FROM `PhieuNhapKho` JOIN `nhacungcap` ON PhieuNhapKho.MaNCC = nhacungcap.MaNCC JOIN `taikhoan` ON PhieuNhapKho.MaQuanLy = taikhoan.MaTaiKhoan  JOIN `NguoiDung` ON `TaiKhoan`.`MaTaiKhoan` = `NguoiDung`.`MaNguoiDung`" ;
 
     //Mảng chứa điều kiện
-    $where_conditions = [];
 
     //Số phần tử mỗi trang
-    $entityPerPage = 5;
+    $entityPerPage = 10;
 
     //Tổng số trang
     $totalPages = null;
 
     // Thêm điều kiện về ngày nhập kho
     //Lọc theo khoảng thời gian
-    if (isset($datenhapkho1) && isset($datenhapkho2)) {
-        $where_conditions[] = "`NgayNhapKho` between '$datenhapkho1' and '$datenhapkho2'";
-    } else if (isset($datenhapkho1)) {
-        $where_conditions[] = "`NgayNhapKho` = '$datenhapkho1'";
-    }
-
-    // Thêm điều kiện về giá trị đơn hàng
-    //trong khoảng giá trị
-    if (isset($giatritren) && isset($giatriduoi)) {
-        $where_conditions[] = "`TongGiaTri` >=$giatritren and `TongGiaTri`  <=  $giatriduoi";
-    } else if (isset($giatritren) || isset($giatriduoi)) {
-        if (isset($giatritren))
-            $where_conditions[] = "`TongGiaTri` = $giatritren";
-        else
-            $where_conditions[] = "`TongGiaTri` = $giatriduoi";
-    }
-    if (isset($maNCC)) {
-        $where_conditions[] = "`MaNCC`= $maNCC";
+    if (isset($datenhapkho) && $datenhapkho != "") {
+        $where_conditions[] = "`NgayNhapKho` like '%$datenhapkho%'";
     }
     // Kết nối các điều kiện lại với nhau (Nếu không có thì skip)
     if (!empty($where_conditions)) {
         $query .= " WHERE " . implode(" AND ", $where_conditions);
-    }
+    }  
     // Khởi tạo kết nối
     $connection = MysqlConfig::getConnection();
 
@@ -49,7 +41,6 @@ function getAllphieunhapkho($page, $datenhapkho1 = null, $datenhapkho2 = null, $
     if ($totalPages === null) {
         //fetchColumn ( <Cột thứ n> ) : Lấy row đầu tiên của cột thứ n - 1
         $query_total_row = substr_replace($query, "COUNT(*)", 7, 1);
-        echo $query_total_row;
         // Chạy lệnh Query để lấy ra tổng trang
         $statement_total_row = $connection->prepare($query_total_row);
         $statement_total_row->execute();

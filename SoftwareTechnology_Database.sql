@@ -52,12 +52,11 @@ CREATE TABLE IF NOT EXISTS `SanPham` (
     `Gia` 			INT UNSIGNED 			NOT NULL,
     `SoLuongConLai` INT UNSIGNED 			NOT NULL 	DEFAULT 0,
     `AnhMinhHoa` 	LONGTEXT,
-	`TrangThai` 	BOOLEAN NOT NULL,
+	`TrangThai` 	BOOLEAN NOT NULL					DEFAULT false,
 	
     `MaLoaiSanPham` INT UNSIGNED 			NOT NULL,
     FOREIGN KEY (`MaLoaiSanPHam`) REFERENCES `LoaiSanPham`(`MaLoaiSanPham`)
 );
-
 /* _____________________________________________________________________ CÁC BẢNG LIÊN QUAN TỚI NGHIEP VU NHAP KHO _________________________________________________________*/
 DROP TABLE IF EXISTS `NhaCungCap`;
 CREATE TABLE IF NOT EXISTS  `NhaCungCap` (
@@ -120,7 +119,7 @@ CREATE TABLE IF NOT EXISTS `DichVuVanChuyen`(
 DROP TABLE IF EXISTS `DonHang`;
 CREATE TABLE IF NOT EXISTS `DonHang`(
 	`MaDonHang`  			INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-    `NgayDat` 				DATETIME NOT NULL, 
+    `NgayDat` 				DATETIME NOT NULL							DEFAULT NOW(), 
     `TongGiaTri` 			INT UNSIGNED NOT NULL,
     `MaKH` 					INT UNSIGNED NOT NULL,
     `DiaChiGiaoHang`		NVARCHAR(255) NOT NULL,
@@ -137,10 +136,10 @@ CREATE TABLE IF NOT EXISTS `TrangThaiDonHang`(
     `TrangThai` 	        ENUM ("ChoDuyet", "DaDuyet", "Huy", "DangGiao" , "GiaoThanhCong") NOT NULL,
     `NgayCapNhat` 	        DATETIME DEFAULT NOW(), -- Ngày này sẽ được cập nhật dựa theo sự thay đổi của TrangThai
 	`MaDonHang`  		    INT UNSIGNED,
-    `MaNguoiCapNhat`	    INT UNSIGNED,
 	FOREIGN KEY (`MaDonHang`) REFERENCES `DonHang`(`MaDonHang`),
     PRIMARY KEY(`MaDonHang`, `TrangThai`)
 );
+
 
 
 DROP TABLE IF EXISTS `CTDH`;
@@ -169,7 +168,7 @@ INSERT INTO `TaiKhoan` (`TenDangNhap`, `MatKhau`, `Quyen`, `TrangThai`) VALUES
 						('customer3', '123456', "Member", true), -- Customer
 						('customer4', '123456', "Member", false), -- Customer
 						('customer5', '123456', "Member", false); -- Customer
-SELECT * FROM `TaiKhoan` WHERE `TrangThai` = 'true';
+
 -- Dữ liệu mẫu cho bảng NguoiDung
 INSERT INTO `NguoiDung` (`HoTen`, 			`NgaySinh`, `GioiTinh`, `SoDienThoai`, `Email`, `DiaChi`,  `MaNguoiDung`) VALUES
 						('Ngô Tuấn Hưng', 	'1990-01-01', 'Male', '0123456789', 'hungnt.020404@example.com', '123 Admin Street', 1),
@@ -226,6 +225,16 @@ VALUES					(1,      		'HaKu Vodka',                                             
 						(28, 	 		'Rượu Johnnie Walker White Walker Game of Thrones (1000ml)',           		'Scotland',     1000,       "Johnnie Walker"	,                   41.7,           1190000,    00,                 3,                false       , "data:image/jpeg;base64"),
 						(29, 	 		'Rượu Johnnie Walker Double Black (Phiên bản 2021)',                   		'Scotland',     750,        "Johnnie Walker"	,                   40,             920000,     00,                 3,                false       , "data:image/jpeg;base64"),
 						(30, 	 		'Rượu Johnnie Walker Red Label - 3000ml',                              		'Scotland',     3000,       "Johnnie Walker"	,                   40,             1650000,    00,                 3,                false       , "data:image/jpeg;base64");
+
+INSERT INTO `GioHang` (`MaSanPham`, `MaTaiKhoan`, `DonGia`, `SoLuong`, `ThanhTien`)
+VALUES
+				(1, 1, 12, 1, 0),
+				(2, 2, 12, 1, 0),
+				(2, 3, 12, 1, 0),
+				(2, 4, 12, 1, 0),
+				(3, 3, 12, 1, 0),
+				(4, 4, 12, 1, 0);
+
 
 
 INSERT INTO `NhaCungCap`    (`MaNCC`,   `TenNCC`,                                               `SoDienThoai`,           `Email`)
@@ -385,3 +394,15 @@ VALUES              (1 ,        16,     1280000     ,10      ,       12800000),
                     (10 ,        3,     1100000     ,5      ,       5500000),
                     (10 ,        4,     650000      ,5      ,       3250000), 
                     (10 ,        5,     850000      ,5      ,       4250000);
+
+SELECT DATE(dh.NgayDat) AS ngayLapDon, tdh.TrangThai AS trangThai, COUNT(*) AS soLuongDon
+FROM TrangThaiDonHang tdh
+INNER JOIN DonHang dh ON tdh.MaDH = dh.MaDH
+WHERE DATE(dh.NgayDat) BETWEEN COALESCE(NULL, '2010-01-01') AND COALESCE(NULL, CURRENT_DATE())
+AND tdh.NgayCapNhat = (
+    SELECT MAX(tdh2.NgayCapNhat)
+    FROM TrangThaiDonHang tdh2
+    WHERE tdh2.MaDH = tdh.MaDH
+)
+GROUP BY DATE(dh.NgayDat), tdh.TrangThai
+ORDER BY DATE(dh.NgayDat);

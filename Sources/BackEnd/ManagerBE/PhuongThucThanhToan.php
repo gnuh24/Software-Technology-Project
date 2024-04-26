@@ -1,5 +1,5 @@
 <?php 
-require_once "../../Configure/MysqlConfig.php";
+require_once __DIR__ . "/../../Configure/MysqlConfig.php";
 
     function getAllPhuongThucThanhToan($page){
         
@@ -179,6 +179,7 @@ require_once "../../Configure/MysqlConfig.php";
     }
 
     function createPhuongThucThanhToan($TenPhuongThuc) {
+        
         // Khởi tạo kết nối
         $connection = MysqlConfig::getConnection();
 
