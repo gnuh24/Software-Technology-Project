@@ -24,6 +24,16 @@ if(isset($_POST['TenNCC']) && isset($_POST['Email']) && isset($_POST['SoDienThoa
     echo json_encode($result);
 }
 
+//Dùng để xoá nhà cung cấp
+if(isset($_GET['MaNCC'])) {
+    $MaNCC = $_GET['MaNCC'];
+
+    // Gọi hàm deleteNhaCungCap và trả về kết quả dưới dạng JSON
+    $result = deleteNhaCungCap($MaNCC);
+
+    echo json_encode($result);
+}
+
 //Dùng để kiểm tra xem TenNCC có tồn tại hay không ?
 if(isset($_GET['TenNCC']) ) {
     $TenNCC = $_GET['TenNCC'];
