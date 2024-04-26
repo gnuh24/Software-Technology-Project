@@ -158,8 +158,9 @@
                 // Thiết lập lại nội dung của tbody bằng chuỗi tableContent
                 tableBody.innerHTML = tableContent;
 
-                // Tạo phân trang
-                createPagination(page, response.totalPages);
+                    // Tạo phân trang
+                    createPagination(page, response.totalPages);
+
             },
 
             error: function(xhr, status, error) {
@@ -168,6 +169,7 @@
         });
     }
 
+
     // Hàm để gọi getAllTaiKhoan và cập nhật dữ liệu và phân trang
     function fetchDataAndUpdateTable(page, search, quyen) {
         //Clear dữ liệu cũ
@@ -175,20 +177,13 @@
 
         // Gọi hàm getAllTaiKhoan và truyền các giá trị tương ứng
         getAllTaiKhoan(page, search, quyen);
+
+        
     }
 
     // Khởi tạo trang hiện tại
     var currentPage = 1;
     fetchDataAndUpdateTable(currentPage, '', '');
-
-    // Hàm để gọi getAllTaiKhoan và cập nhật dữ liệu và phân trang
-    function fetchDataAndUpdateTable(page, search, quyen) {
-        //Clear dữ liệu cũ
-        clearTable();
-
-        // Gọi hàm getAllTaiKhoan và truyền các giá trị tương ứng
-        getAllTaiKhoan(page, search, quyen);
-    }
 
     // Hàm tạo nút phân trang
     function createPagination(currentPage, totalPages) {

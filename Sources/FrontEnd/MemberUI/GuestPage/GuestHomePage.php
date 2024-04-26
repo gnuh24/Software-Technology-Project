@@ -14,19 +14,10 @@
             <div id="Home-over-Header">
                 <img id="Home-img" src="img/logoWine.jpg" alt="" />
                 <form class="input__wrapper">
-                    <input
-                        type="text"
-                        class="search-input"
-                        placeholder="Tìm kiếm"
-                        required=""
+                    <input id="searchSanPham" type="text" class="search-input" placeholder="Tìm kiếm" required=""
                     />
                 </form>
                 <div id="Home-login">Login</div>
-            </div>
-            <div class="Home-Header-Container">
-                <ul class="Home-navigation">
-                  
-                </ul>
             </div>
         </header>
 
@@ -47,37 +38,6 @@
             </div>
         </section>
 
-        <!-- Thanh lọc menu -->
-        <div id="filter-menu">
-            <label for="alcohol-filter">Nồng độ cồn:</label>
-            <select id="alcohol-filter">
-                <option value="">Tất cả</option>
-                <option value="low">Dưới 10%</option>
-                <option value="medium">Từ 10% đến 20%</option>
-                <option value="high">Trên 20%</option>
-            </select>
-
-            <label for="price-filter">Giá:</label>
-            <input type="number" id="price-filter" min="0" step="10000" placeholder="Nhập giá tối đa">
-
-            <label for="volume-filter">Thể tích:</label>
-            <select id="volume-filter">
-                <option value="">Tất cả</option>
-                <option value="low">Dưới 500ml</option>
-                <option value="medium">Từ 500ml đến 1L</option>
-                <option value="high">Trên 1L</option>
-            </select>
-
-            <label for="category-filter">Loại sản phẩm:</label>
-            <select id="category-filter">
-                <option value="">Tất cả</option>
-                <option value="wine">Rượu vang</option>
-                <option value="liquor">Rượu mạnh</option>
-                <option value="giftbox">Hộp quà whisky</option>
-            </select>
-
-            <button id="filter-button">Lọc</button>
-        </div>
 
 
         <section id="product">
@@ -88,7 +48,6 @@
         </section>
         <div style="display: flex; align-items: center; justify-content: center;">
             <button id="btn-load-more">Xem thêm các sản phẩm</button>
-
         </div>
 
         <!-- Tin tức -->
@@ -97,7 +56,6 @@
                 <h2 class="Home-txtTitle">TIN TỨC</h2>
             <div class="Home-lineSection-2"></div>
         </section>
-
 
         <section class="Home-grid-container">
             <div class="Home-grid-item">
@@ -288,7 +246,6 @@
                     isDemoHome: true
                 },
                 success: function(response) {
-                    console.log(response);
                     var productContainer = $('#product .products');
                     if (response.data && response.data.length > 0) {
                         // Tạo biến lưu trữ nội dung HTML mới
