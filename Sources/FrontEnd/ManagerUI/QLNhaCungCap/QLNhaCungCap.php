@@ -169,7 +169,7 @@
                             <td style="text-align:center">${record.TenNCC}</td>
                             <td style="text-align:center">${record.Email}</td>
                             <td style="text-align:center">${record.SoDienThoai}</td>
-                            <td style="text-align:center"><button style="cursor:pointer" onclick="handleDeleteNhaCungCap(${record.MaNCC})"><i class="fa-solid fa-trash"></i></button></td>
+                            <td style="text-align:center"><button style="cursor:pointer" onclick="deleteNhaCungCap(${record.MaNCC})"><i class="fa-solid fa-trash"></i></button></td>
                         </tr>`;
 
           tableContent += trContent; // Thêm nội dung của hàng vào chuỗi tableContent
@@ -257,7 +257,7 @@
     }
   });
 
-  function handleDeleteNhaCungCap(MaNCC) {
+  function deleteNhaCungCap(MaNCC) {
   // Hiển thị hộp thoại xác nhận
   var confirmation = confirm(`Bạn có muốn xóa nhà cung cấp ${TenNCC} không?`);
 
