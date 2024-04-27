@@ -358,8 +358,8 @@
                     isLogin: true
                 },
                 success: function(data) {
-                    console.log(data);
-                    console.log(data.data.TrangThai);
+                    // console.log(data);
+                    // console.log(data.data.TrangThai);
                     if (data.status === 200 && data.data && data.data.MatKhau === matKhau.value) {
                         if (data.data.TrangThai == 0) {
                             alert("Tài khoản của bạn đã bị khóa !!");
