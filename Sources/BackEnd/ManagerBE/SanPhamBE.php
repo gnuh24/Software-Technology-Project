@@ -39,6 +39,61 @@
         $result = getAllSanPham($page, $search, $minTheTich, $maxTheTich, $minGia, $maxGia, $minNongDoCon, $maxNongDoCon, 1, $maLoaiSanPham);
     
         echo json_encode($result);
+    } else if(isset($_GET['search'])){
+        $search = $_GET['search'];
+        $result = getAllSanPhamnotpagination($search);
+        echo json_encode($result);
+    }
+
+    function getAllSanPhamnotpagination($search = null){
+        
+        // Chuẩn bị trước biến $connection
+        $connection = null;
+
+        // Chuẩn bị câu truy vấn gốc
+        $query = "SELECT * FROM `SanPham`";
+
+
+        if (isset($search) & $search !="") {
+            $where_conditions[] = "`TenSanPham` like '%$search%'";
+        }
+        if (!empty($where_conditions)) {
+            $query .= " WHERE " . implode(" AND ", $where_conditions);
+        }  
+
+        // Khởi tạo kết nối
+        $connection = MysqlConfig::getConnection();
+        
+
+            // Query dùng để tính tổng số trang của các data trả về
+            $query_total_row = "SELECT COUNT(*) FROM `SanPham`";
+            $statement_total_row = $connection->prepare($query_total_row);
+            $statement_total_row->execute();
+
+
+        try {
+            $statement = $connection->prepare($query);
+
+            if ($statement !== false) {
+                $statement->execute();
+                $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+                return (object) [
+                    "status" => 200,
+                    "message" => "Thành công",
+                    "data" => $result,
+                ];
+            } else {
+                throw new PDOException();
+            }
+        } catch (PDOException $e) {
+            return (object) [
+                "status" => 400,
+                "message" => "Lỗi không thể lấy danh sách sản phẩm",
+            ];
+        } finally {
+            $connection = null;
+        }
     }
 
     function getAllSanPham($page, $search, 
