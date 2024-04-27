@@ -163,10 +163,11 @@
     
             if ($statement !== false) {
                 $statement->bindValue(':maSanPham', $maSanPham, PDO::PARAM_INT);
+
     
                 $statement->execute();
     
-                $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+                $result = $statement->fetch(PDO::FETCH_ASSOC);
     
                 return (object) [
                     "status" => 200,

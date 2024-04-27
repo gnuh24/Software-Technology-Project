@@ -31,9 +31,7 @@ CREATE TABLE IF NOT EXISTS `NguoiDung` (
 
 	FOREIGN KEY (`MaNguoiDung` ) REFERENCES `TaiKhoan`(`MaTaiKhoan`)
 );
-
 /* _____________________________________________________________________ CÁC BẢNG LIÊN QUAN TỚI SẢN PHẨM _________________________________________________________*/
-
 
 DROP TABLE IF EXISTS `LoaiSanPham`;
 CREATE TABLE IF NOT EXISTS `LoaiSanPham` (

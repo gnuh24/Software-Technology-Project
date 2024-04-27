@@ -4,27 +4,29 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-        <link rel="stylesheet" href="HomePage.css" />
-        <link rel="stylesheet" href="login.css" />
+        <link rel="stylesheet" href="SignedHomePage.css" />
         <title>Kinh doanh rượu</title>
     </head>
 
     <body>
         <header class="Home-container-header">
             <div id="Home-over-Header">
-                <img id="Home-img" src="img/logoWine.jpg" alt="" />
-                <form id="search" class="input__wrapper" method="post" action="GuestProduct.php">
+                <img id="Home-img" src="../GuestPage/img/logoWine.jpg" alt="" />
+                <form id="search" class="input__wrapper" method="post" action="SignedProduct.php">
                     <input id="searchSanPham" name="searchFromAnotherPage" type="text" class="search-input" placeholder="Tìm kiếm" required=""/>
                     <button id="filter-button"><i class="fa-solid fa-magnifying-glass"></i></button>
-                </form>   
+                    <div class="header-option"><a href="Cart.php"><i class="fa-solid fa-cart-shopping"></i></a></div>
+                    <div class="header-option"><a href="Profile.php"><i class="fa-solid fa-user"></i></a></div>
+                    <div class="header-option"><a href="../Login/LoginUI.php"><i class="fa-solid fa-right-from-bracket"></i></a></div>
+        
+                </form>
 
-
-                <div id="Home-login">Login</div>
             </div>
+
         </header>
 
         <section id="poster" style="width: 100%; height: auto; padding: 0 5%;">
-            <img src="img/poster.jpg" style="max-width: 100%;">
+            <img src="../GuestPage/img/poster.jpg" style="max-width: 100%;">
         </section>
 
         
@@ -61,7 +63,7 @@
 
         <section class="Home-grid-container">
             <div class="Home-grid-item">
-                <img class="Home-gird-item-img" src="img/uongRuouVangMoiNgay.jpg" alt=""/>
+                <img class="Home-gird-item-img" src="../GuestPage/img/uongRuouVangMoiNgay.jpg" alt=""/>
                 <div class="home-title-context">
                 <h1 class="Home-title-heading">Uống rượu vang mỗi ngày, nên hay không?</h1>
                 <p class="Home-context">
@@ -70,7 +72,7 @@
                 </div>
             </div>
             <div class="Home-grid-item">
-                <img class="Home-gird-item-img" src="img/whisky.jpg" alt=""/>
+                <img class="Home-gird-item-img" src="../GuestPage/img/whisky.jpg" alt=""/>
                 <div class="home-title-context">
                 <h1 class="Home-title-heading">Sự thật về sự khác biệt giữa Single Malt Whisky và Blended Scotch Whisky</h1>
                 <p class="Home-context">
@@ -79,7 +81,7 @@
                 </div>
             </div>
             <div class="Home-grid-item">
-                <img class="Home-gird-item-img" src="img/chivas.jpg" alt=""/>
+                <img class="Home-gird-item-img" src="../GuestPage/img/chivas.jpg" alt=""/>
                 <div class="home-title-context">
                 <h1 class="Home-title-heading">Giá rượu Chivas 12, 18, 21, 25, 38 mới nhất tại thị thường Việt Nam 2024</h1>
                 <p class="Home-context">
@@ -88,7 +90,7 @@
                 </div>
             </div>
             <div class="Home-grid-item">
-                <img class="Home-gird-item-img" src="img/ballantines.jpg" alt=""/>
+                <img class="Home-gird-item-img" src="../GuestPage/img/ballantines.jpg" alt=""/>
                 <div class="home-title-context">
                 <h1 class="Home-title-heading">Giá rượu Ballantine's Finest, 12, 15, 17, 19, 21, 30, 40 mới nhất thị trường 2023</h1>
                 <p class="Home-context">
@@ -97,7 +99,7 @@
                 </div>
             </div>
             <div class="Home-grid-item">
-                <img class="Home-gird-item-img" src="img/jagermiester.jpg" alt=""/>
+                <img class="Home-gird-item-img" src="../GuestPage/img/jagermiester.jpg" alt=""/>
                 <div class="home-title-context">
                 <h1 class="Home-title-heading">Cách nhận biết rượu Jagermeister thật giả</h1>
                 <p class="Home-context">
@@ -106,7 +108,7 @@
                 </div>
             </div>
             <div class="Home-grid-item">
-                <img class="Home-gird-item-img" src="img/Bordeaux.jpg" alt=""/>
+                <img class="Home-gird-item-img" src="../GuestPage/img/Bordeaux.jpg" alt=""/>
                 <div class="home-title-context">
                 <h1 class="Home-title-heading">Top 10 chai rượu vang Pháp nổi tiếng thế giới đã có mặt tại thị trường Việt Nam</h1>
                 <p class="Home-context">
@@ -119,14 +121,14 @@
         <!-- Dịch vụ -->
         <section class="Home-service">
         <div class="Home-service-child">
-            <div><img class="Home-service-img" src="img/service-1.jpg" alt=""/></div>
+            <div><img class="Home-service-img" src="../GuestPage/img/service-1.jpg" alt=""/></div>
             <h2 class="home-heading-sercive">Giao Hàng nhanh</h2>
             <p class="home-txt-sercive">
             Winemart sẽ luôn cố gắng giao hàng nhanh nhất có thể
             </p>
         </div>
         <div class="Home-service-child">
-            <div><img class="Home-service-img" src="img/service2.jpg" alt=""/></div>
+            <div><img class="Home-service-img" src="../GuestPage/img/service2.jpg" alt=""/></div>
             <h2 class="home-heading-sercive">Hỗ trợ khách hàng</h2>
             <p class="home-txt-sercive">
             Chăm sóc, tư vấn và hỗ trợ khách hàng gọi ngay <br>
@@ -134,7 +136,7 @@
             </p>
         </div>
         <div class="Home-service-child">
-            <div><img class="Home-service-img" src="img/service3.jpg" alt=""/></div>
+            <div><img class="Home-service-img" src="../GuestPage/img/service3.jpg" alt=""/></div>
             <h2 class="home-heading-sercive">Thanh toán thuận tiện</h2>
             <p class="home-txt-sercive">
             Winemart hỗ trợ thanh toán
@@ -212,17 +214,10 @@
         document
             .getElementById("poster")
             .addEventListener("click", function () {
-                window.location.href = 'GuestProduct.php';
+                window.location.href = 'SignedProduct.php';
         });
 
-        // Lắng nghe sự kiện click vào id "Home-login"
-        document
-            .getElementById("Home-login")
-            .addEventListener("click", function () {
-                window.location.href = '../Login/LoginUI.php';
-        });
-
-        // Lắng nghe sự kiện click vào id "Home-login"
+        // Lắng nghe sự kiện click vào id "Person"
         document
             .getElementById("filter-button")
             .addEventListener("click", function () {
@@ -235,7 +230,7 @@
         document
             .getElementById("btn-load-more")
             .addEventListener("click", function () {
-                window.location.href = 'GuestProduct.php';
+                window.location.href = 'SignedProduct.php';
         });
 
         // Gọi hàm getAllLoaiSanPham khi trang được tải
@@ -271,7 +266,7 @@
                             var imageSrc = product.AnhMinhHoa;
                             htmlContent += `
                                 <div class="row">
-                                        <a href="GuestProductDetail.php?maSanPham=${product.MaSanPham}" onclick="detail(${product.MaSanPham})">
+                                        <a href="SignedProductDetail.php?maSanPham=${product.MaSanPham}" onclick="detail(${product.MaSanPham})">
                                         <img src="${imageSrc}" alt="" style=" height: 300px;" onclick="detail(${product.MaSanPham})">
                                         <div class="product-card-content">
                                             <div class="price">
@@ -303,7 +298,7 @@
 
         document.getElementById("Home-img").addEventListener("click", function () {
             // Chuyển hướng về trang chủ khi click vào hình ảnh
-            window.location.href = "GuestHomePage.php";
+            window.location.href = "SignedHomePage.php";
         });
 
         function detail(maSanPham){
@@ -316,9 +311,7 @@
 
             const form = document.getElementById("search");
             const searchValue  = document.getElementById("searchSanPham").value;
-            console.log(searchValue);
-            form.action = `GuestProduct.php?searchFromAnotherPage=${searchValue}`;
-            console.log(form.action);
+            form.action = `SignedProduct.php?searchFromAnotherPage=${searchValue}`;
             form.submit();
 
         });

@@ -1,4 +1,3 @@
-
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
@@ -6,6 +5,8 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
         <link rel="stylesheet" href="HomePage.css" />
         <link rel="stylesheet" href="login.css" />
+        <link rel="stylesheet" href="GuestProduct.css" />
+
         <title>Các sản phẩm</title>
     </head>
 
@@ -14,9 +15,15 @@
             <div id="Home-over-Header">
                 <img id="Home-img" src="img/logoWine.jpg" alt="" />
                 <form class="input__wrapper">
-                    <input id="searchSanPham" type="text" class="search-input" placeholder="Tìm kiếm" required=""/>
-                    <button id="filter-button"><i class="fa-solid fa-magnifying-glass"></i></button>
+                <?php
+                    if (isset($_GET['searchFromAnotherPage'])) {
+                        echo '<input value="' . $_GET['searchFromAnotherPage'] . '" id="searchSanPham" type="text" class="search-input" placeholder="Tìm kiếm" required/>';
+                    } else {
+                        echo '<input id="searchSanPham" type="text" class="search-input" placeholder="Tìm kiếm" required/>';
+                    }
+                ?>
 
+                    <button id="filter-button"><i class="fa-solid fa-magnifying-glass"></i></button>
                 </form>
                 <div id="Home-login">Login</div>
             </div>
@@ -65,7 +72,7 @@
 
         </section>
 
-        <div class="pagination" id=pagination>
+        <div class="pagination" id="pagination">
                                                
         </div>
 
@@ -282,6 +289,7 @@
                 getAllSanPham(currentPage, searchText, minVolume, maxVolume, minPrice,  maxPrice, minAlcoholLevel, maxAlcoholLevel, categoryFilter);
         });
 
+
        
 
         // Hàm lọc sản phẩm
@@ -369,17 +377,13 @@
 
             // Gọi hàm lọc sản phẩm với các tham số vừa lấy được
             getAllSanPham(page, searchText, minVolume, maxVolume, minPrice, maxPrice, minAlcoholLevel, maxAlcoholLevel, categoryFilter);
-
-            // Cập nhật giá trị của biến currentPage
-            currentPage = page;
         }
 
 
         // Gọi hàm getAllLoaiSanPham khi trang được tải
         $(document).ready(function() {
-            getAllSanPham(currentPage, "", 0, 100000, 0,  1000000000, 0, 100, 0);
-            getCategories()
-            
+            filterProducts(currentPage);
+            getCategories();
         });
 
 
@@ -411,28 +415,30 @@
                             $.each(response.data, function(index, product) {
                                 
                                 var imageSrc = product.AnhMinhHoa;
-                                htmlContent += `
-                                    <div class="row">
-                                        <a href="../Login/LoginUI.php">
-                                            <img src="${imageSrc}" alt="" style=" height: 300px;">
-                                            <div class="product-card-content">
-                                                <div class="price">
-                                                    <h4 class="name-product">${product.TenSanPham}</h4>
-                                                    <p class="price-tea">${formatCurrency(product.Gia)}</p>
+                                htmlContent += ` 
+                                    <form  id="productForm_${product.MaSanPham}" method="post" action="GuestProductDetail.php?maSanPham=${product.MaSanPham}">
+                                        <div class="row">
+                                            <a href="#">
+                                                <img src="${imageSrc}" alt="" style=" height: 300px;" onclick="detail(${product.MaSanPham})">
+                                                <div class="product-card-content">
+                                                    <div class="price">
+                                                        <h4 class="name-product">${product.TenSanPham}</h4>
+                                                        <p class="price-tea">${formatCurrency(product.Gia)}</p>
+                                                    </div>
+                                                    <div class="buy-btn-container" onclick="toLogin()">
+                                                        <a href="../Login/LoginUI.php">mua ngay</a>
+                                                    </div>
                                                 </div>
-                                                <div class="buy-btn-container">
-                                                    <a href="../Login/LoginUI.php">mua ngay</a>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </div>
+                                            </a>
+                                        </div>
+                                    </form>
                                 `;
+
                             });
-                            // Thay đổi nội dung HTML của phần tử sản phẩm
+                            // Trong hàm getAllSanPham, sau khi thay đổi nội dung HTML của sản phẩm, gọi lại hàm createPagination
                             productContainer.html(htmlContent);
+                            createPagination(page, response.totalPages);
 
-
-                            createPagination(page, response.totalPages)
 
                             // Đưa giao diện về đầu trang
                             window.scrollTo({
@@ -453,7 +459,43 @@
 
 
 
+        
         // Hàm để gọi API và lấy danh sách loại sản phẩm
+        
+        
+
+        // Hàm tạo nút phân trang
+        function createPagination(currentPage, totalPages) {
+            var paginationContainer = document.getElementById("pagination");
+
+            // Xóa nút phân trang cũ (nếu có)
+            paginationContainer.innerHTML = '';
+
+            // Chỉ tạo phân trang khi totalPages > 1
+            if (totalPages > 1) {
+                // Tạo nút cho từng trang và thêm vào chuỗi HTML
+                var paginationHTML = '';
+                for (var i = 1; i <= totalPages; i++) {
+                    paginationHTML += '<button class="pageButton">' + i + '</button>';
+                }
+
+                // Thiết lập nút phân trang vào paginationContainer
+                paginationContainer.innerHTML = paginationHTML;
+
+                // Thêm sự kiện click cho từng nút phân trang
+                paginationContainer.querySelectorAll('.pageButton').forEach(function(button, index) {
+                    button.addEventListener('click', function() {
+                        // Gọi hàm filterProducts khi người dùng click vào nút phân trang
+                        filterProducts(index + 1); // Thêm 1 vào index để chuyển đổi về trang 1-indexed
+                    });
+                });
+
+                // Đánh dấu trang hiện tại
+                paginationContainer.querySelector('.pageButton:nth-child(' + currentPage + ')').classList.add('active');
+            }
+        }
+
+
         function getCategories() {
             $.ajax({
                 url: "../../../BackEnd/ManagerBE/LoaiSanPhamBE.php",
@@ -482,44 +524,19 @@
             });
         }
 
-        // Hàm tạo nút phân trang
-        function createPagination(currentPage, totalPages) {
-            // var paginationContainer = document.querySelector('.pagination');
-            var paginationContainer = document.getElementById('pagination');
+        function detail(maSanPham){
+            const form = document.getElementById(`productForm_${maSanPham}`);
+            form.submit();
+        }
 
-            console.log(paginationContainer);
+        document.getElementById("Home-img").addEventListener("click", function () {
+            // Chuyển hướng về trang chủ khi click vào hình ảnh
+            window.location.href = "GuestHomePage.php";
+        });
 
-            // Xóa nút phân trang cũ (nếu có)
-            paginationContainer.innerHTML = '';
-
-            console.log(paginationContainer.innerHTML);
-
-            // Tạo nút cho từng trang và thêm vào chuỗi HTML
-            var paginationHTML = '';
-            for (var i = 1; i <= totalPages; i++) {
-                paginationHTML += '<button class="pageButton">' + i + '</button>';
-            }
-
-            // Thiết lập nút phân trang vào paginationContainer
-            paginationContainer.innerHTML = paginationHTML;
-
-            // Thêm sự kiện click cho từng nút phân trang
-            paginationContainer.querySelectorAll('.pageButton').forEach(function(button, index) {
-                button.addEventListener('click', function() {
-
-
-
-                    // Cập nhật giá trị của biến currentPage
-                    currentPage = index + 1;
-
-
-                    // Gọi hàm fetchDataAndUpdateTable khi người dùng click vào nút phân trang
-                    filterProducts(currentPage); // Thêm 1 vào index để chuyển đổi về trang 1-indexed
-                });
-            });
-
-            // Đánh dấu trang hiện tại
-            paginationContainer.querySelector('.pageButton:nth-child(' + currentPage + ')').classList.add('active'); // Sửa lại để chỉ chọn trang hiện tại
+        function toLogin(){
+            // Chuyển hướng về trang chủ khi click vào hình ảnh
+            window.location.href = "../Login/LoginUI.php";
         }
 
             
