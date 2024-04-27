@@ -137,7 +137,7 @@
                     var buttonData = (record.TrangThai === 0) ? "unlock" : "block";
 
                     var trContent = `
-                        <form id="updateForm" method="post" action="FormUpdateTaiKhoan.php?maTaiKhoan=${record.MaTaiKhoan}&quyen=${record.Quyen}&hoTen=${record.HoTen}&gioiTinh=${record.GioiTinh}&email=${record.Email}&ngaySinh=${record.NgaySinh}&diaChi=${record.DiaChi}&soDienThoai=${record.SoDienThoai}">
+                        <form id="updateForm" method="post" action="FormUpdateTaiKhoan.php">
                             <tr>
                                 <td class="${trClass}" style="width: 130px;">${record.MaTaiKhoan}</td>
                                 <td class="${trClass}">${record.TenDangNhap}</td>
@@ -293,6 +293,9 @@
         // Lấy ra form bằng id của nó
         var form =  document.querySelector("#updateForm");
         
+        form.action = `FormUpdateTaiKhoan.php?maTaiKhoan=${maTaiKhoan}&quyen=${quyen}&hoTen=${hoTen}&gioiTinh=${gioiTinh}&email=${email}&ngaySinh=${ngaySinh}&diaChi=${diaChi}&soDienThoai=${soDienThoai}`
+
+        console.log(form.action);
         // Gửi form đi
         form.submit();
 
