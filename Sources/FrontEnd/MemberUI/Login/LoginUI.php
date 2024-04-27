@@ -75,9 +75,6 @@
 
     
     <script>
-        const 
-
-
 
         //Script xử lý Registation
         const container = document.getElementById("container");
@@ -370,6 +367,7 @@
                             alert("Đăng nhập thành công!");
 
                             quyen = data.data.Quyen
+                            
                             // Lưu dữ liệu vào localStorage
                             localStorage.setItem('key', JSON.stringify(data.data) );
 
@@ -380,26 +378,26 @@
                                 window.location.href = `../../ManagerUI/QLLoaiSanPham/QLLoaiSanPham.php`;
 
                             }else{
-                                window.location.href = `../SignedHomePage/SignedHomePage.php`;
+                                window.location.href = `../SignedPage/SignedHomePage.php`;
 
                             }
 
                             object = localStoeage.getItem('key');
 
-                            console.log(object);
+                            // console.log(object);
 
-                            const bcrypt = require('bcryptjs');
+                            // const bcrypt = require('bcryptjs');
 
-                            const saltRounds = 10; // Số vòng lặp để tạo salt
+                            // const saltRounds = 10; // Số vòng lặp để tạo salt
 
-                            // Mã hóa mật khẩu
-                            bcrypt.hash("123456", saltRounds, function(err, hash) {
-                                if (err) {
-                                    console.error('Error:', err);
-                                } else {
-                                    console.log('Mật khẩu đã được mã hóa:', hash);
-                                }
-                            });
+                            // // Mã hóa mật khẩu
+                            // bcrypt.hash("123456", saltRounds, function(err, hash) {
+                            //     if (err) {
+                            //         console.error('Error:', err);
+                            //     } else {
+                            //         console.log('Mật khẩu đã được mã hóa:', hash);
+                            //     }
+                            // });
 
 
 

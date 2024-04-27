@@ -158,8 +158,9 @@
                 // Thiết lập lại nội dung của tbody bằng chuỗi tableContent
                 tableBody.innerHTML = tableContent;
 
-                // Tạo phân trang
-                createPagination(page, response.totalPages);
+                    // Tạo phân trang
+                    createPagination(page, response.totalPages);
+
             },
 
             error: function(xhr, status, error) {
@@ -168,6 +169,7 @@
         });
     }
 
+
     // Hàm để gọi getAllTaiKhoan và cập nhật dữ liệu và phân trang
     function fetchDataAndUpdateTable(page, search, quyen) {
         //Clear dữ liệu cũ
@@ -175,20 +177,13 @@
 
         // Gọi hàm getAllTaiKhoan và truyền các giá trị tương ứng
         getAllTaiKhoan(page, search, quyen);
+
+        
     }
 
     // Khởi tạo trang hiện tại
     var currentPage = 1;
     fetchDataAndUpdateTable(currentPage, '', '');
-
-    // Hàm để gọi getAllTaiKhoan và cập nhật dữ liệu và phân trang
-    function fetchDataAndUpdateTable(page, search, quyen) {
-        //Clear dữ liệu cũ
-        clearTable();
-
-        // Gọi hàm getAllTaiKhoan và truyền các giá trị tương ứng
-        getAllTaiKhoan(page, search, quyen);
-    }
 
     // Hàm tạo nút phân trang
     function createPagination(currentPage, totalPages) {
@@ -199,26 +194,29 @@
         // Xóa nút phân trang cũ (nếu có)
         paginationContainer.innerHTML = '';
 
-        // Tạo nút cho từng trang và thêm vào chuỗi HTML
-        var paginationHTML = '';
-        for (var i = 1; i <= totalPages; i++) {
-            paginationHTML += '<button class="pageButton">' + i + '</button>';
-        }
+        if (totalPages > 1) {
+            // Tạo nút cho từng trang và thêm vào chuỗi HTML
+            var paginationHTML = '';
+            for (var i = 1; i <= totalPages; i++) {
+                paginationHTML += '<button class="pageButton">' + i + '</button>';
+            }
 
-        // Thiết lập nút phân trang vào paginationContainer
-        paginationContainer.innerHTML = paginationHTML;
+            // Thiết lập nút phân trang vào paginationContainer
+            paginationContainer.innerHTML = paginationHTML;
 
-        // Thêm sự kiện click cho từng nút phân trang
-        paginationContainer.querySelectorAll('.pageButton').forEach(function(button, index) {
-            button.addEventListener('click', function() {
-                // Gọi hàm fetchDataAndUpdateTable khi người dùng click vào nút phân trang
-                fetchDataAndUpdateTable(index + 1, searchValue, quyenValue); // Thêm 1 vào index để chuyển đổi về trang 1-indexed
+            // Thêm sự kiện click cho từng nút phân trang
+            paginationContainer.querySelectorAll('.pageButton').forEach(function(button, index) {
+                button.addEventListener('click', function() {
+                    // Gọi hàm fetchDataAndUpdateTable khi người dùng click vào nút phân trang
+                    fetchDataAndUpdateTable(index + 1, searchValue, quyenValue); // Thêm 1 vào index để chuyển đổi về trang 1-indexed
+                });
             });
-        });
 
-        // Đánh dấu trang hiện tại
-        paginationContainer.querySelector('.pageButton:nth-child(' + currentPage + ')').classList.add('active'); // Sửa lại để chỉ chọn trang hiện tại
+            // Đánh dấu trang hiện tại
+            paginationContainer.querySelector('.pageButton:nth-child(' + currentPage + ')').classList.add('active'); // Sửa lại để chỉ chọn trang hiện tại
+        }
     }
+
 
     // Hàm xử lý sự kiện khi select Quyen thay đổi
     document.querySelector('#selectQuyen').addEventListener('change', function() {

@@ -1,12 +1,52 @@
 <?php 
     require_once __DIR__ . "/../../Configure/MysqlConfig.php";
 
+    if (isset($_GET['isDemoHome'])) {
+
+        $result = getAllSanPham(1, "", null, null, null, null, null, null, 1, null);
+    
+        echo json_encode($result);
+
+    } else if (isset($_GET['isProductPage'])) {
+        // Kiểm tra và gán giá trị cho $page từ $_GET
+        $page = isset($_GET['page']) ? $_GET['page'] : 1;
+    
+        // Kiểm tra và gán giá trị cho $search từ $_GET
+        $search = isset($_GET['search']) ? $_GET['search'] : "";
+    
+        // Kiểm tra và gán giá trị cho $minTheTich từ $_GET
+        $minTheTich = isset($_GET['minTheTich']) ? $_GET['minTheTich'] : null;
+    
+        // Kiểm tra và gán giá trị cho $maxTheTich từ $_GET
+        $maxTheTich = isset($_GET['maxTheTich']) ? $_GET['maxTheTich'] : null;
+    
+        // Kiểm tra và gán giá trị cho $minGia từ $_GET
+        $minGia = isset($_GET['minGia']) ? $_GET['minGia'] : null;
+    
+        // Kiểm tra và gán giá trị cho $maxGia từ $_GET
+        $maxGia = isset($_GET['maxGia']) ? $_GET['maxGia'] : null;
+    
+        // Kiểm tra và gán giá trị cho $minNongDoCon từ $_GET
+        $minNongDoCon = isset($_GET['minNongDoCon']) ? $_GET['minNongDoCon'] : null;
+    
+        // Kiểm tra và gán giá trị cho $maxNongDoCon từ $_GET
+        $maxNongDoCon = isset($_GET['maxNongDoCon']) ? $_GET['maxNongDoCon'] : null;
+    
+        // Kiểm tra và gán giá trị cho $maLoaiSanPham từ $_GET
+        $maLoaiSanPham = $_GET['maLoaiSanPham'] !== '0' ? $_GET['maLoaiSanPham'] : null;
+
+    
+        $result = getAllSanPham($page, $search, $minTheTich, $maxTheTich, $minGia, $maxGia, $minNongDoCon, $maxNongDoCon, 1, $maLoaiSanPham);
+    
+        echo json_encode($result);
+    }
+
     function getAllSanPham($page, $search, 
                             $minTheTich, $maxTheTich, 
                             $minGia, $maxGia, 
                             $minNongDo, $maxNongDo, 
                             $trangThai, $maLoaiSanPham){
-        
+
         // Chuẩn bị trước biến $connection
         $connection = null;
 
@@ -15,7 +55,7 @@
 
         // Mảng chứa điều kiện
         $where_conditions = [];
-        
+
         // Số phần tử mỗi trang
         $entityPerPage = 20;
 
@@ -51,7 +91,7 @@
         if (isset($maLoaiSanPham)) {
             $where_conditions[] = "`MaLoaiSanPham` = $maLoaiSanPham";
         }
-        
+
         // Kết nối các điều kiện lại với nhau (Nếu không có thì skip)
         if (!empty($where_conditions)) {
             $query .= " WHERE " . implode(" AND ", $where_conditions);
@@ -59,7 +99,7 @@
 
         // Khởi tạo kết nối
         $connection = MysqlConfig::getConnection();
-        
+
         // Tính toán tổng số trang
         if ($totalPages === null) {
 
@@ -97,12 +137,16 @@
         } catch (PDOException $e) {
             return (object) [
                 "status" => 400,
-                "message" => "Lỗi không thể lấy danh sách sản phẩm",
+                "message" => $e->getMessage(),
             ];
         } finally {
             $connection = null;
         }
     }
+
+
+    
+    
 
     function getSanPhamByMaSanPham($maSanPham) {
         // Khởi tạo kết nối
@@ -119,10 +163,11 @@
     
             if ($statement !== false) {
                 $statement->bindValue(':maSanPham', $maSanPham, PDO::PARAM_INT);
+
     
                 $statement->execute();
     
-                $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+                $result = $statement->fetch(PDO::FETCH_ASSOC);
     
                 return (object) [
                     "status" => 200,
@@ -317,5 +362,4 @@
             $connection = null;
         }
     }
-
 ?>

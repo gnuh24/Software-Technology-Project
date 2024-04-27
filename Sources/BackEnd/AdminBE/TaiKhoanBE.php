@@ -254,7 +254,7 @@
         $connection = null;
 
         //Chuẩn bị câu truy vấn gốc
-        $query = "SELECT * FROM `TaiKhoan` WHERE `MaTaiKhoan` = :maTaiKhoan";
+        $query = "SELECT * FROM `TaiKhoan` JOIN `NguoiDung` ON `TaiKhoan`.`MaTaiKhoan` = `NguoiDung`.`MaNguoiDung` WHERE `MaTaiKhoan` = :maTaiKhoan ";
     
         // Khởi tạo kết nối
         $connection = MysqlConfig::getConnection();
@@ -296,7 +296,7 @@
         $connection = null;
 
         //Chuẩn bị câu truy vấn gốc
-        $query = "SELECT * FROM `TaiKhoan` WHERE `TenDangNhap` = :tenDangNhap";
+        $query = "SELECT * FROM `TaiKhoan` JOIN `NguoiDung` ON `TaiKhoan`.`MaTaiKhoan` = `NguoiDung`.`MaNguoiDung` WHERE `TenDangNhap` = :tenDangNhap";
     
         // Khởi tạo kết nối
         $connection = MysqlConfig::getConnection();
