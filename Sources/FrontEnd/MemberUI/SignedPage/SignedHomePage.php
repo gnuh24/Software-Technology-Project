@@ -15,10 +15,9 @@
                 <form id="search" class="input__wrapper" method="post" action="SignedProduct.php">
                     <input id="searchSanPham" name="searchFromAnotherPage" type="text" class="search-input" placeholder="Tìm kiếm" required=""/>
                     <button id="filter-button"><i class="fa-solid fa-magnifying-glass"></i></button>
-                    <div class="header-option"><a href="Cart.php"><i class="fa-solid fa-cart-shopping"></i></a></div>
+                    <div class="header-option" onclick="toCart()"><i class="fa-solid fa-cart-shopping"></i></div>
                     <div class="header-option"><a href="Profile.php"><i class="fa-solid fa-user"></i></a></div>
-                    <div class="header-option"><a href="../Login/LoginUI.php"><i class="fa-solid fa-right-from-bracket"></i></a></div>
-        
+                    <div class="header-option" onclick="logout()"><a href="../Login/LoginUI.php"><i class="fa-solid fa-right-from-bracket"></i></a></div>
                 </form>
 
             </div>
@@ -233,6 +232,26 @@
                 window.location.href = 'SignedProduct.php';
         });
 
+        function toCart() {
+            const form = document.getElementById("search");
+            
+            if (form) {
+                // Lấy dữ liệu từ localStorage
+                const localStorageData = JSON.parse(localStorage.getItem("key"));
+                const maTaiKhoan = localStorageData.MaTaiKhoan;
+
+                // Thêm MaTaiKhoan vào action của form
+                form.action = "Cart.php?maTaiKhoan=" + maTaiKhoan;
+                // Gửi form đi
+                form.submit();
+            } else {
+                console.error("Form not found!");
+            }
+        }
+
+
+
+
         // Gọi hàm getAllLoaiSanPham khi trang được tải
         $(document).ready(function() {
             getAllSanPham();
@@ -315,6 +334,11 @@
             form.submit();
 
         });
+
+        function logout() {
+            localStorage.removeItem("key");
+        }
+
 
     </script>
 </html>
