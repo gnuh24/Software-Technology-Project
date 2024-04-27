@@ -1,4 +1,4 @@
-<?php
+<?php 
 require_once __DIR__ . "/../../Configure/MysqlConfig.php";
 
 if (isset($_GET['MaPhuongThuc'])) {

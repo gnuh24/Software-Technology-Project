@@ -394,3 +394,35 @@ VALUES              (1 ,        16,     1280000     ,10      ,       12800000),
                     (10 ,        3,     1100000     ,5      ,       5500000),
                     (10 ,        4,     650000      ,5      ,       3250000), 
                     (10 ,        5,     850000      ,5      ,       4250000);
+
+SELECT DATE(dh.NgayDat) AS ngayLapDon, tdh.TrangThai AS trangThai, COUNT(*) AS soLuongDon
+FROM TrangThaiDonHang tdh
+INNER JOIN DonHang dh ON tdh.MaDonHang = dh.MaDonHang
+WHERE DATE(dh.NgayDat) BETWEEN COALESCE(NULL, '2010-01-01') AND COALESCE(NULL, CURRENT_DATE())
+AND tdh.NgayCapNhat = (
+    SELECT MAX(tdh2.NgayCapNhat)
+    FROM TrangThaiDonHang tdh2
+    WHERE tdh2.MaDonHang = tdh.MaDonHang
+)
+GROUP BY DATE(dh.NgayDat), tdh.TrangThai
+ORDER BY DATE(dh.NgayDat);
+
+-- Truy vấn lấy đơn hàng (Kèm với trạng thái mới nhât)
+SELECT * FROM `DonHang` dh JOIN `TrangThaiDonHang` tt ON dh.`MaDonHang` = tt.`MaDonHang`
+WHERE  tt.`NgayCapNhat` = (
+			SELECT MAX(`NgayCapNhat`) FROM `TrangThaiDonHang` subtt 
+            WHERE dh.`MaDonHang` = subtt.`MaDonHang`
+        );
+        
+        SELECT DATE(pnk.ngayNhapKho) AS ngayNhap,
+                            ls.tenLoaiSanPham AS tenLoaiSanPham,
+                            SUM(ct.SoLuong) AS SoLuongNhap,
+                            SUM(ct.ThanhTien) AS TongChi
+                        FROM PhieuNhapKho pnk
+                        JOIN CTPNK ct ON pnk.MaPhieu = ct.MaPhieu
+                        JOIN SanPham sp ON ct.MaSP = sp.MaSP
+                        JOIN LoaiSanPham ls ON ls.maLoaiSanPham = sp.MaLoaiSanPham
+                        WHERE DATE(pnk.ngayNhapKho) BETWEEN COALESCE(NULL, '2010-01-01') AND COALESCE(NULL, CURRENT_DATE())
+                        AND ls.maLoaiSanPham IN (:maLoaiSanPhams)
+                        GROUP BY DATE(pnk.ngayNhapKho), ls.tenLoaiSanPham
+                        ORDER BY DATE(pnk.ngayNhapKho)

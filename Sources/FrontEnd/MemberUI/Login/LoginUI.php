@@ -75,6 +75,10 @@
 
     
     <script>
+        const 
+
+
+
         //Script xử lý Registation
         const container = document.getElementById("container");
         const registerBtn = document.getElementById("register");
@@ -330,8 +334,20 @@
         const matKhau = document.getElementById("passwordLogin");
         loginButton.addEventListener("click", (event) => {
             event.preventDefault();
+            if (tenDangNhap.value.trim() === ""){
+                alert("Bạn không được để trống tên đăng nhập !!");
+                tenDangNhap.focus();
+                return
+            }
+            if (matKhau.value.trim() === ""){
+                alert("Bạn không được để trống mật khẩu !!");
+                matKhau.focus();
+                return
+            }
             checkTaiKhoan(tenDangNhap.value.trim())
         });
+
+        
         
        // Hàm xử lý kiểm tra tài khoản
         function checkTaiKhoan(tenDangNhap) {

@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -6,7 +8,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="oneForAll.css" />
     <link rel="stylesheet" href="Admin.css" />
-    <!-- <link rel="stylesheet" href="../../Resources/bootstrap-5.3.2-dist/css/bootstrap.min.css"> -->
 
     <title>Quản lý tài khoản</title>
 </head>
@@ -63,46 +64,16 @@
                                                             <th class="Table_th__hCkcg">Thao tác</th>
                                                         </tr>
                                                     </thead>
+
                                                     <tbody id="tableBody">
-                                                        <?php
-                                                            require_once "../../BackEnd/AdminBE/TaiKhoanBE.php";
-                                                            require_once "../../BackEnd/AdminBE/NguoiDungBE.php";
-
-                                                            $result = getAllTaiKhoan(1, "", null, null);
-                                                            $totalPage = $result->totalPages;
-                                                            $Ketqua = $result->data;
-
-                                                            foreach ($Ketqua as $record) {
-                                                                $trangThai = $record['TrangThai'] == 0 ? "Khóa" : "Hoạt động";
-                                                                $ngayTao = date('H:i:s d/m/Y', strtotime($record['NgayTao']));
-                                                                $buttonText = $record['TrangThai'] == 0 ? "Mở khóa" : "Khóa";
-                                                                $buttonClass = $record['TrangThai'] == 0 ? "unlock" : "block";
-                                                                $buttonData = $record['TrangThai'] == 0 ? "unlock" : "block";
-                                                                echo '
-                                                                <tr>
-                                                                    <td class="Table_data_quyen_' . ((int)$record['MaTaiKhoan'] % 2 !== 0 ? '1' : '2') . '" style="width: 130px;">' . $record['MaTaiKhoan'] . '</td>
-                                                                    <td class="Table_data_quyen_' . ((int)$record['MaTaiKhoan'] % 2 !== 0 ? '1' : '2') . '">' . $record['TenDangNhap'] . '</td>
-                                                                    <td class="Table_data_quyen_' . ((int)$record['MaTaiKhoan'] % 2 !== 0 ? '1' : '2') . '">' . $record['Email'] . '</td>
-                                                                    <td class="Table_data_quyen_' . ((int)$record['MaTaiKhoan'] % 2 !== 0 ? '1' : '2') . '">' . $ngayTao . '</td>
-                                                                    <td class="Table_data_quyen_' . ((int)$record['MaTaiKhoan'] % 2 !== 0 ? '1' : '2') . '">' . $trangThai . '</td>
-                                                                    <td class="Table_data_quyen_' . ((int)$record['MaTaiKhoan'] % 2 !== 0 ? '1' : '2') . '">' . $record['Quyen'] . '</td>
-                                                                    <td class="Table_data_quyen_' . ((int)$record['MaTaiKhoan'] % 2 !== 0 ? '1' : '2') . '">
-                                                                        <button class="edit" onclick="update(' . $record['MaTaiKhoan'] . ', \'' . $record['Quyen'] . '\', \'' . $record['HoTen'] . '\', \'' . $record['GioiTinh'] . '\', \'' . $record['Email'] . '\', \'' . $record['NgaySinh'] . '\', \'' . $record['DiaChi'] . '\', \'' . $record['SoDienThoai'] . '\')">Sửa</button>
-                                                                        <button class="' . $buttonClass . '" data-action="' . $buttonData . '">' . $buttonText . '</button>
-                                                                    </td>
-                                                                </tr>';
-                                                            
-                                                            }
-                                                        ?>
+                                                    
                                                     </tbody>
+                                                    
                                                 </table>
-                                                <div class="pagination">
-                                                    <?php
-                                                        for ($i = 1; $i <= $totalPage; $i++) {
-                                                            echo '<button class="pageButton" onclick="fetchDataAndUpdateTable(' . $i . ')">' . $i . '</button>';
-                                                        }
-                                                    ?>
-                                                </div>
+                                        
+                                            <div class="pagination">
+                                               
+                                            </div>
 
 
                                         </div>
@@ -137,88 +108,6 @@
         tableBody.innerHTML = ''; // Xóa nội dung trong tbody
     }
 
-   // Hàm getAllTaiKhoan
-    function getAllTaiKhoan(page, search, quyen){
-        $.ajax({
-            url: '../../BackEnd/AdminBE/TaiKhoanBE.php',
-            type: 'GET',
-            dataType: "json", 
-            data: {
-                page: page,
-                search: search,
-                quyen: quyen
-            },
-            success: function(response) {
-                var data = response.data;
-                var tableBody = document.getElementById("tableBody"); // Lấy thẻ tbody của bảng
-                var tableContent = ""; // Chuỗi chứa nội dung mới của tbody
-
-                // Duyệt qua mảng dữ liệu và tạo các hàng mới cho tbody
-                data.forEach(function(record) {
-                    var trClass = (parseInt(record.MaTaiKhoan) % 2 !== 0) ? "Table_data_quyen_1" : "Table_data_quyen_2"; // Xác định class của hàng
-
-                    var ngayTao = new Date(record.NgayTao);
-                    var ngayTaoFormatted = ngayTao.toLocaleString();
-
-                    // Xác định trạng thái và văn bản của nút dựa trên trạng thái của tài khoản
-                    var buttonText = (record.TrangThai === 0) ? "Mở khóa" : "Khóa";
-                    var buttonClass = (record.TrangThai === 0) ? "unlock" : "block";
-                    var buttonData = (record.TrangThai === 0) ? "unlock" : "block";
-
-                    var trContent = `
-                        <tr>
-                            <td class="${trClass}" style="width: 130px;">${record.MaTaiKhoan}</td>
-                            <td class="${trClass}">${record.TenDangNhap}</td>
-                            <td class="${trClass}">${record.Email}</td>
-                            <td class="${trClass}">${ngayTaoFormatted}</td>
-                            <td class="${trClass}">${record.TrangThai === 0 ? "Khóa" : "Hoạt động"}</td>
-                            <td class="${trClass}">${record.Quyen}</td>
-                            <td class="${trClass}">
-                                <button class="edit" onclick="update(${record.MaTaiKhoan}, '${record.Quyen}', '${record.HoTen}', '${record.GioiTinh}', '${record.Email}', '${record.NgaySinh}', '${record.DiaChi}', '${record.SoDienThoai}')">Sửa</button>
-                                <button class="${buttonClass}" data-action="${buttonData}" onclick="handleLockUnlock(${record.MaTaiKhoan}, ${record.TrangThai}, '${record.Quyen}')">${buttonText}</button>
-                            </td>
-                        </tr>`;
-                        
-                    tableContent += trContent; // Thêm nội dung của hàng vào chuỗi tableContent
-                });
-
-                // Thiết lập lại nội dung của tbody bằng chuỗi tableContent
-                tableBody.innerHTML = tableContent;
-            },
-
-            error: function(xhr, status, error) {
-                console.error('Lỗi khi gọi API: ', error);
-            }
-        });
-    }
-
-
-
-  // Hàm để gọi getAllTaiKhoan và cập nhật dữ liệu và phân trang
-    function fetchDataAndUpdateTable(page, search, quyen) {
-        //Clear dữ liệu cũ
-        clearTable();
-
-        // Gọi hàm getAllTaiKhoan và truyền các giá trị tương ứng
-        getAllTaiKhoan(page, search, quyen);
-
-        // Tạo phân trang
-        createPagination(page);
-    }
-
-    // Khởi tạo trang hiện tại
-    var currentPage = 1;
-    fetchDataAndUpdateTable(currentPage, '', '');
-
-    // Hàm để gọi getAllTaiKhoan và cập nhật dữ liệu và phân trang
-    function fetchDataAndUpdateTable(page, search, quyen) {
-        //Clear dữ liệu cũ
-        clearTable();
-
-        // Gọi hàm getAllTaiKhoan và truyền các giá trị tương ứng
-        getAllTaiKhoan(page, search, quyen);
-    }
-
     // Hàm getAllTaiKhoan
     function getAllTaiKhoan(page, search, quyen) {
         $.ajax({
@@ -248,18 +137,20 @@
                     var buttonData = (record.TrangThai === 0) ? "unlock" : "block";
 
                     var trContent = `
-                        <tr>
-                            <td class="${trClass}" style="width: 130px;">${record.MaTaiKhoan}</td>
-                            <td class="${trClass}">${record.TenDangNhap}</td>
-                            <td class="${trClass}">${record.Email}</td>
-                            <td class="${trClass}">${ngayTaoFormatted}</td>
-                            <td class="${trClass}">${record.TrangThai === 0 ? "Khóa" : "Hoạt động"}</td>
-                            <td class="${trClass}">${record.Quyen}</td>
-                            <td class="${trClass}">
-                                <button class="edit">Sửa</button>
-                                <button class="${buttonClass}" data-action="${buttonData}" onclick="handleLockUnlock(${record.MaTaiKhoan}, ${record.TrangThai}, '${record.Quyen}')">${buttonText}</button>
-                            </td>
-                        </tr>`;
+                        <form id="updateForm" method="post" action="FormUpdateTaiKhoan.php?maTaiKhoan=${record.MaTaiKhoan}&quyen=${record.Quyen}&hoTen=${record.HoTen}&gioiTinh=${record.GioiTinh}&email=${record.Email}&ngaySinh=${record.NgaySinh}&diaChi=${record.DiaChi}&soDienThoai=${record.SoDienThoai}">
+                            <tr>
+                                <td class="${trClass}" style="width: 130px;">${record.MaTaiKhoan}</td>
+                                <td class="${trClass}">${record.TenDangNhap}</td>
+                                <td class="${trClass}">${record.Email}</td>
+                                <td class="${trClass}">${ngayTaoFormatted}</td>
+                                <td class="${trClass}">${record.TrangThai === 0 ? "Khóa" : "Hoạt động"}</td>
+                                <td class="${trClass}">${record.Quyen}</td>
+                                <td class="${trClass}">
+                                    <button class="edit" onclick="update(${record.MaTaiKhoan}, '${record.Quyen}', '${record.HoTen}', '${record.GioiTinh}', '${record.Email}', '${record.NgaySinh}', '${record.DiaChi}', '${record.SoDienThoai}')">Sửa</button>
+                                    <button class="${buttonClass}" data-action="${buttonData}" onclick="handleLockUnlock(${record.MaTaiKhoan}, ${record.TrangThai}, '${record.Quyen}')">${buttonText}</button>
+                                </td>
+                            </tr>
+                        </form>`
 
                     tableContent += trContent; // Thêm nội dung của hàng vào chuỗi tableContent
                 });
@@ -275,6 +166,28 @@
                 console.error('Lỗi khi gọi API: ', error);
             }
         });
+    }
+
+    // Hàm để gọi getAllTaiKhoan và cập nhật dữ liệu và phân trang
+    function fetchDataAndUpdateTable(page, search, quyen) {
+        //Clear dữ liệu cũ
+        clearTable();
+
+        // Gọi hàm getAllTaiKhoan và truyền các giá trị tương ứng
+        getAllTaiKhoan(page, search, quyen);
+    }
+
+    // Khởi tạo trang hiện tại
+    var currentPage = 1;
+    fetchDataAndUpdateTable(currentPage, '', '');
+
+    // Hàm để gọi getAllTaiKhoan và cập nhật dữ liệu và phân trang
+    function fetchDataAndUpdateTable(page, search, quyen) {
+        //Clear dữ liệu cũ
+        clearTable();
+
+        // Gọi hàm getAllTaiKhoan và truyền các giá trị tương ứng
+        getAllTaiKhoan(page, search, quyen);
     }
 
     // Hàm tạo nút phân trang
@@ -307,7 +220,41 @@
         paginationContainer.querySelector('.pageButton:nth-child(' + currentPage + ')').classList.add('active'); // Sửa lại để chỉ chọn trang hiện tại
     }
 
-   // Hàm xử lý sự kiện cho nút khóa / mở khóa
+    // Hàm xử lý sự kiện khi select Quyen thay đổi
+    document.querySelector('#selectQuyen').addEventListener('change', function() {
+        var searchValue = document.querySelector('.Admin_input__LtEE-').value;
+        var quyenValue = this.value;
+
+        // Truyền giá trị của biến currentPage vào hàm fetchDataAndUpdateTable
+        fetchDataAndUpdateTable(currentPage, searchValue, quyenValue);
+    });
+
+    // Hàm xử lý sự kiện khi nút tìm kiếm được click
+    document.getElementById('searchButton').addEventListener('click', function() {
+        var searchValue = document.querySelector('.Admin_input__LtEE-').value;
+        var quyenValue = document.querySelector('#selectQuyen').value;
+
+        // Truyền giá trị của biến currentPage vào hàm fetchDataAndUpdateTable
+        fetchDataAndUpdateTable(currentPage, searchValue, quyenValue, '');
+    });
+
+    // Bắt sự kiện khi người dùng ấn phím Enter trong ô tìm kiếm
+    document.querySelector('.Admin_input__LtEE-').addEventListener('keypress', function(event) {
+        // Kiểm tra xem phím được ấn có phải là Enter không (mã phím 13)
+        if (event.key === 'Enter') {
+            // Ngăn chặn hành động mặc định của phím Enter (ví dụ: gửi form)
+            event.preventDefault();
+
+            // Lấy giá trị của ô tìm kiếm và của select quyền
+            var searchValue = this.value;
+            var quyenValue = document.querySelector('#selectQuyen').value;
+
+            // Truyền giá trị của biến currentPage vào hàm fetchDataAndUpdateTable
+            fetchDataAndUpdateTable(currentPage, searchValue, quyenValue);
+        }
+    });
+
+    // Hàm xử lý sự kiện cho nút khóa / mở khóa
     function handleLockUnlock(maTaiKhoan, trangThai, quyen) {
         var newTrangThai = trangThai === 0 ? 1 : 0; // Đảo ngược trạng thái
 
@@ -344,49 +291,15 @@
     }
 
 
-    // Hàm xử lý sự kiện khi select Quyen thay đổi
-    document.querySelector('#selectQuyen').addEventListener('change', function() {
-        var searchValue = document.querySelector('.Admin_input__LtEE-').value;
-        var quyenValue = this.value;
-        
-        // Truyền giá trị của biến currentPage vào hàm fetchDataAndUpdateTable
-        fetchDataAndUpdateTable(currentPage, searchValue, quyenValue);
-    });
-
-    // Hàm xử lý sự kiện khi nút tìm kiếm được click
-    document.getElementById('searchButton').addEventListener('click', function() {
-        var searchValue = document.querySelector('.Admin_input__LtEE-').value;
-        var quyenValue = document.querySelector('#selectQuyen').value;
-
-        // Truyền giá trị của biến currentPage vào hàm fetchDataAndUpdateTable
-        fetchDataAndUpdateTable(currentPage, searchValue, quyenValue, '');
-    });
-
-    // Bắt sự kiện khi người dùng ấn phím Enter trong ô tìm kiếm
-    document.querySelector('.Admin_input__LtEE-').addEventListener('keypress', function(event) {
-        // Kiểm tra xem phím được ấn có phải là Enter không (mã phím 13)
-        if (event.key === 'Enter') {
-            // Ngăn chặn hành động mặc định của phím Enter (ví dụ: gửi form)
-            event.preventDefault();
-
-            // Lấy giá trị của ô tìm kiếm và của select quyền
-            var searchValue = this.value;
-            var quyenValue = document.querySelector('#selectQuyen').value;
-
-            // Truyền giá trị của biến currentPage vào hàm fetchDataAndUpdateTable
-            fetchDataAndUpdateTable(currentPage, searchValue, quyenValue);
-        }
-    });
-
-
-    // Hàm update với các tham số maTaiKhoan, quyen, hoTen, gioiTinh, email, ngaySinh, diaChi, soDienThoai
     function update(maTaiKhoan, quyen, hoTen, gioiTinh, email, ngaySinh, diaChi, soDienThoai) {
-        console.log(":3:3");
-        alert("Hello");
-        // Thực hiện các hành động cần thiết khi nút "Sửa" được nhấn
-        // Ví dụ: Chuyển hướng sang trang FormUpdateTaiKhoan.php và truyền các tham số
-        window.location.href = `FormUpdateTaiKhoan.php?maTaiKhoan=${maTaiKhoan}&quyen=${quyen}&hoTen=${hoTen}&gioiTinh=${gioiTinh}&email=${email}&ngaySinh=${ngaySinh}&diaChi=${diaChi}&soDienThoai=${soDienThoai}`;
+        // Lấy ra form bằng id của nó
+        var form =  document.querySelector("#updateForm");
+        
+        // Gửi form đi
+        form.submit();
+
     }
+
 
 
 

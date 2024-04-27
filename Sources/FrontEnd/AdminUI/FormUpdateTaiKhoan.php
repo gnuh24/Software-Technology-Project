@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="UserUpdate.css" />
     <link rel="stylesheet" href="oneForAll.css" />
 
-    <title>CRUD Tài khoản</title>
+    <title>Cập nhật tài khoản</title>
 </head>
 
 <body>
@@ -19,130 +19,109 @@
                     <div class="StaffHeader_wrapper__IQw-U">
                         <p class="StaffHeader_title__QxjW4">Dekanta</p>
                         <button class="StaffHeader_signOut__i2pcu">
-                            <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="arrow-right-from-bracket" class="svg-inline--fa fa-arrow-right-from-bracket" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 2rem; height: 2rem; color: white">
-                            </svg>
+                            <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="arrow-right-from-bracket" class="svg-inline--fa fa-arrow-right-from-bracket" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 2rem; height: 2rem; color: white"></svg>
                         </button>
                     </div>
                     <div>
                         <div>
                             <div class="Manager_wrapper__vOYy">
-                          
                                 <div style="padding-left: 3%; width: 100%; padding-right: 2rem">
                                     <div class="wrapper">
-                                        <div style="
-                          display: flex;
-                          padding-top: 1rem;
-                          align-items: center;
-                          gap: 1rem;
-                          padding-bottom: 1rem;
-                        "></div>
+                                        <div style="display: flex; padding-top: 1rem; align-items: center; gap: 1rem; padding-bottom: 1rem;"></div>
                                         <form id="submit-form" method="post">
                                             <input type="hidden" name="action" value="createUser">
                                             <div class="boxFeature">
                                                 <div>
-                                                    <h2 style="font-size: 2.3rem">Tạo tài khoản người dùng</h2>
-
+                                                    <h2 style="font-size: 2.3rem">Cập nhật tài khoản người dùng</h2>
                                                 </div>
                                                 <div>
-                                                    <a style="
-                                                    font-family: Arial;
-                                                    font-size: 1.5rem;
-                                                    font-weight: 700;
-                                                    border: 1px solid rgb(140, 140, 140);
-                                                    background-color: white;
-                                                    color: rgb(80, 80, 80);
-                                                    padding: 1rem 2rem 1rem 2rem;
-                                                    border-radius: 0.6rem;
-                                                    cursor: pointer;
-                                                    " href="QLTaiKhoan.php">
-                                                        Hủy
-                                                    </a>
-                                                    <button id="updateUser_save" style="
-                              margin-left: 1rem;
-                              font-family: Arial;
-                              font-size: 1.5rem;
-                              font-weight: 700;
-                              color: white;
-                              background-color: rgb(65, 64, 64);
-                              padding: 1rem 2rem 1rem 2rem;
-                              border-radius: 0.6rem;
-                              cursor: pointer;
-                            ">
-                                                        Lưu
-                                                    </button>
+                                                    <a style="font-family: Arial; font-size: 1.5rem; font-weight: 700; border: 1px solid rgb(140, 140, 140); background-color: white; color: rgb(80, 80, 80); padding: 1rem 2rem 1rem 2rem; border-radius: 0.6rem; cursor: pointer;" href="QLTaiKhoan.php">Hủy</a>
+                                                    <button id="updateUser_save" style="margin-left: 1rem; font-family: Arial; font-size: 1.5rem; font-weight: 700; color: white; background-color: rgb(65, 64, 64); padding: 1rem 2rem 1rem 2rem; border-radius: 0.6rem; cursor: pointer;">Lưu</button>
                                                 </div>
                                             </div>
                                             <div class="boxTable">
-
-                                                <div style="
-                            display: flex;
-                            padding: 0rem 1rem 0rem 1rem;
-                            justify-content: space-between;
-                          ">
+                                                <div style="display: flex; padding: 0rem 1rem 0rem 1rem; justify-content: space-between;">
                                                     <div>
-                                                   
-                                                        <?php 
-                    
+                                                    <?php
 
 
-                                                            echo `<div style="padding-left: 1rem">
-                                                            <p class="text">Họ Tên</p>
-                                                                <input id="hoTen" class="input" type="text" name="hoTen" style="width: 40rem" />
-                                                                <span style="
-                                                                margin-left: 1rem;
-                                                                font-weight: 700;
-                                                                color: rgb(150, 150, 150);
-                                                                ">*</span>
-    
+$maTaiKhoan = "";
+$quyen =  "";
+$hoTen =  "";
+$gioiTinh =  "";
+$email =  "";
+$ngaySinh =  "";
+$diaChi =  "";
+$soDienThoai =  "";
+
+if (isset($_GET['maTaiKhoan'])) {
+    // Lấy các tham số được gửi từ AJAX
+    $maTaiKhoan = $_GET['maTaiKhoan'];
+    $quyen = $_GET['quyen'];
+    $hoTen = $_GET['hoTen'];
+    $gioiTinh = $_GET['gioiTinh'];
+    $email = $_GET['email'];
+    $ngaySinh = $_GET['ngaySinh'];
+    $diaChi = $_GET['diaChi'];
+    $soDienThoai = $_GET['soDienThoai'];
+
+}
+                                                            echo '
+                                                            <div style="padding-left: 1rem">
+
                                                                 <div style="display: flex; gap: 2rem">
                                                                     <div>
-                                                                        <p class="text">Email</p>
-                                                                        <input id="email" type="text" class="input" name="email" />
-    
+                                                                        <p class="text">Mã tài khoản<span style="color: red; margin-left: 10px;">🔒</span></p>
+                                                                        <input style="user-select: none; pointer-events: none; caret-color: transparent;" id="maTaiKhoan" class="input" name="maTaiKhoan" readonly value="' . ($maTaiKhoan) . '" />
                                                                     </div>
+                                                                </div>
+
+                                                                <p class="text">Họ Tên</p>
+                                                                <input id="hoTen" class="input" type="text" name="hoTen" style="width: 40rem" value="' . ($hoTen) . '" />
+
+                                                                <div style="display: flex; gap: 2rem">
+                                                                    <div>
+                                                                        <p class="text">Email<span style="color: red; margin-left: 10px;">🔒</span></p>
+                                                                        <input style="user-select: none; pointer-events: none; caret-color: transparent;" id="email" class="input" name="email" readonly value="' . ($email) . '" />
+                                                                    </div>
+                                                                </div>
+
+                                                                <div style="display: flex; gap: 2rem">
                                                                     <div>
                                                                         <p class="text">Địa chỉ</p>
-                                                                        <input id="diaChi" class="input" name="diaChi" />
+                                                                        <input id="diaChi" class="input" name="diaChi" value="' . ($diaChi) . '" />
                                                                     </div>
                                                                 </div>
                                                                 <div style="display: flex; gap: 4rem">
-    
-                                                                    <div style="display: flex; gap: 2rem ; align-items: center; text-align: center;">
+                                                                    <div style="display: flex; gap: 2rem; align-items: center; text-align: center;">
                                                                         <p class="text">Giới Tính</p>
-                                                                        <input type="radio" id="gioiTinhMale" name="gender" value="Male">
+                                                                        <input type="radio" id="gioiTinhMale" name="gender" value="Male" ' . ($gioiTinh === "Male" ? "checked" : "") . '>
                                                                         <p for="html">Male</p>
-                                                                        <input type="radio" id="gioiTinhFemale" name="gender" value="Female" />
+                                                                        <input type="radio" id="gioiTinhFemale" name="gender" value="Female" ' . ($gioiTinh === "Female" ? "checked" : "") . ' />
                                                                         <label for="css">Female</label><br>
                                                                     </div>
-    
                                                                     <div>
                                                                         <p class="text">Ngày sinh</p>
-                                                                        <input id="ngaySinh" type="date" class="input" name="ngaySinh" />
+                                                                        <input id="ngaySinh" type="date" class="input" name="ngaySinh" value="' . ($ngaySinh ?? '') . '" />
                                                                     </div>
                                                                 </div>
                                                                 <div style="display: flex; gap: 2rem">
                                                                     <div>
                                                                         <p class="text">Số điện thoại</p>
-                                                                        <input id="sdt" class="input" style="width: 30rem" name="sdt" />
+                                                                        <input id="sdt" class="input" style="width: 30rem" name="sdt" value="' . ($soDienThoai) . '" />
                                                                     </div>
-                                                    
                                                                     <div>
                                                                         <p class="text">Quyền</p>
                                                                         <select name="quyen" id="quyen" class="input">
-                                                                            <option value="Admin">Admin</option>
-                                                                            <option value="Manager">Manager</option>
-                                                                            <option value="Member" selected>Member</option>
+                                                                            <option value="Admin" ' . ($quyen === "Admin" ? "selected" : "") . '>Admin</option>
+                                                                            <option value="Manager" ' . ($quyen === "Manager" ? "selected" : "") . '>Manager</option>
+                                                                            <option value="Member" ' . (($quyen ?? "Member") === "Member" ? "selected" : "") . '>Member</option>
                                                                         </select>
                                                                     </div>
-    
-    
                                                                 </div>
-                                    
-    
-                                                                
-                                                            </div>`
-                                                        
-                                                        ?>
+                                                            </div>';
+
+                                                            ?>
 
                                                     </div>
                                                 </div>
@@ -157,60 +136,26 @@
             </div>
         </div>
     </div>
-    </div>
 </body>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    document.getElementById("submit-form").addEventListener('submit', function check(event) {
+    document.getElementById("updateUser_save").addEventListener('click', function check(event) {
         event.preventDefault(); // Ngăn chặn hành động mặc định của form
 
-
-        let tenDangNhap = document.getElementById("tenDangNhap");
-        let matKhau = document.getElementById("matKhau");
-        let xacNhanMatKhau = document.getElementById("xacNhanMatKhau");
+        let maTaiKhoan = document.getElementById("maTaiKhoan");
         let hoTen = document.getElementById("hoTen");
         let sdt = document.getElementById("sdt");
         let diaChi = document.getElementById("diaChi");
         let gioiTinhMale = document.getElementById("gioiTinhMale");
         let gioiTinhFemale = document.getElementById("gioiTinhFemale");
         let vaiTro = document.getElementById("vaiTro");
-        let email = document.getElementById("email");
         let ngaySinh = document.getElementById("ngaySinh");
 
-        if (!tenDangNhap.value.trim()) {
-            alert("Tên đăng nhập không được để trống");
-            tenDangNhap.focus();
-            event.preventDefault();
-            return;
-        }
-        if (!matKhau.value.trim()) {
-            alert("Mật khẩu không được để trống");
-            matKhau.focus();
-            event.preventDefault();
-            return;
-        }
 
-        if (!xacNhanMatKhau.value.trim()) {
-            alert("Mật khẩu xác nhận không được để trống");
-            xacNhanMatKhau.focus();
-            event.preventDefault();
-            return;
-        }
-        if (matKhau.value !== xacNhanMatKhau.value) {
-            alert("Mật khẩu xác nhận và mật khẩu phải giống nhau");
-            xacNhanMatKhau.focus();
-            event.preventDefault();
-            return;
-        }
         if (!hoTen.value.trim()) {
             alert("Họ Tên không được để trống");
             hoTen.focus();
-            event.preventDefault();
-            return;
-        }
-        if (!email.value.trim()) {
-            alert("Email không được để trống");
-            email.focus();
             event.preventDefault();
             return;
         }
@@ -239,35 +184,8 @@
             return;
         }
 
-        // Kiểm tra định dạng Email
-        if (!isValidEmail(email.value.trim())) {
-            alert("Email không hợp lệ");
-            email.focus();
-            event.preventDefault();
-            return;
-        }
-      
-
-        //Kiểm tra tên đăng nhập
-        if (checkTenDangNhap(tenDangNhap.value.trim())) {
-            alert("Tên đăng nhập đã tồn tại");
-            tenDangNhap.focus();
-            event.preventDefault();
-            return;
-        }
-
-        //Kiểm tra xem email đã tồn tại hay chưa
-        if (checkEmailTonTai(email.value.trim())) {
-            alert("Email đã tồn tại");
-            email.focus();
-            event.preventDefault();
-            return;
-        }
-
         //Sau khi qua được tất cả ta bắt đầu tạo TaiKhoan
-        let isCreateTaiKhoanComplete = createTaiKhoan(tenDangNhap.value,
-                        matKhau.value,
-                        quyen.value);
+        let isUpdateTaiKhoanComplete = updateTaiKhoan(maTaiKhoan.value, quyen.value);
 
         var gioiTinhValue = "Female";
 
@@ -278,102 +196,54 @@
         
 
         //Tạo thông tin người dùng đi kèm
-        let isCreateNguoiDungComplete = createNguoiDung(hoTen.value,
+        let isUpdateNguoiDungComplete = updateNguoiDung(
+                        maTaiKhoan.value,
+                        hoTen.value,
                         ngaySinh.value, 
                         gioiTinhValue, 
                         sdt.value, 
                         email.value, 
                         diaChi.value)
 
-        
         //Sau khi tạo xong chuyển về trang QLTaiKHoan
-        alert("Tạo tài khoản mới thành công !!");
+        alert("Cập nhật tài khoản thành công !!");
         window.location.href = 'QLTaiKhoan.php';
+       
+        
+        
 
         
     });
 
-    function isValidEmail(email) {
-    // Thực hiện kiểm tra định dạng Email và trả về true hoặc false
-    // Bạn có thể sử dụng biểu thức chính quy hoặc các phương thức khác để kiểm tra định dạng Email
-        return /[^\s@]+@[^\s@]+\.[^\s@]+/.test(email);
-    }
-
-    function checkTenDangNhap(value) {
-        let exists = false;
-        $.ajax({
-            url: '../../BackEnd/AdminBE/TaiKhoanBE.php',
-            type: 'GET',
-            dataType: "json",
-            async: false, // Đảm bảo AJAX request được thực hiện đồng bộ
-            data: {
-                tenDangNhap: value
-            },
-            success: function(data) {
-                if (data.status === 200) {
-                    exists = data.isExists == 1;
-                } else {
-                    console.error('Error:', data.message);
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error('Error: ' + xhr.status + ' - ' + error);
-            }
-        });
-        return exists;
-    }
-
-
-    function checkEmailTonTai(value) {
-        let exists = false;
-        $.ajax({
-            url: '../../BackEnd/AdminBE/NguoiDungBE.php',
-            type: 'GET',
-            dataType: "json",
-            async: false, // Đảm bảo AJAX request được thực hiện đồng bộ
-            data: {
-                email: value
-            },
-            success: function(data) {
-
-                if (data.status === 200) {
-                    exists = data.isExists == 1;
-                } else {
-                    console.error('Error:', data.message);
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error('Error: ' + xhr.status + ' - ' + error);
-            }
-        });
-        return exists;
-    }
-
-    function createTaiKhoan(tenDangNhap, matKhau, quyen) {
+    function updateTaiKhoan(maTaiKhoan, quyen) {
+        let flag=false;
         $.ajax({
             url: '../../BackEnd/AdminBE/TaiKhoanBE.php',
             type: 'POST',
             dataType: "json",
             data: {
-                tenDangNhap: tenDangNhap,
-                matKhau: matKhau,
+                maTaiKhoan: maTaiKhoan,
                 quyen: quyen
             },
             success: function(data) {
-                return data.status === 200;
+                if (data.status == 200){
+                    flag = true;
+                }
             },
             error: function(xhr, status, error) {
                 console.error('Error: ' + xhr.status + ' - ' + error);
             }
         });
+        return flag;
     }
 
-    function createNguoiDung(hoTen, ngaySinh, gioiTinh, soDienThoai, email, diaChi) {
+    function updateNguoiDung(maNguoiDung, hoTen, ngaySinh, gioiTinh, soDienThoai, email, diaChi) {
         $.ajax({
             url: '../../BackEnd/AdminBE/NguoiDungBE.php',
             type: 'POST',
             dataType: "json",
             data: {
+                maNguoiDung: maNguoiDung,
                 hoTen: hoTen,
                 ngaySinh: ngaySinh,
                 gioiTinh: gioiTinh,

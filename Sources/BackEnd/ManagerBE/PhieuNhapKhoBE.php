@@ -1,6 +1,6 @@
 <?php
-require "../../Configure/MysqlConfig.php";
-function getAllphieunhapkho($page, $datenhapkho1 = null, $datenhapkho2 = null, $giatritren = null, $giatriduoi = null, $maNCC = null)
+    require_once __DIR__ . "/../../Configure/MysqlConfig.php";
+    function getAllphieunhapkho($page, $datenhapkho1 = null, $datenhapkho2 = null, $giatritren = null, $giatriduoi = null, $maNCC = null)
 {
     //Chuẩn bị trước biến $connection
     $connection = null;
