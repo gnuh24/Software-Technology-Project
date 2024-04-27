@@ -26,8 +26,8 @@
           <div>
             <div>
               <div class="Manager_wrapper__vOYy">
-                <div class="Sidebar_sideBar__CC4MK">
-                    <a class="MenuItemSidebar_menuItem__56b1m" href="QLLoaiSanPham.php">
+              <div class="Sidebar_sideBar__CC4MK">
+                    <a class="MenuItemSidebar_menuItem__56b1m" href="../QLLoaiSanPham/QLLoaiSanPham.php">
                         <span class="MenuItemSidebar_title__LLBtx">Loại Sản Phẩm</span>
                     </a>
                     <a class="MenuItemSidebar_menuItem__56b1m" href="../QLSanPham/QLSanPham.php">

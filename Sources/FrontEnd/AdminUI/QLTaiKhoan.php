@@ -295,7 +295,6 @@
         
         form.action = `FormUpdateTaiKhoan.php?maTaiKhoan=${maTaiKhoan}&quyen=${quyen}&hoTen=${hoTen}&gioiTinh=${gioiTinh}&email=${email}&ngaySinh=${ngaySinh}&diaChi=${diaChi}&soDienThoai=${soDienThoai}`
 
-        console.log(form.action);
         // Gửi form đi
         form.submit();
 
