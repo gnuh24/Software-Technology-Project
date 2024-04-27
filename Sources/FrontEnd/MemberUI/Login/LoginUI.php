@@ -367,6 +367,7 @@
                             alert("Đăng nhập thành công!");
 
                             quyen = data.data.Quyen
+                            
                             // Lưu dữ liệu vào localStorage
                             localStorage.setItem('key', JSON.stringify(data.data) );
 
@@ -377,7 +378,7 @@
                                 window.location.href = `../../ManagerUI/QLLoaiSanPham/QLLoaiSanPham.php`;
 
                             }else{
-                                window.location.href = `../SignedHomePage/SignedHomePage.php`;
+                                window.location.href = `../SignedPage/SignedHomePage.php`;
 
                             }
 

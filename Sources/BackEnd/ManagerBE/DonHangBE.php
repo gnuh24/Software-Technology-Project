@@ -1,45 +1,89 @@
-<?php 
+<?php
 require_once __DIR__ . "/../../Configure/MysqlConfig.php";
 
+if (isset($_GET['page'])) {
+    $page = $_GET['page'];
+    $minNgayTao = isset($_GET['minNgayTao']) ? $_GET['minNgayTao'] : "";
+    $maxNgayTao = isset($_GET['maxNgayTao']) ? $_GET['maxNgayTao'] : "";
+    $trangThai = isset($_GET['trangThai']) ? $_GET['trangThai'] : "";
 
-function getAllDonHang($page, $minNgayTao, $maxNgayTao, $trangThai) {
+    // Gọi hàm PHP bạn muốn thực thi và trả về kết quả dưới dạng JSON
+    $result = getAllDonHang($page, $minNgayTao, $maxNgayTao, $trangThai);
+
+    echo json_encode($result);
+}
+
+function getAllDonHang($page, $minNgayTao, $maxNgayTao, $trangThai)
+{
     $connection = null;
-    $query = "SELECT * FROM `DonHang` dh 
+    $query = "SELECT dh.MaDonHang,
+                    dh.NgayDat,
+                    dh.TongGiaTri,
+                    dh.MaKH,
+                    dh.DiaChiGiaoHang,
+                    pt.MaPhuongThuc,
+                    dv.MaDichVu,
+                    pt.TenPhuongThuc,
+                    tt.TrangThai,
+                    tt.NgayCapNhat,
+                    dv.TenDichVu,
+                    kh.HoTen,
+                    kh.SoDienThoai,
+                    kh.Email 
+                FROM `DonHang` dh
+                JOIN `PhuongThucThanhToan` pt ON dh.`MaPhuongThuc` = pt.`MaPhuongThuc`
                 JOIN `TrangThaiDonHang` tt ON dh.`MaDonHang` = tt.`MaDonHang`
-                WHERE tt.`NgayCapNhat` = (
-                    SELECT MAX(`NgayCapNhat`) 
-                    FROM `TrangThaiDonHang` subtt 
-                    WHERE dh.`MaDonHang` = subtt.`MaDonHang`
-                )";
+                JOIN `nguoidung` kh ON dh.`MaKH` = kh.`MaNguoiDung`
+                JOIN `dichvuvanchuyen` dv ON dh.`MaDichVu` = dv.`MaDichVu`
+                WHERE tt.NgayCapNhat = (SELECT MAX(NgayCapNhat) 
+                                        FROM TrangThaiDonHang 
+                                        WHERE MaDonHang = dh.MaDonHang)
+                ";
+
+    $query_total_row = "SELECT COUNT(*)
+                        FROM `DonHang` dh
+                        JOIN `PhuongThucThanhToan` pt ON dh.`MaPhuongThuc` = pt.`MaPhuongThuc`
+                        JOIN `TrangThaiDonHang` tt ON dh.`MaDonHang` = tt.`MaDonHang`
+                        JOIN `nguoidung` kh ON dh.`MaKH` = kh.`MaNguoiDung`
+                        JOIN `dichvuvanchuyen` dv ON dh.`MaDichVu` = dv.`MaDichVu`
+                        WHERE tt.NgayCapNhat = (SELECT MAX(NgayCapNhat) 
+                                                FROM TrangThaiDonHang 
+                                                WHERE MaDonHang = dh.MaDonHang)";
 
     $where_conditions = [];
-    
-    $entityPerPage = 20;
+
+    $entityPerPage = 7;
     $totalPages = null;
 
-    if (!empty($minNgayTao) && !empty($maxNgayTao)) {
-        $where_conditions[] = "NgayDat BETWEEN '$minNgayTao' AND '$maxNgayTao'";
+    if ($minNgayTao!=="null") {
+        $where_conditions[] = "dh.NgayDat >= '$minNgayTao 00:00:00'";
+    }
+    if($maxNgayTao!=="null"){
+        $where_conditions[] = "dh.NgayDat <= '$maxNgayTao 23:59:59'" ;
     }
 
-    if (isset($trangThai)) {
+    if ($trangThai!=="null") {
         $where_conditions[] = "tt.TrangThai = '$trangThai'";
     }
-    
+
     if (!empty($where_conditions)) {
         $query .= " AND " . implode(" AND ", $where_conditions);
+        $query_total_row .= " AND " . implode(" AND ", $where_conditions);
     }
 
+    $query .= "ORDER BY dh.MaDonHang DESC";
+    $query_total_row .= "ORDER BY dh.MaDonHang DESC";
+
     $connection = MysqlConfig::getConnection();
-    
+
     if ($totalPages === null) {
-        $query_total_row = "SELECT COUNT(*) FROM DonHang";
         $statement_total_row = $connection->prepare($query_total_row);
         $statement_total_row->execute();
 
         $totalPages = ceil($statement_total_row->fetchColumn() / $entityPerPage);
     }
 
-    $current_page = isset($page) ? $page : 1;
+    $current_page = $page;
     $start_from = ($current_page - 1) * $entityPerPage;
 
     $query .= " LIMIT $entityPerPage OFFSET $start_from";
@@ -70,7 +114,8 @@ function getAllDonHang($page, $minNgayTao, $maxNgayTao, $trangThai) {
     }
 }
 
-function getAllDonHangByMaKH($maKH) {
+function getAllDonHangByMaKH($maKH)
+{
     $connection = null;
     $query = "SELECT * FROM `DonHang` dh 
                 JOIN `TrangThaiDonHang` tt ON dh.`MaDonHang` = tt.`MaDonHang`
@@ -108,7 +153,8 @@ function getAllDonHangByMaKH($maKH) {
     }
 }
 
-function getDonHangByMaDonHang($maDonHang) {
+function getDonHangByMaDonHang($maDonHang)
+{
     $connection = null;
     $query = "SELECT * FROM `DonHang` dh 
                 JOIN `TrangThaiDonHang` tt ON dh.`MaDonHang` = tt.`MaDonHang`
@@ -142,9 +188,10 @@ function getDonHangByMaDonHang($maDonHang) {
     }
 }
 
-function createDonHang($tongGiaTri, $maKH, $diaChiGiaoHang, $maPhuongThuc, $maDichVu) {
+function createDonHang($tongGiaTri, $maKH, $diaChiGiaoHang, $maPhuongThuc, $maDichVu)
+{
     $connection = null;
-    
+
     $query_insert_donhang = "INSERT INTO `DonHang` (`TongGiaTri`, `MaKH`, `DiaChiGiaoHang`, `MaPhuongThuc`, `MaDichVu`) 
                                 VALUES (:tongGiaTri, :maKH, :diaChiGiaoHang, :maPhuongThuc, :maDichVu)";
 
@@ -195,5 +242,3 @@ function createDonHang($tongGiaTri, $maKH, $diaChiGiaoHang, $maPhuongThuc, $maDi
         $connection = null;
     }
 }
-
-?>
