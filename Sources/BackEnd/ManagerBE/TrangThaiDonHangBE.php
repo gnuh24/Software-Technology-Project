@@ -1,5 +1,23 @@
 <?php
 require_once __DIR__ . "/../../Configure/MysqlConfig.php";
+// TrangThai NgayCapNhat MaDonHang
+if (isset($_GET['MaDonHang'])) {
+    $MaDonHang = $_GET['MaDonHang'];
+
+    // Gọi hàm PHP bạn muốn thực thi và trả về kết quả dưới dạng JSON
+    $result = getTrangThaiDonHangByMaDonHang($MaDonHang);
+
+    echo json_encode($result);
+}
+
+if (isset($_POST['MaDonHang'])){
+    $MaDonHang = $_POST['MaDonHang'];
+    $TrangThai = $_POST['TrangThai'];
+
+    $result = createTrangThaiDonHang($MaDonHang, $TrangThai);
+
+    echo json_encode($result);
+}
 
 function getTrangThaiDonHangByMaDonHang($maDonHang) {
     $connection = null;
@@ -16,7 +34,7 @@ function getTrangThaiDonHangByMaDonHang($maDonHang) {
 
             $statement->execute();
 
-            $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+            $result = $statement->fetchALL(PDO::FETCH_ASSOC);
 
             return (object) [
                 "status" => 200,
@@ -39,8 +57,8 @@ function getTrangThaiDonHangByMaDonHang($maDonHang) {
 function createTrangThaiDonHang($maDonHang, $trangThai) {
     $connection = null;
 
-    $query = "INSERT INTO `TrangThaiDonHang` (`TrangThai`, `MaDonHang`) 
-                VALUES (:trangThai, :maDonHang)";
+    $query = "INSERT INTO trangthaidonhang (MaDonHang, TrangThai) 
+                VALUES (:maDonHang, :trangThai)";
 
     $connection = MysqlConfig::getConnection();
 
