@@ -10,25 +10,8 @@
     </head>
 
     <body>
-        <header class="Home-container-header">
-            <div id="Home-over-Header">
-                <img id="Home-img" src="../GuestPage/img/logoWine.jpg" alt="" />
-                <form id="search" class="input__wrapper" method="post" action="SignedProduct.php">
-                    <?php
-                        if (isset($_GET['searchFromAnotherPage'])) {
-                            echo '<input value="' . $_GET['searchFromAnotherPage'] . '" id="searchSanPham" type="text" class="search-input" placeholder="Tìm kiếm" required/>';
-                        } else {
-                            echo '<input id="searchSanPham" type="text" class="search-input" placeholder="Tìm kiếm" required/>';
-                        }
-                    ?>                    
-                    <button id="filter-button"><i class="fa-solid fa-magnifying-glass"></i></button>
-                    <div class="header-option" onclick="toCart()"><i class="fa-solid fa-cart-shopping"></i></div>
-                    <div class="header-option"><a href="Profile.php"><i class="fa-solid fa-user"></i></a></div>
-                    <div class="header-option" onclick="logout()"><a href="../Login/LoginUI.php"><i class="fa-solid fa-right-from-bracket"></i></a></div>
-                </form>
-            </div>
+    <?php require_once "../Header/SignedHeaderProduct.php" ?>
 
-        </header>
 
         
       <!-- Thanh lọc menu -->
@@ -78,56 +61,8 @@
         </div>
 
         <!-- Footer -->
-        <section id="footer">
-            <div class="contact-info">
-                <div class="first-info">
-                <div style="font-size: 20px;">Thông tin liên hệ</div>
-                <div class="map">
-                    <i class="fa-solid fa-location-dot"></i>
-                    <span>An Dương Vương, Phường 3, Quận 5</span>
-                </div>
-                <div class="phone">
-                    <i class="fa-solid fa-phone-volume"></i>
-                    <span>0325459901</span>
-                </div>
-                <div class="mail">
-                    <i class="fa-solid fa-envelope"></i>
-                    <span>doanhdaigr5.2004@gmail.com</span>
-                </div>
-                </div>
-                <div class="second-info">
-                    <h4>CHÍNH SÁCH</h4>
-                    <ul>
-                        <li><a href="#">Chính sách bảo mật</a></li>
-                        <li><a href="#">Chính sách giao hàng</a></li>
-                        <li><a href="#">Chính sách thẻ thành viên</a></li>
-                        <li><a href="#">Điều khoản sử dụng</a></li>
-                    </ul>
-                </div>
+        <?php require_once "../Footer/Footer.php" ?>
 
-                <div class="third-info">
-                    <h4>ABOUT US</h4>
-                    <ul>
-                        <li><a href="#">Giới thiệu</a></li>
-                        <li><a href="#">Tuyển dụng</a></li>
-                        <li><a href="#">Nhượng quyền</a></li>
-                        <li><a href="#">Tin tức</a></li>
-                    </ul>
-                </div>
-
-                <div class="fourth">
-                    <h4>FOLOW US</h4>
-                    <a href="https://www.facebook.com/doanhdai.2004"><i id="fb" class="fa-brands fa-facebook" id="fb"></i></a>
-                    <a href="https://www.instagram.com"><i id="ig" class="fa-brands fa-instagram"></i></a>
-                    <a href="https://github.com/ltgiai/DO_AN_WEBSITE/tree/main"><i id="git" class="fa-brands fa-github"></i></a>
-                    <a href="https://twitter.com/?lang=vi"><i id="tw" class="fa-brands fa-square-twitter"></i></a>
-                    <a href="http://online.gov.vn/Home/WebDetails/36260"><img src="#" alt="" /></a>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>Copyrights © 2019 by comebuy_vn. All rights reserved.</p>
-            </div>
-        </section>
     </body>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -194,98 +129,6 @@
             // Gọi lại hàm lọc sản phẩm khi giá trị thay đổi
             filterProducts(currentPage);
         });
-
-        // Lắng nghe sự kiện click vào nút search
-        document.getElementById("filter-button").addEventListener("click", function (event) {
-                currentPage = 1;
-                event.preventDefault();
-
-                  // Lấy giá trị từ thanh tìm kiếm
-                var searchText = document.getElementById("searchSanPham").value;
-                
-               // Lấy giá trị từ thanh lọc nồng độ cồn
-                var alcoholFilter = document.getElementById("alcohol-filter").value;
-                var minAlcoholLevel, maxAlcoholLevel;
-
-                // Thiết lập giá trị min và max dựa trên giá trị của thanh lọc nồng độ cồn
-                switch (alcoholFilter) {
-                    case "low":
-                        minAlcoholLevel = 0;
-                        maxAlcoholLevel = 40;
-                        break;
-                    case "medium":
-                        minAlcoholLevel = 40;
-                        maxAlcoholLevel = 60;
-                        break;
-                    case "high":
-                        minAlcoholLevel = 60;
-                        maxAlcoholLevel = 100;
-                        break;
-                    default:
-                        minAlcoholLevel = 0;
-                        maxAlcoholLevel = 100;
-                        break;
-                }
-
-                // Lấy giá trị từ thanh lọc giá
-                var priceFilter = document.getElementById("price-filter").value;
-                var minPrice, maxPrice;
-
-                // Thiết lập giá trị min và max dựa trên giá trị của thanh lọc giá
-                switch (priceFilter) {
-                    case "low":
-                        minPrice = 0;
-                        maxPrice = 1000000;
-                        break;
-                    case "medium":
-                        minPrice = 1000000;
-                        maxPrice = 3000000;
-                        break;
-                    case "high":
-                        minPrice = 3000000;
-                        maxPrice = 1000000000; // Trên 3 triệu, không giới hạn
-                        break;
-                    default:
-                        minPrice = 0;
-                        maxPrice = 1000000000; // Không giới hạn
-                        break;
-                }
-
-
-                // Lấy giá trị từ thanh lọc thể tích
-                var volumeFilter = document.getElementById("volume-filter").value;
-                var minVolume, maxVolume;
-
-                // Thiết lập giá trị min và max dựa trên giá trị của thanh lọc thể tích
-                switch (volumeFilter) {
-                    case "low":
-                        minVolume = 0;
-                        maxVolume = 500;
-                        break;
-                    case "medium":
-                        minVolume = 500;
-                        maxVolume = 1000;
-                        break;
-                    case "high":
-                        minVolume = 1000;
-                        maxVolume = 100000; // Không giới hạn
-                        break;
-                    default:
-                        minVolume = 0;
-                        maxVolume = 100000; // Không giới hạn
-                        break;
-                }
-
-                // Lấy giá trị từ thanh lọc loại sản phẩm
-                var categoryFilter = document.getElementById("category-filter").value;
-                if (categoryFilter == ""){
-                    categoryFilter = 0;
-                }
-
-                getAllSanPham(currentPage, searchText, minVolume, maxVolume, minPrice,  maxPrice, minAlcoholLevel, maxAlcoholLevel, categoryFilter);
-        });
-
-
        
 
         // Hàm lọc sản phẩm
@@ -375,6 +218,95 @@
             getAllSanPham(page, searchText, minVolume, maxVolume, minPrice, maxPrice, minAlcoholLevel, maxAlcoholLevel, categoryFilter);
         }
 
+        // Lắng nghe sự kiện click vào nút search
+    document.getElementById("filter-button").addEventListener("click", function (event) {
+            currentPage = 1;
+            event.preventDefault();
+
+                // Lấy giá trị từ thanh tìm kiếm
+            var searchText = document.getElementById("searchSanPham").value;
+            
+            // Lấy giá trị từ thanh lọc nồng độ cồn
+            var alcoholFilter = document.getElementById("alcohol-filter").value;
+            var minAlcoholLevel, maxAlcoholLevel;
+
+            // Thiết lập giá trị min và max dựa trên giá trị của thanh lọc nồng độ cồn
+            switch (alcoholFilter) {
+                case "low":
+                    minAlcoholLevel = 0;
+                    maxAlcoholLevel = 40;
+                    break;
+                case "medium":
+                    minAlcoholLevel = 40;
+                    maxAlcoholLevel = 60;
+                    break;
+                case "high":
+                    minAlcoholLevel = 60;
+                    maxAlcoholLevel = 100;
+                    break;
+                default:
+                    minAlcoholLevel = 0;
+                    maxAlcoholLevel = 100;
+                    break;
+            }
+
+            // Lấy giá trị từ thanh lọc giá
+            var priceFilter = document.getElementById("price-filter").value;
+            var minPrice, maxPrice;
+
+            // Thiết lập giá trị min và max dựa trên giá trị của thanh lọc giá
+            switch (priceFilter) {
+                case "low":
+                    minPrice = 0;
+                    maxPrice = 1000000;
+                    break;
+                case "medium":
+                    minPrice = 1000000;
+                    maxPrice = 3000000;
+                    break;
+                case "high":
+                    minPrice = 3000000;
+                    maxPrice = 1000000000; // Trên 3 triệu, không giới hạn
+                    break;
+                default:
+                    minPrice = 0;
+                    maxPrice = 1000000000; // Không giới hạn
+                    break;
+            }
+
+
+            // Lấy giá trị từ thanh lọc thể tích
+            var volumeFilter = document.getElementById("volume-filter").value;
+            var minVolume, maxVolume;
+
+            // Thiết lập giá trị min và max dựa trên giá trị của thanh lọc thể tích
+            switch (volumeFilter) {
+                case "low":
+                    minVolume = 0;
+                    maxVolume = 500;
+                    break;
+                case "medium":
+                    minVolume = 500;
+                    maxVolume = 1000;
+                    break;
+                case "high":
+                    minVolume = 1000;
+                    maxVolume = 100000; // Không giới hạn
+                    break;
+                default:
+                    minVolume = 0;
+                    maxVolume = 100000; // Không giới hạn
+                    break;
+            }
+
+            // Lấy giá trị từ thanh lọc loại sản phẩm
+            var categoryFilter = document.getElementById("category-filter").value;
+            if (categoryFilter == ""){
+                categoryFilter = 0;
+            }
+
+            getAllSanPham(currentPage, searchText, minVolume, maxVolume, minPrice,  maxPrice, minAlcoholLevel, maxAlcoholLevel, categoryFilter);
+    });
 
         // Gọi hàm getAllLoaiSanPham khi trang được tải
         $(document).ready(function() {
@@ -524,32 +456,6 @@
         //     form.submit();
         // }
 
-        document.getElementById("Home-img").addEventListener("click", function () {
-            // Chuyển hướng về trang chủ khi click vào hình ảnh
-            window.location.href = "SignedHomePage.php";
-        });
-
-        function toLogin(){
-            // Chuyển hướng về trang chủ khi click vào hình ảnh
-            window.location.href = "../Login/LoginUI.php";
-        }
-
-        function toCart() {
-            const form = document.getElementById("search");
-            
-            if (form) {
-                // Lấy dữ liệu từ localStorage
-                const localStorageData = JSON.parse(localStorage.getItem("key"));
-                const maTaiKhoan = localStorageData.MaTaiKhoan;
-
-                // Thêm MaTaiKhoan vào action của form
-                form.action = "Cart.php?maTaiKhoan=" + maTaiKhoan;
-                // Gửi form đi
-                form.submit();
-            } else {
-                console.error("Form not found!");
-            }
-        }
 
             
     </script>

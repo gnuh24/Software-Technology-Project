@@ -1,6 +1,42 @@
 <?php 
     require_once __DIR__ . "/../../Configure/MysqlConfig.php";
 
+    function getAllDichVuVanChuyenNoPaging() {
+        // Chuẩn bị trước biến $connection
+        $connection = null;
+    
+        // Chuẩn bị câu truy vấn gốc
+        $query = "SELECT * FROM `DichVuVanChuyen`";
+    
+        try {
+            // Khởi tạo kết nối
+            $connection = MysqlConfig::getConnection();
+            
+            $statement = $connection->prepare($query);
+    
+            if ($statement !== false) {
+                $statement->execute();
+                $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+    
+                return (object) [
+                    "status" => 200,
+                    "message" => "Thành công",
+                    "data" => $result
+                ];
+            } else {
+                throw new PDOException();
+            }
+        } catch (PDOException $e) {
+            return (object) [
+                "status" => 400,
+                "message" => "Lỗi không thể lấy danh sách phương thức vận chuyển",
+            ];
+        } finally {
+            $connection = null;
+        }
+    }
+    
+
     function getAllDichVuVanChuyen($page){
         
         // Chuẩn bị trước biến $connection

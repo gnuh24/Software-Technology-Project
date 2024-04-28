@@ -23,7 +23,7 @@
   }
   
   .wrapListCart {
-    padding-top: 30px;
+    /* padding-top: 30px; */
     padding-bottom: 50px;
   }
   
@@ -189,7 +189,7 @@
     width: 100%;
     height: 100%;
     position: relative;
-    padding: 150px 40px 30px;
+    padding: 50px 40px 30px;
   }
   
   .wrapInfoOrder .bg_infoOrder {
@@ -204,7 +204,7 @@
   
   .wrapInfoOrder .infoOrder {
     position: sticky;
-    top: 80px;
+    top: 0;
     z-index: 2;
     margin-bottom: 100px;
     width: 100%;

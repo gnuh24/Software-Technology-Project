@@ -1,6 +1,23 @@
 <?php
     require_once __DIR__ . "/../../Configure/MysqlConfig.php";
 
+    if (isset($_POST['action'])){
+        if ($_POST['action'] == "add"){
+            $maDonHang = $_POST['maDonHang'];
+            $maSanPham =  $_POST['maSanPham'];
+            $donGia =  $_POST['donGia'];
+            $soLuong =  $_POST['soLuong'];
+            $thanhTien =  $_POST['thanhTien'];
+    
+            // Gọi hàm PHP bạn muốn thực thi và trả về kết quả dưới dạng JSON
+            $result = createChiTietDonHang($maDonHang, $maSanPham, $donGia, $soLuong, $thanhTien);
+    
+            echo json_encode($result);
+    
+        }
+    }
+
+
 function getChiTietDonHangByMaDonHang($maDonHang) {
     $connection = null;
 

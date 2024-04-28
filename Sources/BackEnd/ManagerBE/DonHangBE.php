@@ -13,6 +13,23 @@ if (isset($_GET['page'])) {
     echo json_encode($result);
 }
 
+if (isset($_POST['action'])){
+    if ($_POST['action'] == "add"){
+        $tongGiaTri = $_POST['tongGiaTri'];
+        $maKH =  $_POST['maTaiKhoan'];
+        $maPhuongThuc =  $_POST['maPhuongThuc'];
+        $maDichVu =  $_POST['maDichVu'];
+        $diaChiGiaoHang =  $_POST['diaChiGiaoHang'];
+
+        // Gọi hàm PHP bạn muốn thực thi và trả về kết quả dưới dạng JSON
+        $result = createDonHang($tongGiaTri, $maKH, $diaChiGiaoHang, $maPhuongThuc, $maDichVu);
+
+        echo json_encode($result);
+
+    }
+}
+
+
 function getAllDonHang($page, $minNgayTao, $maxNgayTao, $trangThai)
 {
     $connection = null;
