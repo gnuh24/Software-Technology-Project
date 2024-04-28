@@ -1,3 +1,36 @@
+#filter-menu {
+    background-color: white;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+#filter-menu label {
+    color: rgb(146, 26, 26); /* Màu chữ trắng */
+    font-weight: bold;
+}
+
+#filter-menu select {
+    margin-right: 10px;
+    padding: 5px;
+    border: none;
+    border-radius: 3px;
+    background-color: rgb(146, 26, 26); /* Màu nền trắng */
+    color: white; /* Màu chữ tương ứng với tone màu chủ đạo */
+}
+
+#filter-menu button {
+    background-color: rgb(146, 26, 26); /* Màu nền trắng */
+    color: white; /* Màu chữ tương ứng với tone màu chủ đạo */
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+#filter-menu button:hover {
+    background-color: #cccccc; /* Màu nền xám nhạt khi di chuột vào */
+}
 * {
     padding: 0;
     margin: 0;
@@ -55,11 +88,8 @@
   }
   
   .input__wrapper {
-    display: flex;
-    align-items: center;
     position: relative;
     margin-left: 8%;
-    gap: 10px;
   }
   
   .search-input {
@@ -76,7 +106,7 @@
   #Home-over-Header {
     background-color:rgb(146, 26, 26);
     display: flex;
-    /* flex-direction: row; */
+    flex-direction: row;
     justify-items: center;
     align-items: center;
     padding: 0 5%;
@@ -1049,18 +1079,4 @@
   img {
     vertical-align: middle;
     border-style: none;
-  }
-
- 
-  .header-option, .header-option > *{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: white; /* Màu nền */
-    color: rgb(146, 26, 26); /* Màu chữ */
-    padding: 5px 15px; /* Kích thước padding */
-    border: none; /* Không viền */
-    cursor: pointer; /* Con trỏ tương tác */
-    border-radius: 5px; /* Bo góc */
-  
   }

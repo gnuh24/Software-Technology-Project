@@ -15,9 +15,74 @@ if (isset($_POST["action"])){
         $result = updateGioHang($_POST["maTaiKhoan"], $_POST["productId"],  $_POST["donGia"],  $_POST["soLuong"],  $_POST["thanhTien"]);
 
         echo json_encode($result);
+    }else if ($_POST["action"] == 'add') {
+        $maTaiKhoan = $_POST["maTaiKhoan"];
+        $maSanPham = $_POST["maSanPham"];
+        $donGia = $_POST["donGia"];
+        $soLuong = $_POST["soLuong"];
+        $thanhTien = $_POST["thanhTien"];
+    
+        // Kiểm tra xem sản phẩm đã tồn tại trong giỏ hàng hay chưa
+        $gioHang = getGioHangById($maTaiKhoan, $maSanPham);
+    
+        if ($gioHang->status == 200 && $gioHang->data != null) {
+            // Sản phẩm đã tồn tại trong giỏ hàng
+            $soLuongHienTai = $gioHang->data['SoLuong'];
+            $soLuongMoi = $soLuongHienTai + $soLuong;
+    
+            // Lấy thông tin số lượng tồn kho của sản phẩm từ kết quả truy vấn
+            $soLuongConLai = $gioHang->data['SoLuongConLai'];
+    
+            // Kiểm tra nếu tổng số lượng mới lớn hơn số lượng tồn kho
+            if ($soLuongMoi > $soLuongConLai) {
+                $soLuongMoi = $soLuongConLai; // Đặt số lượng mới bằng số lượng tồn kho
+            }
+    
+            // Cập nhật giỏ hàng với số lượng mới tính được
+            $result = updateGioHang($maTaiKhoan, $maSanPham, $donGia, $soLuongMoi, $thanhTien);
+        } else {
+            // Sản phẩm chưa tồn tại trong giỏ hàng, thêm mới vào giỏ hàng
+            $result = createGioHang($maTaiKhoan, $maSanPham, $donGia, $soLuong, $thanhTien);
+        }
+    
+        echo json_encode($result);
     }
+    
 }
 
+
+function getGioHangById($maTaiKhoan, $maSanPham){
+    $connection = null;
+    $query = "SELECT * FROM `GioHang` JOIN `SanPham`  ON `GioHang`.`MaSanPham` = `SanPham`.`MaSanPham` WHERE `MaTaiKhoan` = :maTaiKhoan AND `SanPham`.`MaSanPham` = :maSanPham";
+    $connection = MysqlConfig::getConnection();
+    
+    try {
+        $statement = $connection->prepare($query);
+        
+        if ($statement !== false) {
+            $statement->bindValue(':maTaiKhoan', $maTaiKhoan, PDO::PARAM_INT);
+            $statement->bindValue(':maSanPham', $maSanPham, PDO::PARAM_INT);
+
+            $statement->execute();
+            $result = $statement->fetch(PDO::FETCH_ASSOC);
+            
+            return (object) [
+                "status" => 200,
+                "message" => "Thành công",
+                "data" => $result
+            ];
+        } else {
+            throw new PDOException("Lỗi khi lấy giỏ hàng theo mã tài khoản.");
+        }
+    } catch (PDOException $e) {
+        return (object) [
+            "status" => 400,
+            "message" => $e->getMessage()
+        ];
+    } finally {
+        $connection = null;
+    }
+}
 
 
 function getAllGioHangByMaTaiKhoan($maTaiKhoan) {

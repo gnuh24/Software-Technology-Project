@@ -20,7 +20,7 @@
                     <input id="searchSanPham" name="searchFromAnotherPage" type="text" class="search-input"
                         placeholder="Tìm kiếm" required="" />
                     <button id="filter-button"><i class="fa-solid fa-magnifying-glass"></i></button>
-                    <div class="header-option"><a href="Cart.php"><i class="fa-solid fa-cart-shopping"></i></a>
+                    <div class="header-option"><a href=""><i class="fa-solid fa-cart-shopping"></i></a>
                     </div>
                     <div class="header-option"><a href="Profile.php"><i class="fa-solid fa-user"></i></a></div>
                     <div class="header-option" onclick="logout()"><a href="../Login/LoginUI.php"><i
@@ -63,30 +63,34 @@
                                 $formattedPrice = formatMoney($cartProduct['DonGia']);
                                 $formattedTotalPrice = formatMoney($cartProduct['ThanhTien']);
 
+                                // Thêm dòng này để lấy số lượng tối đa
+                                $soLuongToiDa = $cartProduct['SoLuongConLai'];
+
                                 echo "
-                                    <div class='cartItem' id='{$cartProduct['MaSanPham']}'>
-                                            <a href='#' class='img'><img class='img' src='{$cartProduct['AnhMinhHoa']}' /></a>
-                                            <div class='inforCart'>
-                                            <div class='nameAndPrice'>
-                                                <a href='#' class='nameCart'>{$cartProduct['TenSanPham']}</a>
-                                                <p class='priceCart'>$formattedPrice</p>
-                                            </div>
-                                            <div class='quantity'>
-                                                <button class='btnQuantity decrease'>-</button>
-                                                <div class='txtQuantity'>{$cartProduct['SoLuong']}</div>
-                                                <button class='btnQuantity increase' >+</button>
-                                            </div>
+                                <div class='cartItem' id='{$cartProduct['MaSanPham']}'>
+                                    <a href='#' class='img'><img class='img' src='{$cartProduct['AnhMinhHoa']}' /></a>
+                                    <div class='inforCart'>
+                                        <div class='nameAndPrice'>
+                                            <a href='#' class='nameCart'>{$cartProduct['TenSanPham']}</a>
+                                            <p class='priceCart'>$formattedPrice</p>
                                         </div>
-                                        <div class='wrapTotalPriceOfCart'>
-                                            <div class='totalPriceOfCart'>
-                                                <p class='lablelPrice'>Thành tiền</p>
-                                                <p class='valueTotalPrice'>$formattedTotalPrice</p>
-                                            </div>
-                                            <button class='btnRemove'>
-                                                <i class='fa-solid fa-xmark'></i>
-                                            </button>
+                                        <div class='quantity'>
+                                            <button class='btnQuantity decrease'>-</button>
+                                            <div class='txtQuantity'>{$cartProduct['SoLuong']}</div>
+                                            <button class='btnQuantity increase'>+</button>
                                         </div>
-                                    </div>";
+                                    </div>
+                                    <div class='wrapTotalPriceOfCart'>
+                                        <div class='totalPriceOfCart'>
+                                            <p class='lablelPrice'>Thành tiền</p>
+                                            <p class='valueTotalPrice'>$formattedTotalPrice</p>
+                                        </div>
+                                        <button class='btnRemove'>
+                                            <i class='fa-solid fa-xmark'></i>
+                                        </button>
+                                    </div>
+                                </div>";
+
                             }
                         } else {
                             echo "<h1> Lỗi </h1>";
@@ -112,8 +116,8 @@
                         <!-- <a href="#" class="btnCheckout"> -->
                         <button class="btnCheckout">Tiến hành đặt hàng</button>
                         <!-- </a> -->
-                        <a href=" ./cartHome.php">
-                            <button class="btnCheckout_buy">Tiếp tục mua hàng</button>
+                        <a href=" SignedProduct.php">
+                            <button class="btnCheckout_buy" style="border: 2px #7b181a solid;">Tiếp tục mua hàng</button>
                         </a>
                     </div>
                 </div>
@@ -186,14 +190,21 @@ $(document).ready(function () {
         var cartItem = btn.closest('.cartItem');
         var productId = cartItem.attr('id');
         var maTaiKhoan = '<?php echo $_GET["maTaiKhoan"]; ?>'; // Lấy mã tài khoản từ PHP
-        var donGia = cartItem.find('.priceCart').text().replace(/\D/g,''); // Lấy đơn giá từ phần tử DOM và loại bỏ ký tự không phải số
-        
+        var donGia = cartItem.find('.priceCart').text().replace(/\D/g, ''); // Lấy đơn giá từ phần tử DOM và loại bỏ ký tự không phải số
+
         var soLuong = parseInt(quantityField.text()); // Mặc định lấy giá trị số lượng từ quantityField
         
-        if (action == "increase"){
-            soLuong += 1;
+        var soLuongToiDa = <?php echo $soLuongToiDa; ?>;
+
+    
+        if (action == "increase") {
+            if (soLuong + 1 > soLuongToiDa) {
+                alert("Bạn không thể mua hàng với số lượng lớn hơn số lượng tồn kho !!");
+            } else {
+                soLuong += 1;
+            }
         } else {
-            if (soLuong - 1 <= 0){
+            if (soLuong - 1 <= 0) {
                 alert("Bạn không thể để số lượng sản phẩm là 0 !!");
             } else {
                 soLuong -= 1;
@@ -201,14 +212,14 @@ $(document).ready(function () {
         }
 
         var thanhTien = soLuong * donGia;
-        
+
         // Set giá trị mới của số lượng
         quantityField.text(soLuong);
 
         // Tìm phần tử chứa giá trị thành tiền và cập nhật giá trị mới
         var totalPriceField = cartItem.find('.valueTotalPrice');
         totalPriceField.text(formatMoney(thanhTien));
-        
+
         $.ajax({
             url: '../../../BackEnd/ManagerBE/GioHangBE.php',
             method: 'POST',
@@ -222,7 +233,7 @@ $(document).ready(function () {
             },
             success: function (response) {
                 console.log(response);
-        
+
             },
             error: function (xhr, status, error) {
                 console.error(error);
@@ -233,41 +244,40 @@ $(document).ready(function () {
         updateTotalPrice();
     });
 
+    // Code hiện tại của bạn để xóa sản phẩm khỏi giỏ hàng
     $('.btnRemove').on('click', function () {
-        // Code hiện tại của bạn để xóa sản phẩm khỏi giỏ hàng
-        $('.btnRemove').on('click', function () {
-                var productId = $(this).closest('.cartItem').attr('id');
-                var maTaiKhoan = '<?php echo $_GET["maTaiKhoan"]; ?>'; // Thêm mã tài khoản vào
-                $.ajax({
-                    url: '../../../BackEnd/ManagerBE/GioHangBE.php',
-                    method: 'POST',
-                    dataType: "json",
+        var productId = $(this).closest('.cartItem').attr('id');
+        var maTaiKhoan = '<?php echo $_GET["maTaiKhoan"]; ?>'; // Thêm mã tài khoản vào
+        $.ajax({
+            url: '../../../BackEnd/ManagerBE/GioHangBE.php',
+            method: 'POST',
+            dataType: "json",
 
-                    data: {
-                        productId: productId,
-                        maTaiKhoan: maTaiKhoan, // Thêm mã tài khoản vào dữ liệu gửi đi
-                        action: 'deleteCart'
-                    },
-                    success: function (response) {
-                        console.log(response);
-                        console.log(response.data);
+            data: {
+                productId: productId,
+                maTaiKhoan: maTaiKhoan, // Thêm mã tài khoản vào dữ liệu gửi đi
+                action: 'deleteCart'
+            },
+            success: function (response) {
+                console.log(response);
+                console.log(response.data);
 
-                        try {
-                            // Loại bỏ JSON.parse() ở đây
-                            $('#' + productId).remove();
-                            $('.priceTotal').text(response.priceTotal);
-                            $('.totalProducts').text(response.quantityCart);                  
-                        } catch (error) {
-                            console.error("Error parsing JSON: ", error);
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        console.error(error);
-                    }
-                });
-            });
-        // Gọi hàm cập nhật tổng tiền sau mỗi lần xóa sản phẩm
-        updateTotalPrice();
+                try {
+                    // Loại bỏ JSON.parse() ở đây
+                    $('#' + productId).remove();
+                    $('.priceTotal').text(response.priceTotal);
+                    $('.totalProducts').text(response.quantityCart);
+                } catch (error) {
+                    console.error("Error parsing JSON: ", error);
+                }
+
+                // Gọi hàm cập nhật tổng tiền sau mỗi lần xóa sản phẩm
+                updateTotalPrice();
+            },
+            error: function (xhr, status, error) {
+                console.error(error);
+            }
+        });
     });
 
     // Hàm cập nhật tổng tiền dựa trên các giá trị thành tiền của từng sản phẩm trong giỏ hàng
@@ -283,8 +293,11 @@ $(document).ready(function () {
     // Hàm định dạng số tiền thành chuỗi có dấu chấm ngăn cách hàng nghìn
     function formatMoney(amount) {
         return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "đ";
-}   
+    }
 
+    function logout() {
+        localStorage.removeItem("key");
+    }
 
 });
 
@@ -308,8 +321,24 @@ $(document).ready(function () {
             return productInfo;
         }
 
+
+
         document.querySelector('.btnCheckout').addEventListener('click', function () {
             window.location.href = '../../controller/cartControll/cartHome.php?page=thanhtoan';
+        });
+
+        document.getElementById("Home-img").addEventListener("click", function () {
+            // Chuyển hướng về trang chủ khi click vào hình ảnh
+            window.location.href = "SignedHomePage.php";
+        });
+        document.getElementById("filter-button").addEventListener("click", function (event) {
+            event.preventDefault();
+
+            const form = document.getElementById("search");
+            const searchValue  = document.getElementById("searchSanPham").value;
+            form.action = `SignedProduct.php?searchFromAnotherPage=${searchValue}`;
+            form.submit();
+
         });
     </script>
 </body>

@@ -2,36 +2,77 @@
     require_once __DIR__ . "/../../Configure/MysqlConfig.php";
 
     //Dùng để call List loại sản phẩm
- if(isset($_GET['page'])) {
-    $page = $_GET['page'];
-    $search = isset($_GET['search']) ? $_GET['search'] : "";
+    if(isset($_GET['isDemoHome'])) {
 
-    // Gọi hàm PHP bạn muốn thực thi và trả về kết quả dưới dạng JSON
-    $result = getAllLoaiSanPham($page, $search);
+        $result = getAllLoaiSanPhamNoPaging();
 
-    echo json_encode($result);
-}
+        echo json_encode($result);
+    }
 
-//Dùng để thêm loại sản phẩm
-if(isset($_POST['TenLoaiSanPham'])) {
-    $TenLoaiSanPham = $_POST['TenLoaiSanPham'];
+    //Dùng để call List loại sản phẩm
+    if(isset($_GET['page'])) {
+        $page = $_GET['page'];
+        $search = isset($_GET['search']) ? $_GET['search'] : "";
 
-    // Gọi hàm createLoaiSanPham và trả về kết quả dưới dạng JSON
-    $result = createLoaiSanPham($TenLoaiSanPham);
+        // Gọi hàm PHP bạn muốn thực thi và trả về kết quả dưới dạng JSON
+        $result = getAllLoaiSanPham($page, $search);
 
-    echo json_encode($result);
-}
+        echo json_encode($result);
+    }
 
-//Dùng để kiểm tra xem TenLoaiSanPham có tồn tại hay không ?
-if(isset($_GET['TenLoaiSanPham']) ) {
-    $TenLoaiSanPham = $_GET['TenLoaiSanPham'];
+    //Dùng để thêm loại sản phẩm
+    if(isset($_POST['TenLoaiSanPham'])) {
+        $TenLoaiSanPham = $_POST['TenLoaiSanPham'];
 
-    $result = isTenLoaiSanPhamExists($TenLoaiSanPham);
+        // Gọi hàm createLoaiSanPham và trả về kết quả dưới dạng JSON
+        $result = createLoaiSanPham($TenLoaiSanPham);
 
-    echo json_encode($result);
+        echo json_encode($result);
+    }
 
-}
+    //Dùng để kiểm tra xem TenLoaiSanPham có tồn tại hay không ?
+    if(isset($_GET['TenLoaiSanPham']) ) {
+        $TenLoaiSanPham = $_GET['TenLoaiSanPham'];
 
+        $result = isTenLoaiSanPhamExists($TenLoaiSanPham);
+
+        echo json_encode($result);
+
+    }
+    function getAllLoaiSanPhamNoPaging(){
+        // Chuẩn bị trước biến $connection
+        $connection = null;
+    
+        // Chuẩn bị câu truy vấn gốc
+        $query = "SELECT * FROM `LoaiSanPham`";
+    
+        // Khởi tạo kết nối
+        $connection = MysqlConfig::getConnection();
+    
+        try {
+            $statement = $connection->prepare($query);
+    
+            if ($statement !== false) {
+                $statement->execute();
+                $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+    
+                return (object) [
+                    "status" => 200,
+                    "message" => "Thành công",
+                    "data" => $result
+                ];
+            } else {
+                throw new PDOException();
+            }
+        } catch (PDOException $e) {
+            return (object) [
+                "status" => 400,
+                "message" => "Lỗi không thể lấy danh sách loại sản phẩm",
+            ];
+        } finally {
+            $connection = null;
+        }
+    }
 function getAllLoaiSanPham($page,$search){
     // Chuẩn bị trước biến $connection
     $connection = null;

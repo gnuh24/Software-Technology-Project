@@ -285,15 +285,15 @@
                             var imageSrc = product.AnhMinhHoa;
                             htmlContent += `
                                 <div class="row">
-                                        <a href="SignedProductDetail.php?maSanPham=${product.MaSanPham}" onclick="detail(${product.MaSanPham})">
+                                        <a href="SignedProductDetail.php?maSanPham=${product.MaSanPham}&soLuong=${product.SoLuongConLai}" onclick="detail(${product.MaSanPham})">
                                         <img src="${imageSrc}" alt="" style=" height: 300px;" onclick="detail(${product.MaSanPham})">
                                         <div class="product-card-content">
                                             <div class="price">
                                                 <h4 class="name-product">${product.TenSanPham}</h4>
                                                 <p class="price-tea">${formatCurrency(product.Gia)}</p>
                                             </div>
-                                            <div class="buy-btn-container">
-                                                <a href="../Login/LoginUI.php">mua ngay</a>
+                                            <div class="buy-btn-container" onclick="detail(${product.MaSanPham})>
+                                                <a href="">Xem chi tiết</a>
                                             </div>
                                         </div>
                                     </a>
@@ -322,6 +322,7 @@
 
         function detail(maSanPham){
             const form = document.getElementById(`productForm_${maSanPham}`);
+            
             form.submit();
         }
         
@@ -338,6 +339,7 @@
         function logout() {
             localStorage.removeItem("key");
         }
+
 
 
     </script>
