@@ -42,7 +42,7 @@ if (isset($_GET['MaNguoiDung'])) {
 <body>
     <?php require_once "../Header/SignedHeader.php" ?>
     <div class="col-12">
-        <div class="my-2">
+        <div class="my-2 d-flex justify-content-center">
             <h3>My Profile</h3>
             <hr>
         </div>
