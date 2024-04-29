@@ -1,10 +1,20 @@
 <?php
     require_once __DIR__ . "/../../Configure/MysqlConfig.php";
 
+if(isset($_GET['MaDonHang'])){
+    $MaDonHang = $_GET['MaDonHang'];
+
+    $result = getChiTietDonHangByMaDonHang($MaDonHang);
+
+    echo json_encode($result);
+}
+
 function getChiTietDonHangByMaDonHang($maDonHang) {
     $connection = null;
 
-    $query = "SELECT * FROM `CTDH` WHERE `MaDonHang` = :maDonHang";
+    $query = "SELECT * 
+                FROM `CTDH` 
+                WHERE `MaDonHang` = :maDonHang";    
 
     $connection = MysqlConfig::getConnection();
 

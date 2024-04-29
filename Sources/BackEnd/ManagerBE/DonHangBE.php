@@ -13,6 +13,14 @@ if (isset($_GET['page'])) {
     echo json_encode($result);
 }
 
+if(isset($_GET['MaDonHang'])){
+    $MaDonHang = isset($_GET['MaDonHang']);
+
+    $result = getDonHangByMaDonHang($MaDonHang);
+
+    echo json_encode($result);
+}
+
 function getAllDonHang($page, $minNgayTao, $maxNgayTao, $trangThai)
 {
     $connection = null;
@@ -35,7 +43,7 @@ function getAllDonHang($page, $minNgayTao, $maxNgayTao, $trangThai)
                 JOIN `TrangThaiDonHang` tt ON dh.`MaDonHang` = tt.`MaDonHang`
                 JOIN `nguoidung` kh ON dh.`MaKH` = kh.`MaNguoiDung`
                 JOIN `dichvuvanchuyen` dv ON dh.`MaDichVu` = dv.`MaDichVu`
-                WHERE tt.NgayCapNhat = (SELECT MAX(NgayCapNhat) 
+                WHERE tt.NgayCapNhat = (SELECT MAX(NgayCapNhat)
                                         FROM TrangThaiDonHang 
                                         WHERE MaDonHang = dh.MaDonHang)
                 ";
@@ -156,9 +164,29 @@ function getAllDonHangByMaKH($maKH)
 function getDonHangByMaDonHang($maDonHang)
 {
     $connection = null;
-    $query = "SELECT * FROM `DonHang` dh 
+    $query = "SELECT dh.MaDonHang,
+                    dh.NgayDat,
+                    dh.TongGiaTri,
+                    dh.MaKH,
+                    dh.DiaChiGiaoHang,
+                    pt.MaPhuongThuc,
+                    dv.MaDichVu,
+                    pt.TenPhuongThuc,
+                    tt.TrangThai,
+                    tt.NgayCapNhat,
+                    dv.TenDichVu,
+                    kh.HoTen,
+                    kh.SoDienThoai,
+                    kh.Email 
+                FROM `DonHang` dh
+                JOIN `PhuongThucThanhToan` pt ON dh.`MaPhuongThuc` = pt.`MaPhuongThuc`
                 JOIN `TrangThaiDonHang` tt ON dh.`MaDonHang` = tt.`MaDonHang`
-                WHERE dh.`MaDonHang` = :maDonHang";
+                JOIN `nguoidung` kh ON dh.`MaKH` = kh.`MaNguoiDung`
+                JOIN `dichvuvanchuyen` dv ON dh.`MaDichVu` = dv.`MaDichVu`
+                WHERE tt.NgayCapNhat = (SELECT MAX(NgayCapNhat)
+                                        FROM TrangThaiDonHang 
+                                        WHERE MaDonHang = dh.MaDonHang)
+                AND dh.`MaDonHang` = :maDonHang";
 
     $connection = MysqlConfig::getConnection();
 

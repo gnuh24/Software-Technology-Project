@@ -1,6 +1,14 @@
 <?php 
     require_once __DIR__ . "/../../Configure/MysqlConfig.php";
 
+    if(isset($_GET['MaDichVu'])){
+        $MaDichVu = isset($_GET['MaDichVu']);
+
+        $result = getDichVuVanChuyenByMaDichVu($MaDichVu);
+
+        echo json_encode($result);
+    }
+
     function getAllDichVuVanChuyen($page){
         
         // Chuẩn bị trước biến $connection
