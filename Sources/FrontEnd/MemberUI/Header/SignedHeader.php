@@ -2,7 +2,7 @@
 
     /* Logo */
     #Home-img {
-        width: 110px;
+        width: 120px;
         height: 80px;
     }
 
@@ -35,18 +35,7 @@
         margin-right: 10px;
     }
 
-    /* Giỏ hàng */
-    .header-option {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: white;
-        color: rgb(146, 26, 26);
-        padding: 5px 15px;
-        border: none;
-        cursor: pointer;
-        border-radius: 5px;
-    }
+
 
     /* Đăng nhập */
     .header-option, .header-option > *{
@@ -72,6 +61,8 @@
             <input id="searchSanPham" name="searchFromAnotherPage" type="text" class="search-input" placeholder="Tìm kiếm" required=""/>
             <button id="filter-button"><i class="fa-solid fa-magnifying-glass"></i></button>
             <div class="header-option" onclick="toCart()"><i class="fa-solid fa-cart-shopping"></i></div>
+            <div class="header-option" onclick="toMyOrder()"><i class="fa-solid fa-truck-fast"></i></div>
+
             <div class="header-option"><a href="Profile.php"><i class="fa-solid fa-user"></i></a></div>
             <div class="header-option" onclick="logout()"><a href="../Login/LoginUI.php"><i class="fa-solid fa-right-from-bracket"></i></a></div>
         </form>
@@ -106,6 +97,24 @@
 
             // Thêm MaTaiKhoan vào action của form
             form.action = "Cart.php?maTaiKhoan=" + maTaiKhoan;
+            // Gửi form đi
+            form.submit();
+        } else {
+            console.error("Form not found!");
+        }
+    }
+
+    //Sự kiện đơn hàng cá nhân
+    function toMyOrder() {
+        const form = document.getElementById("search");
+        if (form) {
+            // Lấy dữ liệu từ localStorage
+            const localStorageData = JSON.parse(localStorage.getItem("key"));
+            const maTaiKhoan = localStorageData.MaTaiKhoan;
+
+            // Thêm MaTaiKhoan vào action của form
+            form.action = "MyOrder.php?maTaiKhoan=" + maTaiKhoan;
+
             // Gửi form đi
             form.submit();
         } else {

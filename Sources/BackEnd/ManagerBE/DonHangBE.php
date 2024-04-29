@@ -25,9 +25,19 @@ if (isset($_POST['action'])){
         $result = createDonHang($tongGiaTri, $maKH, $diaChiGiaoHang, $maPhuongThuc, $maDichVu);
 
         echo json_encode($result);
-
     }
 }
+
+// if (isset($_GET['maTaiKhoan'])){
+
+//     $maTaiKhoan = $_GET['maTaiKhoan'];
+
+//     // Gọi hàm PHP bạn muốn thực thi và trả về kết quả dưới dạng JSON
+//     $result = getAllDonHangByMaKH($maTaiKhoan);
+
+//     echo json_encode($result);
+
+// }
 
 
 function getAllDonHang($page, $minNgayTao, $maxNgayTao, $trangThai)
@@ -136,11 +146,14 @@ function getAllDonHangByMaKH($maKH)
     $connection = null;
     $query = "SELECT * FROM `DonHang` dh 
                 JOIN `TrangThaiDonHang` tt ON dh.`MaDonHang` = tt.`MaDonHang`
+                JOIN `PhuongThucThanhToan` pptt ON dh.`MaPhuongThuc` = pptt.`MaPhuongThuc`
+				JOIN `DichVuVanChuyen` dvvc ON dh.`MaDichVu` = dvvc.`MaDichVu`
                 WHERE tt.`NgayCapNhat` = (
                     SELECT MAX(`NgayCapNhat`) 
                     FROM `TrangThaiDonHang` subtt 
                     WHERE dh.`MaDonHang` = subtt.`MaDonHang`
-                ) AND dh.`MaKH` = :maKH";
+                ) AND dh.`MaKH` = :maKH
+                ORDER BY dh.`NgayDat` desc";
 
     $connection = MysqlConfig::getConnection();
 

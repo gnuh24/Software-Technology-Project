@@ -43,6 +43,13 @@
         $search = $_GET['search'];
         $result = getAllSanPhamnotpagination($search);
         echo json_encode($result);
+    } else if (isset($_POST['action'])){
+        if ($_POST['action'] == "up"){
+            $maSanPham = $_POST['maSanPham'];
+            $soLuongTang = $_POST['soLuongTang'];
+            $result = tangSoLuongSanPham($maSanPham, $soLuongTang);
+            echo json_encode($result);
+        }
     }
 
     function getAllSanPhamnotpagination($search = null){
@@ -198,10 +205,45 @@
             $connection = null;
         }
     }
-
-
     
+
+    function tangSoLuongSanPham($maSanPham, $soLuongTang){
+        // Khởi tạo kết nối
+        $connection = null;
     
+        // Chuẩn bị câu truy vấn
+        $query = "UPDATE `SanPham` SET `SoLuongConLai` = `SoLuongConLai` + :soLuongTang WHERE `MaSanPham` = :maSanPham";
+    
+        // Khởi tạo kết nối
+        $connection = MysqlConfig::getConnection();
+    
+        try {
+            $statement = $connection->prepare($query);
+    
+            if ($statement !== false) {
+                $statement->bindValue(':soLuongTang', $soLuongTang, PDO::PARAM_INT);
+                $statement->bindValue(':maSanPham', $maSanPham, PDO::PARAM_INT);
+    
+                $statement->execute();
+    
+                return (object) [
+                    "status" => 200,
+                    "message" => "Tăng số lượng sản phẩm thành công!"
+                ];
+            } else {
+                throw new PDOException();
+            }
+        } catch (PDOException $e) {
+            return (object) [
+                "status" => 400,
+                "message" => "Lỗi không thể tăng số lượng sản phẩm"
+            ];
+        } finally {
+            $connection = null;
+        }
+    }
+    
+
 
     function getSanPhamByMaSanPham($maSanPham) {
         // Khởi tạo kết nối
