@@ -197,6 +197,8 @@
 
 <script>
 
+  console.log("Quản lý đơn hàng");
+
   var udPage=0; 
   var udminNgayTao=0;
   var udmaxNgayTao=0;
