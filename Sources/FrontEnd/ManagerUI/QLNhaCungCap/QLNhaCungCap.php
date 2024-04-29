@@ -82,7 +82,7 @@
                       </div>
                       <div style="margin-left: auto"></div>
                     </div>
-                    
+
                     <br>
                     <div class="boxTable">
                       <table class="Table_table__BWPy">
@@ -163,7 +163,7 @@
       <td style="text-align:center">${record.SoDienThoai}</td>
       <td style="text-align:center">`;
 
-  // Conditionally add the delete button
+  //Điều kiện để thêm nút xoá vào
   if (record.MaNCC !== 1) {
     trContent += `<button style="cursor:pointer" onclick="deleteNhaCungCap(${record.MaNCC})"><i class="fa-solid fa-trash"></i></button>`;
   }
@@ -236,7 +236,7 @@
   // Hàm xử lý sự kiện khi nút tìm kiếm được click
   document.getElementById('searchButton').addEventListener('click', function() {
     var searchValue = document.querySelector('.Admin_input__LtEE-').value;
-
+  
     // Truyền giá trị của biến currentPage vào hàm fetchDataAndUpdateTable
     fetchDataAndUpdateTable(currentPage, searchValue, '');
   });
@@ -257,32 +257,33 @@
   });
 
   function deleteNhaCungCap(MaNCC) {
-    // Hiển thị hộp thoại xác nhận
-    var confirmation = confirm(`Bạn có muốn xóa nhà cung cấp ${MaNCC} không?`);
+  var confirmation = confirm(`Bạn có muốn xóa nhà cung cấp ${MaNCC} không?`);
 
-    // Kiểm tra xác nhận của người dùng
-    if (confirmation) {
-      // Gọi hàm deleteNhaCungCap bằng Ajax
-      $.ajax({
-        url: '../../../BackEnd/ManagerBE/NhaCungCapBE.php',
-        type: 'GET',
-        dataType: "json",
-        data: {
-          MaNCC: MaNCC
-        },
-        success: function(response) {
-          // Nếu xóa thành công, reload bảng
-          if (response.status === 200) {
-            alert("Xóa nhà cung cấp thành công !!");
-            fetchDataAndUpdateTable(currentPage, '');
-          } else {
-            console.error('Lỗi khi xóa nhà cung cấp: ', response.message);
-          }
-        },
-        error: function(xhr, status, error) {
-          console.error('Lỗi khi gọi API: ', error);
+  if (confirmation) {
+    $.ajax({
+      url: '../../../BackEnd/ManagerBE/NhaCungCapBE.php',
+      type: 'GET',
+      dataType: "json",
+      data: {
+        MaNCC: MaNCC
+      },
+      success: function(response) {
+        console.log('Status:', response.status); // In mã trạng thái
+        console.log('Message:', response.message); // In thông báo
+        console.log('MaNCC:', MaNCC);
+
+        if (response.status === 200) {
+          alert("Xóa nhà cung cấp thành công !!");
+          fetchDataAndUpdateTable(currentPage, '');
+        } else {
+          console.error('Lỗi khi xóa nhà cung cấp: ', response.message);
         }
-      });
-    }
+      },
+      error: function(xhr, status, error) {
+        console.error('Lỗi khi gọi API: ', xhr, status, error);
+      }
+    });
   }
+}
+
 </script>
