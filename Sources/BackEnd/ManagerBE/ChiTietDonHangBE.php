@@ -25,13 +25,11 @@ if (isset($_GET['MaDonHang'])) {
 }
 
 
-function getChiTietDonHangByMaDonHang($maDonHang)
-{
+function getChiTietDonHangByMaDonHang($maDonHang) {
+
     $connection = null;
 
-    $query = "SELECT * 
-                FROM `CTDH` 
-                WHERE `MaDonHang` = :maDonHang";
+    $query = "SELECT ct.`MaSanPham`, ct.`SoLuong`, ct.`ThanhTien`, ct.`DonGia`, sp.`TenSanPham`, sp.`AnhMinhHoa` FROM `CTDH` ct JOIN `SanPham` sp ON ct.`MaSanPham` = sp.`MaSanPham` WHERE `MaDonHang` = :maDonHang";
 
     $connection = MysqlConfig::getConnection();
 

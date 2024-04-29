@@ -53,18 +53,16 @@
 
                     $sanPham = getSanPhamByMaSanPham($maSanPham)->data;
 
+
                     $soLuongConLai = $sanPham["SoLuongConLai"];
 
                     // Thay đổi thông báo số lượng sản phẩm còn lại nếu = 0
                     $quantityMessage = $soLuongConLai > 0 ? "Còn $soLuongConLai sản phẩm" : "<span style='color: red;'>Sản phẩm đã hết hàng</span>";
 
                     echo '<div class="product_images__wrapper">
-
-
                     <div class="image">
                         <img style="border: 2px solid black;  height: 400px;" src="' . $sanPham["AnhMinhHoa"] . '" alt="" class="product_img">
                     </div>
-
                 </div>
                 <div class="info__wrapper" style="margin-left: 30px">
                     <div class="title__wrapper">
@@ -94,43 +92,40 @@
                         <div class="size__wrapper">
                             <p class="title">Nồng độ cồn</p>
                             <div class="size__list">
-
                                 <div class="size__item ">
                                     <p>' . $sanPham["NongDoCon"] . '%</p>
                                 </div>
-
                             </div>
                         </div>
                         <div class="size__wrapper">
                             <p class="title">Dung tích</p>
                             <div class="size__list">
-
                                 <div class="size__item ">
                                     <p>' . $sanPham["TheTich"] . 'ml</p>
                                 </div>
-
                             </div>
                         </div>
                         <div class="quantity__wrapper" style="display: flex; align-items: center;">
                             <p class="title">Số lượng</p>
                             <div class="quantity">
                                 <div style="display: flex; align-items: center; justify-content: center;" class="minusBtn"> <i class="fa-solid fa-minus"></i></div>
-                                
-                                <input type="number" value="1" min="0" max="' . $soLuongConLai . '" oninput="checkQuantity(this)">
-                                
+                                <input type="number" value="1" min="1" max="' . $soLuongConLai . '" oninput="checkQuantity(this)">
                                 <div style="display: flex; align-items: center; justify-content: center;" class="plusBtn"><i class="fa-solid fa-plus"></i></div>
                             </div>
                         </div>
                     </div>
-                    <div class="button__wrapper">
-                        <button class="secondary">
-                            <span>Thêm vào giỏ hàng</span>
-                        </button>
-                        <button class="primary" style="visibility: hidden;">
+                    <div class="button__wrapper">';
+                        if ($soLuongConLai > 0) {
+                            echo '<button class="secondary">
+                                <span>Thêm vào giỏ hàng</span>
+                            </button>';
+                        }
+        echo '          <button class="primary" style="visibility: hidden;">
                             <span>Mua ngay</span>
                         </button>
                     </div>
                 </div>';
+        
 
                 } else {
                     // Nếu không có mã sản phẩm được truyền vào, hiển thị thông báo lỗi
@@ -152,6 +147,19 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
+
+      // Hàm kiểm tra số lượng nhập vào
+      function checkQuantity(input) {
+        var currentValue = parseInt(input.value); // Lấy giá trị số lượng hiện tại
+        var maxQuantity = parseInt(input.getAttribute("max")); // Lấy giá trị số lượng tối đa
+        var quantityMessage = document.querySelector(".quantity-available p.title"); // Phần hiển thị thông báo số lượng còn lại
+
+        if (currentValue < 1) { // Nếu số lượng nhỏ hơn 1
+            input.value = 1; // Đặt lại giá trị là 1
+        } else if (currentValue > maxQuantity) { // Nếu số lượng lớn hơn số lượng tối đa
+            input.value = maxQuantity; // Đặt lại giá trị là số lượng tối đa
+        }
+    }
 
     // Lắng nghe sự kiện click vào nút "Thêm vào giỏ hàng"
     var secondaryBtn = document.querySelector(".secondary");

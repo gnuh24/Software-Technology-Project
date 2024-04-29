@@ -143,11 +143,14 @@ function getAllDonHangByMaKH($maKH)
     $connection = null;
     $query = "SELECT * FROM `DonHang` dh 
                 JOIN `TrangThaiDonHang` tt ON dh.`MaDonHang` = tt.`MaDonHang`
+                JOIN `PhuongThucThanhToan` pptt ON dh.`MaPhuongThuc` = pptt.`MaPhuongThuc`
+				JOIN `DichVuVanChuyen` dvvc ON dh.`MaDichVu` = dvvc.`MaDichVu`
                 WHERE tt.`NgayCapNhat` = (
                     SELECT MAX(`NgayCapNhat`) 
                     FROM `TrangThaiDonHang` subtt 
                     WHERE dh.`MaDonHang` = subtt.`MaDonHang`
-                ) AND dh.`MaKH` = :maKH";
+                ) AND dh.`MaKH` = :maKH
+                ORDER BY dh.`NgayDat` desc";
 
     $connection = MysqlConfig::getConnection();
 

@@ -225,6 +225,8 @@
                 const diaChiGiaoHang = diaChi; // Địa chỉ giao hàng có thể thay đổi tùy theo yêu cầu của bạn
                 // Gọi hàm tạo đơn hàng
                 createDonHang(maTaiKhoan, tongGiaTri, maPhuongThuc, maDichVu, diaChiGiaoHang, danhSachChiTietDonHang);
+                
+                window.location.href = "SignedHomePage.php";
 
             } else {
                 // Hiển thị thông báo lỗi nếu thiếu thông tin
@@ -327,6 +329,8 @@
                     createTrangThaiDonHang(maDonHang)
 
                     alert("Đặt hàng thành công !!");
+
+                    
 
                 },
                 error: function(xhr, status, error) {

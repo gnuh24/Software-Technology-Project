@@ -11,13 +11,14 @@
 </head>
 
 <body>
+    <?php require_once "../Header/SignedHeader.php" ?>
+
     <div>
 
-       <?php require_once "../Header/SignedHeader.php" ?>
 
 
         <section>
-            <div class="center-text" style="margin-top: 70px;">
+            <div class="center-text" style="margin-top: 20px;">
 
                 <div class="title_section">
                     <div class="bar"></div>

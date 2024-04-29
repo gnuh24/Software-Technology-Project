@@ -1,3 +1,59 @@
+<style>
+
+    /* Logo */
+    #Home-img {
+        width: 110px;
+        height: 80px;
+    }
+
+    /* Tìm kiếm  */
+    .input__wrapper {
+        display: flex;
+        align-items: center;
+        position: relative;
+        margin-left: 8%;
+        gap: 10px;
+    }
+    .search-input {
+        padding-left: 25px;
+        background-image: url("../img/search.png");
+        background-size: 20px;
+        background-repeat: no-repeat;
+        background-position: 5px center;
+        width: 800px;
+        height: 35px;
+        border: 2px solid rgb(133, 6, 6);
+        border-radius: 20px;
+    }
+    #filter-button {
+        background-color: white;
+        color: rgb(146, 26, 26);
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        margin-right: 10px;
+    }
+
+
+
+    /* Đăng nhập */
+    .header-option, .header-option > *{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: white; /* Màu nền */
+        color: rgb(146, 26, 26); /* Màu chữ */
+        padding: 5px 15px; /* Kích thước padding */
+        border: none; /* Không viền */
+        cursor: pointer; /* Con trỏ tương tác */
+        border-radius: 5px; /* Bo góc */
+    
+    }
+
+
+
+</style>
 <header class="Home-container-header">
     <div id="Home-over-Header">
         <img id="Home-img" src="../GuestPage/img/logoWine.jpg" alt="" />
@@ -11,6 +67,7 @@
             ?>                    
             <button id="filter-button"><i class="fa-solid fa-magnifying-glass"></i></button>
             <div class="header-option" onclick="toCart()"><i class="fa-solid fa-cart-shopping"></i></div>
+            <div class="header-option" onclick="toMyOrder()"><i class="fa-solid fa-truck-fast"></i></div>
             <div class="header-option"><a href="Profile.php"><i class="fa-solid fa-user"></i></a></div>
             <div class="header-option" onclick="logout()"><a href="../Login/LoginUI.php"><i class="fa-solid fa-right-from-bracket"></i></a></div>
         </form>
@@ -24,6 +81,23 @@
         window.location.href = "SignedHomePage.php";
     });
 
+    //Sự kiện đơn hàng cá nhân
+    function toMyOrder() {
+        const form = document.getElementById("search");
+        if (form) {
+            // Lấy dữ liệu từ localStorage
+            const localStorageData = JSON.parse(localStorage.getItem("key"));
+            const maTaiKhoan = localStorageData.MaTaiKhoan;
+
+            // Thêm MaTaiKhoan vào action của form
+            form.action = "MyOrder.php?maTaiKhoan=" + maTaiKhoan;
+
+            // Gửi form đi
+            form.submit();
+        } else {
+            console.error("Form not found!");
+        }
+    }
     
 
     //Sự kiện giỏ hàng

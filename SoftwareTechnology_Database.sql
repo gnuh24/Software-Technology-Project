@@ -5,6 +5,7 @@ CREATE DATABASE IF NOT EXISTS `SoftwareTechnology_Database`;
 -- Sử dụng cơ sở dữ liệu mới hoặc có sẵn
 USE `SoftwareTechnology_Database`;
 
+
 /*______________________________ TÀI KHOẢN VÀ NGƯỜI DÙNG___________________________ */
 
 
