@@ -185,7 +185,16 @@
     function updateNguoiDung($maNguoiDung, $hoTen, $ngaySinh, $gioiTinh, $soDienThoai, $email, $diaChi) {
         // Khởi tạo kết nối
         $connection = MysqlConfig::getConnection();
-    
+        $tmp = 1;
+        if(is_null($email))
+        $query = "UPDATE `NguoiDung` SET 
+        `HoTen` = :hoTen,
+        `NgaySinh` = :ngaySinh,
+        `GioiTinh` = :gioiTinh,
+        `SoDienThoai` = :soDienThoai,
+        `DiaChi` = :diaChi
+    WHERE `MaNguoiDung` = :maNguoiDung";
+    else
         $query = "UPDATE `NguoiDung` SET 
                     `HoTen` = :hoTen,
                     `NgaySinh` = :ngaySinh,
@@ -205,7 +214,10 @@
                 $statement->bindValue(':ngaySinh', $ngaySinh, PDO::PARAM_STR);
                 $statement->bindValue(':gioiTinh', $gioiTinh, PDO::PARAM_STR);
                 $statement->bindValue(':soDienThoai', $soDienThoai, PDO::PARAM_STR);
-                $statement->bindValue(':email', $email, PDO::PARAM_STR);
+                if(!is_null($email))
+                {
+                    $statement->bindValue(':email', $email, PDO::PARAM_STR);
+                }
                 $statement->bindValue(':diaChi', $diaChi, PDO::PARAM_STR);
     
                 // Thực hiện truy vấn
