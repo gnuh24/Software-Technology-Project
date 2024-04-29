@@ -13,13 +13,29 @@ if (isset($_GET['page'])) {
     echo json_encode($result);
 }
 
-if(isset($_GET['MaDonHang'])){
+if (isset($_POST['action'])) {
+    if ($_POST['action'] == "add") {
+        $tongGiaTri = $_POST['tongGiaTri'];
+        $maKH =  $_POST['maTaiKhoan'];
+        $maPhuongThuc =  $_POST['maPhuongThuc'];
+        $maDichVu =  $_POST['maDichVu'];
+        $diaChiGiaoHang =  $_POST['diaChiGiaoHang'];
+
+        // Gọi hàm PHP bạn muốn thực thi và trả về kết quả dưới dạng JSON
+        $result = createDonHang($tongGiaTri, $maKH, $diaChiGiaoHang, $maPhuongThuc, $maDichVu);
+
+        echo json_encode($result);
+    }
+}
+
+if (isset($_GET['MaDonHang'])) {
     $MaDonHang = isset($_GET['MaDonHang']);
 
     $result = getDonHangByMaDonHang($MaDonHang);
 
     echo json_encode($result);
 }
+
 
 function getAllDonHang($page, $minNgayTao, $maxNgayTao, $trangThai)
 {
@@ -63,14 +79,14 @@ function getAllDonHang($page, $minNgayTao, $maxNgayTao, $trangThai)
     $entityPerPage = 7;
     $totalPages = null;
 
-    if ($minNgayTao!=="null") {
+    if ($minNgayTao !== "null") {
         $where_conditions[] = "dh.NgayDat >= '$minNgayTao 00:00:00'";
     }
-    if($maxNgayTao!=="null"){
-        $where_conditions[] = "dh.NgayDat <= '$maxNgayTao 23:59:59'" ;
+    if ($maxNgayTao !== "null") {
+        $where_conditions[] = "dh.NgayDat <= '$maxNgayTao 23:59:59'";
     }
 
-    if ($trangThai!=="null") {
+    if ($trangThai !== "null") {
         $where_conditions[] = "tt.TrangThai = '$trangThai'";
     }
 

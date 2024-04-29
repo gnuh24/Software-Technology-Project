@@ -1,7 +1,22 @@
 <?php
-    require_once __DIR__ . "/../../Configure/MysqlConfig.php";
+require_once __DIR__ . "/../../Configure/MysqlConfig.php";
 
-if(isset($_GET['MaDonHang'])){
+if (isset($_POST['action'])) {
+    if ($_POST['action'] == "add") {
+        $maDonHang = $_POST['maDonHang'];
+        $maSanPham =  $_POST['maSanPham'];
+        $donGia =  $_POST['donGia'];
+        $soLuong =  $_POST['soLuong'];
+        $thanhTien =  $_POST['thanhTien'];
+
+        // Gọi hàm PHP bạn muốn thực thi và trả về kết quả dưới dạng JSON
+        $result = createChiTietDonHang($maDonHang, $maSanPham, $donGia, $soLuong, $thanhTien);
+
+        echo json_encode($result);
+    }
+}
+
+if (isset($_GET['MaDonHang'])) {
     $MaDonHang = $_GET['MaDonHang'];
 
     $result = getChiTietDonHangByMaDonHang($MaDonHang);
@@ -9,12 +24,14 @@ if(isset($_GET['MaDonHang'])){
     echo json_encode($result);
 }
 
-function getChiTietDonHangByMaDonHang($maDonHang) {
+
+function getChiTietDonHangByMaDonHang($maDonHang)
+{
     $connection = null;
 
     $query = "SELECT * 
                 FROM `CTDH` 
-                WHERE `MaDonHang` = :maDonHang";    
+                WHERE `MaDonHang` = :maDonHang";
 
     $connection = MysqlConfig::getConnection();
 
@@ -46,7 +63,8 @@ function getChiTietDonHangByMaDonHang($maDonHang) {
     }
 }
 
-function createChiTietDonHang($maDonHang, $maSanPham, $donGia, $soLuong, $thanhTien) {
+function createChiTietDonHang($maDonHang, $maSanPham, $donGia, $soLuong, $thanhTien)
+{
     $connection = null;
 
     $query = "INSERT INTO `CTDH` (`MaDonHang`, `MaSanPham`, `DonGia`, `SoLuong`, `ThanhTien`) 
@@ -83,4 +101,3 @@ function createChiTietDonHang($maDonHang, $maSanPham, $donGia, $soLuong, $thanhT
         $connection = null;
     }
 }
-?>

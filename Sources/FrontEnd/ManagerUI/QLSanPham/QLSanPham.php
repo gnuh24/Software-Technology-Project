@@ -40,7 +40,7 @@
                     <a class="MenuItemSidebar_menuItem__56b1m" href="../QLLoaiSanPham/QLLoaiSanPham.php">
                         <span class="MenuItemSidebar_title__LLBtx">Loại Sản Phẩm</span>
                     </a>
-                    <a class="MenuItemSidebar_menuItem__56b1m" href="QLSanPham.php">
+                    <a class="MenuItemSidebar_menuItem__56b1m" href="../QLSanPham/QLSanPham.php">
                         <span class="MenuItemSidebar_title__LLBtx">Sản Phẩm</span>
                     </a>
                     <a class="MenuItemSidebar_menuItem__56b1m" href="../QLNhaCungCap/QLNhaCungCap.php">
@@ -52,11 +52,9 @@
                     <a class="MenuItemSidebar_menuItem__56b1m" href="../QLDonHang/QLDonHang.php">
                         <span class="MenuItemSidebar_title__LLBtx">Đơn Hàng</span>
                     </a>
-                    <a class="MenuItemSidebar_menuItem__56b1m" href="./thongkedoanhthu.html">
-                        <span class="MenuItemSidebar_title__LLBtx">Thống Kê Doanh Thu</span>
-                    </a>
-                    <a class="MenuItemSidebar_menuItem__56b1m" href="./thongkechitieu.html">
-                        <span class="MenuItemSidebar_title__LLBtx">Thống Kê Chi Tiêu</span>
+                    <a class="MenuItemSidebar_menuItem__56b1m" href="../ThongKe/ThongKeDoanhThuChiTieu.php">
+                        <span class="MenuItemSidebar_title__LLBtx">Thống Kê Tài Chính</span>
+                    </a>                         
                     </a>
                     <a class="MenuItemSidebar_menuItem__56b1m" href="../ThongKe/ThongKeDonHang.php">
                         <span class="MenuItemSidebar_title__LLBtx">Thống Kê Đơn Hàng</span>

@@ -19,6 +19,19 @@ if (isset($_POST['MaDonHang'])){
     echo json_encode($result);
 }
 
+if (isset($_POST['action'])){
+    if ($_POST['action'] == "add"){
+        $maDonHang = $_POST['maDonHang'];
+        $trangThai =  $_POST['trangThai'];
+     
+        // Gọi hàm PHP bạn muốn thực thi và trả về kết quả dưới dạng JSON
+        $result = createTrangThaiDonHang($maDonHang, $trangThai);
+
+        echo json_encode($result);
+
+    }
+}
+
 function getTrangThaiDonHangByMaDonHang($maDonHang) {
     $connection = null;
 

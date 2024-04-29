@@ -409,7 +409,7 @@ function deleteNhaCungCap($MaNCC)
         $connection->beginTransaction();
 
         // Lấy danh sách các phiếu nhập kho thuộc nhà cung cấp cần xóa
-        $query_select_PNKS = "SELECT `MaNCC` FROM `PhieuNhapKho` WHERE `MaNCC` = :maNhaCungCap";
+        $query_select_PNKS = "SELECT `MaNCC` FROM `PhieuNhapKho` WHERE `MaNCC` = :MaNCC";
         $statement_select_PNKS = $connection->prepare($query_select_PNKS);
         $statement_select_PNKS->bindValue(':MaNCC', $MaNCC, PDO::PARAM_INT);
         $statement_select_PNKS->execute();

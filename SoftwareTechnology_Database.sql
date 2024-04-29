@@ -228,12 +228,12 @@ VALUES					(1,      'HaKu Vodka',                                               
 
 INSERT INTO `GioHang` (`MaSanPham`, `MaTaiKhoan`, `DonGia`, `SoLuong`, `ThanhTien`)
 VALUES
-				(1, 1, 12, 1, 0),
-				(2, 2, 12, 1, 0),
-				(2, 3, 12, 1, 0),
-				(2, 4, 12, 1, 0),
-				(3, 3, 12, 1, 0),
-				(4, 4, 12, 1, 0);
+                        (1, 1, 120000, 1, 120000),
+                        (2, 2, 120000, 1, 120000),
+                        (2, 3, 120000, 2, 240000),
+                        (2, 4, 120000, 1, 120000),
+                        (3, 3, 120000, 3, 360000),
+                        (4, 4, 120000, 1, 120000);
 
 
 
@@ -395,35 +395,4 @@ VALUES              (1 ,        16,     1280000     ,10      ,       12800000),
                     (10 ,        4,     650000      ,5      ,       3250000), 
                     (10 ,        5,     850000      ,5      ,       4250000);
 
-SELECT DATE(dh.NgayDat) AS ngayLapDon, tdh.TrangThai AS trangThai, COUNT(*) AS soLuongDon
-FROM TrangThaiDonHang tdh
-INNER JOIN DonHang dh ON tdh.MaDonHang = dh.MaDonHang
-WHERE DATE(dh.NgayDat) BETWEEN COALESCE(NULL, '2010-01-01') AND COALESCE(NULL, CURRENT_DATE())
-AND tdh.NgayCapNhat = (
-    SELECT MAX(tdh2.NgayCapNhat)
-    FROM TrangThaiDonHang tdh2
-    WHERE tdh2.MaDonHang = tdh.MaDonHang
-)
-GROUP BY DATE(dh.NgayDat), tdh.TrangThai
-ORDER BY DATE(dh.NgayDat);
 
--- Truy vấn lấy đơn hàng (Kèm với trạng thái mới nhât)
-SELECT * FROM `DonHang` dh JOIN `TrangThaiDonHang` tt ON dh.`MaDonHang` = tt.`MaDonHang`
-WHERE  tt.`NgayCapNhat` = (
-			SELECT MAX(`NgayCapNhat`) FROM `TrangThaiDonHang` subtt 
-            WHERE dh.`MaDonHang` = subtt.`MaDonHang`
-        );
-        
-SELECT DATE(pnk.ngayNhapKho) AS ngayNhap,
-                            SUM(ct.SoLuong) AS SoLuongDaNhap,
-                            SUM(ct.ThanhTien) AS ChiTieu
-                    FROM PhieuNhapKho pnk
-                    JOIN CTPNK ct ON pnk.MaPhieu = ct.MaPhieu
-                    WHERE DATE(pnk.ngayNhapKho) BETWEEN COALESCE(NULL, '2010-01-01') AND COALESCE(NULL, CURRENT_DATE())
-                    GROUP BY DATE(pnk.ngayNhapKho)
-                    ORDER BY DATE(pnk.ngayNhapKho);
-                    
-                    
-                    
-SELECT * FROM `DonHang` dh 
-JOIN `NguoiDung` nd ON dh.`MaKH` = nd.`MaNguoiDung`;

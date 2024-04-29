@@ -62,6 +62,77 @@
 
     }
 
+    function getAllTaiKhoan1($quyen){
+
+        //Chuẩn bị trước biến $connection
+        $connection = null;
+
+        //Chuẩn bị câu truy vấn gốc
+        $query = "SELECT * FROM `TaiKhoan` JOIN `NguoiDung` ON `TaiKhoan`.`MaTaiKhoan` = `NguoiDung`.`MaNguoiDung` ";
+
+        //Mảng chứa điều kiện
+        $where_conditions=[];
+        
+        //Số phần tử mỗi trang
+        $entityPerPage = 6;
+
+        //Tổng số trang
+        $totalPages = null;
+
+        // Thêm điều kiện về quyền
+        if (!empty($quyen)) {
+            $where_conditions[] = "`Quyen` = '$quyen' ";
+        }
+        // Kết nối các điều kiện lại với nhau (Nếu không có thì skip)
+        if (!empty($where_conditions)) {
+            $query .= " WHERE " . implode(" AND ", $where_conditions);
+        }
+
+        // Khởi tạo kết nối
+        $connection = MysqlConfig::getConnection();
+    
+    
+         
+
+            //fetchColumn ( <Cột thứ n> ) : Lấy row đầu tiên của cột thứ n - 1
+            $query_total_row = substr_replace($query, "COUNT(*)", 7, 1);
+
+            // Chạy lệnh Query để lấy ra tổng trang
+            $statement_total_row = $connection->prepare($query_total_row);
+            $statement_total_row->execute();
+    
+    
+        // Khởi tạo kết nối đến cơ sở dữ liệu
+    
+        try {
+
+            $statement = $connection->prepare($query);
+    
+            if ($statement !== false) {
+    
+                $statement->execute();
+        
+                $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+        
+                return (object) [
+                    "status" => 200,
+                    "message" => "Thành công",
+                    "data" => $result
+
+                ];
+            } else {
+                throw new PDOException();
+            }
+        } catch (PDOException $e) {
+            return (object) [
+                "status" => 400,
+                "message" => "Lỗi không thể lấy danh sách tài khoản",
+                "data" => []
+            ];
+        } finally {
+            $connection = null;
+        }
+    }
    
 
     function getAllTaiKhoan($page, $search, $quyen, $trangThai){

@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="GuestProductDetail.css" />
 
     <link rel="stylesheet" href="login.css" />
-    <title>Các sản phẩm</title>
+    <title>Chi tiết sản phẩm</title>
     <style>
         .quantity-available {
             color: red;
@@ -230,7 +230,7 @@
      document.querySelector(".minusBtn").addEventListener("click", function () {
         var quantityInput = document.querySelector("input[type='number']"); // Lấy input số lượng
         var currentQuantity = parseInt(quantityInput.value); // Lấy giá trị số lượng hiện tại
-        if (currentQuantity > 0) { // Kiểm tra nếu số lượng hiện tại lớn hơn 0
+        if (currentQuantity > 1) { // Kiểm tra nếu số lượng hiện tại lớn hơn 0
             quantityInput.value = currentQuantity - 1; // Giảm số lượng đi 1 và cập nhật vào input
         }
     });
