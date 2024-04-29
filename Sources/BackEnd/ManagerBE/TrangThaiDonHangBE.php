@@ -35,7 +35,7 @@ if (isset($_POST['action'])){
 function getTrangThaiDonHangByMaDonHang($maDonHang) {
     $connection = null;
 
-    $query = "SELECT * FROM `TrangThaiDonHang` WHERE `MaDonHang` = :maDonHang";
+    $query = "SELECT * FROM `TrangThaiDonHang` WHERE `MaDonHang` = :maDonHang ORDER BY `NgayCapNhat` desc";
 
     $connection = MysqlConfig::getConnection();
 
