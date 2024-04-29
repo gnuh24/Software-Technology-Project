@@ -289,16 +289,14 @@
         paginationHTML += '<button class="pageButton">' + i + '</button>';
       }
     }
-
-    // Thiết lập nút phân trang vào paginationContainer
-    paginationContainer.innerHTML = paginationHTML;
-
-    // Thêm sự kiện click cho từng nút phân trang
-
+    if(totalPages>1){
+      paginationContainer.innerHTML = paginationHTML;
+    }
+   
     paginationContainer.querySelectorAll('.pageButton').forEach(function(button, index) {
       button.addEventListener('click', function() {
         // Gọi hàm fetchDataAndUpdateTable khi người dùng click vào nút phân trang
-        fetchDataAndUpdateTable(index + 1); // Thêm 1 vào index để chuyển đổi về trang 1-indexed
+        fetchDataAndUpdateTable(index + 1,udminNgayTao, udmaxNgayTao, udtrangThai); // Thêm 1 vào index để chuyển đổi về trang 1-indexed
       });
     });
   }
@@ -349,9 +347,9 @@
                             <td class="${trClass}"><button type="button" onclick="changeOrderStatus(${record.MaDonHang}, '${record.TrangThai}')" class="${order_statuses_classname}">  ${order_statuses}  </button></td>        
                           `;
           if (order_statuses == 'Chờ Duyệt')
-            trContent += `<td class="Table_data_quyen_1"><a href="./ChiTietDonHang.php" class="edit"> chi tiết</a> <button class="delete" onclick="setTrangThaiDonHang(${record.MaDonHang},'Huy')"> hủy</button> </td></tr> `;
+            trContent += `<td class="${trClass}"><a href="./ChiTietDonHang.php?${record.MaDonHang}" class="edit">chi tiết</a> <button class="delete" onclick="setTrangThaiDonHang(${record.MaDonHang},'Huy')"> hủy</button> </td></tr> `;
           else
-            trContent += `<td class="Table_data_quyen_1"><a href="./ChiTietDonHang.php" class="edit"> chi tiết</a> </td></tr>`;
+            trContent += `<td class="${trClass}"><a href="./ChiTietDonHang.php?${record.MaDonHang}" class="edit">chi tiết</a> </td></tr>`;
           tableContent += trContent; // Thêm nội dung của hàng vào chuỗi tableContent
         });
 

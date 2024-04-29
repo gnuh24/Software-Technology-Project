@@ -13,8 +13,8 @@ if (isset($_GET['page'])) {
     echo json_encode($result);
 }
 
-if (isset($_POST['action'])){
-    if ($_POST['action'] == "add"){
+if (isset($_POST['action'])) {
+    if ($_POST['action'] == "add") {
         $tongGiaTri = $_POST['tongGiaTri'];
         $maKH =  $_POST['maTaiKhoan'];
         $maPhuongThuc =  $_POST['maPhuongThuc'];
@@ -28,16 +28,13 @@ if (isset($_POST['action'])){
     }
 }
 
-// if (isset($_GET['maTaiKhoan'])){
+if (isset($_GET['MaDonHang'])) {
+    $MaDonHang = isset($_GET['MaDonHang']);
 
-//     $maTaiKhoan = $_GET['maTaiKhoan'];
+    $result = getDonHangByMaDonHang($MaDonHang);
 
-//     // Gọi hàm PHP bạn muốn thực thi và trả về kết quả dưới dạng JSON
-//     $result = getAllDonHangByMaKH($maTaiKhoan);
-
-//     echo json_encode($result);
-
-// }
+    echo json_encode($result);
+}
 
 
 function getAllDonHang($page, $minNgayTao, $maxNgayTao, $trangThai)
@@ -62,7 +59,7 @@ function getAllDonHang($page, $minNgayTao, $maxNgayTao, $trangThai)
                 JOIN `TrangThaiDonHang` tt ON dh.`MaDonHang` = tt.`MaDonHang`
                 JOIN `nguoidung` kh ON dh.`MaKH` = kh.`MaNguoiDung`
                 JOIN `dichvuvanchuyen` dv ON dh.`MaDichVu` = dv.`MaDichVu`
-                WHERE tt.NgayCapNhat = (SELECT MAX(NgayCapNhat) 
+                WHERE tt.NgayCapNhat = (SELECT MAX(NgayCapNhat)
                                         FROM TrangThaiDonHang 
                                         WHERE MaDonHang = dh.MaDonHang)
                 ";
@@ -82,14 +79,14 @@ function getAllDonHang($page, $minNgayTao, $maxNgayTao, $trangThai)
     $entityPerPage = 7;
     $totalPages = null;
 
-    if ($minNgayTao!=="null") {
+    if ($minNgayTao !== "null") {
         $where_conditions[] = "dh.NgayDat >= '$minNgayTao 00:00:00'";
     }
-    if($maxNgayTao!=="null"){
-        $where_conditions[] = "dh.NgayDat <= '$maxNgayTao 23:59:59'" ;
+    if ($maxNgayTao !== "null") {
+        $where_conditions[] = "dh.NgayDat <= '$maxNgayTao 23:59:59'";
     }
 
-    if ($trangThai!=="null") {
+    if ($trangThai !== "null") {
         $where_conditions[] = "tt.TrangThai = '$trangThai'";
     }
 
@@ -186,9 +183,29 @@ function getAllDonHangByMaKH($maKH)
 function getDonHangByMaDonHang($maDonHang)
 {
     $connection = null;
-    $query = "SELECT * FROM `DonHang` dh 
+    $query = "SELECT dh.MaDonHang,
+                    dh.NgayDat,
+                    dh.TongGiaTri,
+                    dh.MaKH,
+                    dh.DiaChiGiaoHang,
+                    pt.MaPhuongThuc,
+                    dv.MaDichVu,
+                    pt.TenPhuongThuc,
+                    tt.TrangThai,
+                    tt.NgayCapNhat,
+                    dv.TenDichVu,
+                    kh.HoTen,
+                    kh.SoDienThoai,
+                    kh.Email 
+                FROM `DonHang` dh
+                JOIN `PhuongThucThanhToan` pt ON dh.`MaPhuongThuc` = pt.`MaPhuongThuc`
                 JOIN `TrangThaiDonHang` tt ON dh.`MaDonHang` = tt.`MaDonHang`
-                WHERE dh.`MaDonHang` = :maDonHang";
+                JOIN `nguoidung` kh ON dh.`MaKH` = kh.`MaNguoiDung`
+                JOIN `dichvuvanchuyen` dv ON dh.`MaDichVu` = dv.`MaDichVu`
+                WHERE tt.NgayCapNhat = (SELECT MAX(NgayCapNhat)
+                                        FROM TrangThaiDonHang 
+                                        WHERE MaDonHang = dh.MaDonHang)
+                AND dh.`MaDonHang` = :maDonHang";
 
     $connection = MysqlConfig::getConnection();
 
