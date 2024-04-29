@@ -1,22 +1,3 @@
-<?php
-
-require_once "../../../BackEnd/ManagerBE/DonHangBE.php";
-require_once "../../../BackEnd/ManagerBE/ChiTietDonHangBE.php";
-
-$MaDonHang;
-
-if (isset($_GET['MaDonHang'])) {
-    $MaDonHang = $_GET['MaDonHang'];
-}
-
-$chiTiet = getDonHangByMaDonHang($MaDonHang);
-$dataChitiet = $chiTiet->data;
-
-$donHang = getDonHangByMaDonHang($MaDonHang);
-$dataDonHang = $donHang->data;
-
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -72,12 +53,13 @@ $dataDonHang = $donHang->data;
                             <div style="padding-left: 16%; width: 100%; padding-right: 2rem">
                                 <div class="wrapper">
                                     <div class="orderManagement_order_history">
-                                        <a class="back" href="./QLDonHang.php"><</a>
+                                        <a class="back" href="./QLDonHang.php">
+                                            <</a>
                                                 <div class="detail__wrapper">
-                                                    <p class="title">Chi tiết đơn hàng: <span id="orderID"><?php echo $MaDonHang ?></span></p>
-                                                    <ul class="order_status__wrapper">
+                                                    <p class="title">Chi tiết đơn hàng: <span id="orderID"></span></p>
+                                                    <ul class="order_status__wrapper" id="order_status">
                                                         <?php
-                                                        if ($dataDonHang['TrangThai']=='Huy') {
+                                                        if ($dataDonHang['TrangThai'] == 'Huy') {
                                                             echo "  <div class='order_status completed'>
                                                                 <li>Đã đặt hàng</li>
                                                             </div>
@@ -111,44 +93,38 @@ $dataDonHang = $donHang->data;
                                                             <p class="title">Thông tin người nhận:</p>
                                                             <div class="divider"></div>
                                                             <div class="receive_info">
-                                                                <?php
-                                                                    echo "
-                                                                        <p class='name'><span>Họ tên:</span>"+$dataDonHang['HoTen']+"</p>
-                                                                        <p><span>Địa chỉ: </span>"+$dataDonHang['DiaChiGiaoHang']+"</p>
-                                                                        <p><span>Số điện thoại: </span>"+$dataDonHang['SoDienThoai']+"</p>
-                                                                    ";
-                                                                ?>
+                                                                <p class='name' id='hoten'></p>
+                                                                <p id='diachigiaohang'></p>
+                                                                <p id='sodienthoai'></p>
                                                             </div>
                                                         </div>
                                                         <div class="payment_method__wrapper">
                                                             <p class="title">Phương thức thanh toán:</p>
                                                             <div class="divider"></div>
-                                                            <p><?php echo  $dataDonHang['TenPhuongThuc'];?><br>
+                                                            <p id="tenphuongthuc">
                                                                 <!-- <span> CHỈ ÁP DỤNG TIỀN MẶT ĐỐI VỚI NỘI THÀNH TPHCM</span> -->
                                                             </p>
                                                         </div>
                                                         <div class="payment_method__wrapper">
                                                             <p class="title">Phương thức vận chuyển:</p>
                                                             <div class="divider"></div>
-                                                            <p><?php echo  $dataDonHang['TenDichVu'];?><br>
+                                                            <p id="tendichvu">
                                                                 <!-- <span> CHỈ ÁP DỤNG TIỀN MẶT ĐỐI VỚI NỘI THÀNH TPHCM</span> -->
                                                             </p>
                                                         </div>
                                                     </div>
                                                     <div class="transaction_items__wrapper">
                                                         <p class="transaction_name">Trạng thái:
-                                                            <span class="">
-                                                                <?php
-                                                                    echo $dataDonHang['TrangThai'];
-                                                                ?>
+                                                            <span class="" id="trangthai">
+
                                                             </span>
                                                         </p>
                                                         <div class="divider"></div>
                                                         <div class="transaction_list">
-                                                            <?php
+                                                            <!-- <?php
 
-                                                                foreach($dataChitiet as $sanPham){
-                                                                    echo "
+                                                            foreach ($dataChitiet as $sanPham) {
+                                                                echo "
                                                                     <div class='transaction_item'><img  src='' alt=''>
                                                                         <div class='item_info__wrapper'>
                                                                             <div class='item_info'>
@@ -161,9 +137,9 @@ $dataDonHang = $donHang->data;
                                                                         </div>
                                                                     </div>
                                                                     <div class='divider'></div>";
-                                                                }
-                                                                
-                                                            ?>
+                                                            }
+
+                                                            ?> -->
 
                                                         </div>
                                                     </div>
@@ -202,16 +178,80 @@ $dataDonHang = $donHang->data;
 </body>
 
 <script>
+    var currentURL = new URL(window.location.href);
 
-    var totalPrice = <?php $dataDonHang['TongGiaTri'] ?>;
+    var MaDonHang = currentURL.searchParams.get("MaDonHang");
 
-    document.getElementById('tongTamTinh').innerText =number_format_vnd(totalPrice);
-    document.getElementById('totalPrice').innerText =number_format_vnd(totalPrice);
-    function number_format_vnd(number) {
-    return Number(number).toLocaleString('vi-VN', {
-      style: 'currency',
-      currency: 'VND'
-    });
+    document.getElementById("orderID").innerText = MaDonHang;
+
+    getChiTietDonHangByMaDonHang(MaDonHang);
+
+    getDonHangByMaDonHang(MaDonHang);
+
+    function getChiTietDonHangByMaDonHang(MaDonHang) {
+        $.ajax({
+            url: '../../../BackEnd/ManagerBE/ChiTietDonHangBE.php',
+            type: 'GET',
+            dataType: "json",
+            data: {
+                MaDonHang: MaDonHang,
+            },
+            success: function(response) {
+                console.log(response)
+                var data = response.data;
+
+            },
+
+            error: function(xhr, status, error) {
+                console.error('Lỗi khi gọi API: ', error);
+            }
+        });
+    }
+
+    function getTenTrangThai(order_statuses) {
+        if (order_statuses == 'ChoDuyet') {
+            order_statuses = 'Chờ Duyệt';
+        }
+        if (order_statuses == 'Huy') {
+            order_statuses = 'Đã Hủy';
+        }
+        if (order_statuses == 'DaDuyet') {
+            order_statuses = 'Đã duyệt';
+        }
+        if (order_statuses == 'DangGiao') {
+            order_statuses = 'Đang Giao';
+        }
+        if (order_statuses == 'GiaoThanhCong') {
+            order_statuses = 'Giao Thành Công';
+        }
+        return order_statuses;
+    }
+
+    function getDonHangByMaDonHang(MaDonHang) {
+        $.ajax({
+            url: '../../../BackEnd/ManagerBE/DonHangBE.php',
+            type: 'GET',
+            dataType: "json",
+            data: {
+                MaDonHang: MaDonHang,
+            },
+            success: function(response) {
+                console.log(response)
+                var data = response.data;
+                var order_status = document.getElementById("order_status");
+                document.getElementById("hoten").innerHTML = `<span>Họ tên:</span>${data.HoTen}`;
+                document.getElementById("diachigiaohang").innerHTML = `<span>Địa chỉ: </span>${data.SoDienThoai}`;
+                document.getElementById("sodienthoai").innerHTML = `<span>Số điện thoại: </span>${data.DiaChiGiaoHang}`;
+                document.getElementById("tenphuongthuc").innerHTML = `${date.TenPhuongThuc}<br>`;
+                document.getElementById("tendichvu").innerHTML = `${data.TenDichVu}<br>`;
+                document.getElementById("trangthai").innerText = getTenTrangThai(data.TrangThai);
+
+            },
+
+            error: function(xhr, status, error) {
+                console.error('Lỗi khi gọi API: ', error);
+            }
+        });
     }
 </script>
 
