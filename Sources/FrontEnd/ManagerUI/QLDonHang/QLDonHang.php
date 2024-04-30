@@ -217,25 +217,17 @@
   }
 
   function formatDate(originalDate) {
-    // Parse the original date string
     var dateObj = new Date(originalDate);
 
-    // Extract date components
-    var month = dateObj.getMonth() + 1; // Months are zero-based, so add 1
+    var month = dateObj.getMonth() + 1;
     var day = dateObj.getDate();
     var year = dateObj.getFullYear();
     var hours = dateObj.getHours();
     var minutes = dateObj.getMinutes();
     var seconds = dateObj.getSeconds();
-    var meridian = hours >= 12 ? 'PM' : 'AM';
+    const pad = (num) => (num < 10 ? '0' : '') + num;
 
-    // Adjust hours to 12-hour format
-    hours = hours % 12;
-    hours = hours ? hours : 12; // Handle midnight (0 hours)
-
-    // Format the date string
-    var formattedDate = month + '/' + day + '/' + year + ', ' + hours + ':' + minutes + ':' + seconds + ' ' + meridian;
-
+    const formattedDate = `${pad(hours)}:${pad(minutes)}:${pad(seconds)} ${pad(day)}/${pad(month)}/${year}`;
     return formattedDate;
   }
 
@@ -346,12 +338,12 @@
                             <td class="${trClass}"> ${ngayDatFormatted}  </td>
                             <td class="${trClass}"> ${number_format_vnd(record.TongGiaTri)}</td>
                             <td class="${trClass}"> ${record.Email}  </td>  
-                            <td class="${trClass}"> ${order_statuses} </td>        
+                            <td class="${trClass} ${order_statuses_classname}"> ${order_statuses} </td>        
                           `;
           if (order_statuses == 'Chờ Duyệt')
-            trContent += `<td class="${trClass}"><button type="button" onclick="changeOrderStatus(${record.MaDonHang}, '${record.TrangThai}')" class="${order_statuses_classname}">Đổi trạng thái</button><a href="./ChiTietDonHang.php?${record.MaDonHang}" class="edit">chi tiết</a> <button class="delete" onclick="setTrangThaiDonHang(${record.MaDonHang},'Huy')"> hủy</button> </td></tr> `;
+            trContent += `<td class="${trClass}"><button type="button" onclick="changeOrderStatus(${record.MaDonHang}, '${record.TrangThai}')" class="edit">Đổi trạng thái</button><a href="./ChiTietDonHang.php?${record.MaDonHang}" class="edit">chi tiết</a> <button class="delete" onclick="setTrangThaiDonHang(${record.MaDonHang},'Huy')"> hủy</button> </td></tr> `;
           else
-            trContent += `<td class="${trClass}"><button type="button" onclick="changeOrderStatus(${record.MaDonHang}, '${record.TrangThai}')" class="${order_statuses_classname}">Đổi trạng thái</button><a href="./ChiTietDonHang.php?${record.MaDonHang}" class="edit">chi tiết</a> </td></tr>`;
+            trContent += `<td class="${trClass}"><a href="./ChiTietDonHang.php?MaHoaDon=${record.MaDonHang}" class="edit">chi tiết</a></td></tr>`;
           tableContent += trContent; // Thêm nội dung của hàng vào chuỗi tableContent
         });
 
@@ -433,6 +425,8 @@
     TrangThai = nextState(TrangThai);
     setTrangThaiDonHang(MaDonHang, TrangThai);
   }
+
+
 
   function setTrangThaiDonHang(MaDonHang, TrangThai) {
     $.ajax({
