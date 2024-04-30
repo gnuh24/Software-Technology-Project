@@ -170,7 +170,18 @@
             fillOrderInfo();
             
         });
+        function convertPriceToNumber(priceString) {
+            // Loại bỏ ký tự '.'
+            var priceWithoutDot = priceString.replace('.', '');
 
+            // Loại bỏ ký tự 'đ'
+            var priceWithoutDong = priceWithoutDot.replace('đ', '');
+
+            // Chuyển đổi thành số
+            var priceNumber = parseInt(priceWithoutDong);
+
+            return priceNumber;
+        }
             
 
         document.getElementById('createOrder').addEventListener('click', function() {
@@ -199,9 +210,9 @@
             cartItems.forEach(function(item) {
                 const maSanPham = item.id;
                 const tenSanPham = item.querySelector('.nameCart').textContent;
-                const donGia = item.querySelector('.priceCart').textContent;
+                const donGia = convertPriceToNumber(item.querySelector('.priceCart').textContent);
                 const soLuong = item.querySelector('.txtQuantity').textContent;
-                const thanhTien = item.querySelector('.valueTotalPrice').textContent;
+                const thanhTien = convertPriceToNumber(item.querySelector('.valueTotalPrice').textContent);
                 danhSachChiTietDonHang.push({
                     maSanPham: maSanPham,
                     tenSanPham: tenSanPham,
@@ -226,7 +237,7 @@
                 // Gọi hàm tạo đơn hàng
                 createDonHang(maTaiKhoan, tongGiaTri, maPhuongThuc, maDichVu, diaChiGiaoHang, danhSachChiTietDonHang);
                 
-                window.location.href = "SignedHomePage.php";
+               window.location.href = "MyOrder.php";
 
             } else {
                 // Hiển thị thông báo lỗi nếu thiếu thông tin

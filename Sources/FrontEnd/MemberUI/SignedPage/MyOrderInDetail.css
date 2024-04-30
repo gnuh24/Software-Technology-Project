@@ -7,8 +7,8 @@
 .circle-container {
     display: inline-block;
     position: relative;
-    width: 200px; /* Độ dài và độ rộng của vòng tròn */
-    height: 200px;
+    width: 150px; /* Độ dài và độ rộng của vòng tròn */
+    height: 150px;
     border-radius: 50%; /* Tạo hình dạng vòng tròn */
     border: 5px solid grey; /* Đường viền của vòng tròn */
     text-align: center;
@@ -30,23 +30,32 @@
 }
 
 .icon{
-    font-size: 50px;
+    font-size: 40px;
     color: grey;
 }
 
 .trangThai{
-    font-size: 25px;
+    font-size: 20px;
     color: grey;
 
 }
 
-.thoiGian{
+.thoiGian {
+    max-width: 60px;
     font-size: 15px;
     color: grey;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
+
 .line {
     color: gray;
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.checkout__wrapper{
+    margin-top:L 20px;
 }

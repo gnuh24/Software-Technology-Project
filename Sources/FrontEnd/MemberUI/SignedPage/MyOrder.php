@@ -33,10 +33,10 @@ if (isset($_GET['maTaiKhoan'])) {
     <!-- Phần hiển thị đơn hàng -->
     <div class="orderManagement_order_history">
         <?php
-        // Code PHP để lấy dữ liệu đơn hàng
-        ?>
 
-        <?php
+        function formatMoney($amount) {
+            return number_format($amount, 0, ',', '.') . 'đ';
+        }
         // Kiểm tra số lượng đơn hàng
         $numberOfProducts = count(array_unique(array_column($data->data, 'MaDonHang')));
 
@@ -64,12 +64,12 @@ if (isset($_GET['maTaiKhoan'])) {
                 echo "<div class='orderManagement_order_info'>" .
                     "<p class='anhMinhHoa'><img style='width: 100px; height: 100px;' src='{$chiTiet['AnhMinhHoa']}'></p>" .
                     "<p class='tenSanPham'>{$chiTiet['TenSanPham']}</p>" .
-                    "<p class='donGia'>{$chiTiet['DonGia']}</p>" .
+                    "<p class='donGia'>" . formatMoney($chiTiet['DonGia']) . "</p>" .
                     "<p class='soLuong'>{$chiTiet['SoLuong']}</p>" .
-                    "<p class='thanhTien'>{$chiTiet['ThanhTien']}</p>" .
+                    "<p class='thanhTien'>" . formatMoney($chiTiet['ThanhTien']) . "</p>" .
                 "</div>";
             }
-
+            
             echo "<div class='orderManagement_order_thanhTien'>" .
                 "<p>Trạng thái: ";
                 switch ($hoaDon['TrangThai']) {
@@ -103,7 +103,7 @@ if (isset($_GET['maTaiKhoan'])) {
             if ($hoaDon['TrangThai'] == 'GiaoThanhCong' || $hoaDon['TrangThai'] == 'Huy') {
                 echo "<button class='order_detail_button' onclick='toOrderDetail({$hoaDon["MaDonHang"]})'> Chi tiết</button>";
             } else {
-                echo "<button class='order_detail_button' onclick='toOrderDetail({$hoaDon["MaDonHang"]})'> Chi tiết</button>" .
+                echo "<button class='order_detail_button' onclick='toOrderDetail({$hoaDon["MaDonHang"]}, {$hoaDon["MaKH"]})'> Chi tiết</button>" .
                     "<button class='cancel_order_button' onclick='cancel({$hoaDon["MaDonHang"]}, \"{$hoaDon['TrangThai']}\", " . json_encode($listSanPham) . ")'>Hủy đơn hàng</button>";
             }
             
@@ -187,8 +187,8 @@ if (isset($_GET['maTaiKhoan'])) {
             });
         }
 
-        function toOrderDetail(maDonHang){
-            window.location.href = `MyOrderInDetail.php?maDonHang=${maDonHang}`;
+        function toOrderDetail(maDonHang, maTaiKhoan){
+            window.location.href = `MyOrderInDetail.php?maDonHang=${maDonHang}&maTaiKhoan=${maTaiKhoan}`;
         }
 
 

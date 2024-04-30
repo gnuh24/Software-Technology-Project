@@ -17,6 +17,8 @@
     <link rel="stylesheet" href="../GuestPage/HomePage.css" />
     <link rel="stylesheet" href="../GuestPage/login.css" />
     <link rel="stylesheet" href="MyOrderInDetail.css" />
+    <link rel="stylesheet" href="CreateOrder.css" />
+
 
     <title>Chi tiết đơn hàng</title>
 </head>
@@ -32,7 +34,7 @@
         </div>
     </section>
 
-    <section>
+    <section style="padding: 0 5%;">
         <div id="chiTietTrangThaiContent">
             <div id="circle-container1" class="circle-container">
                 <div id="ele1" class="chiTietTrangThaiElement">
@@ -71,8 +73,114 @@
                     <p id="thoiGian4" class="thoiGian"></p>
                 </div>
             </div>
+
+            <div id="line4" class="line">_____________________</div>
+            
+            <div id="circle-container5" class="circle-container">
+                <div id="ele5" class="chiTietTrangThaiElement">
+                    <i id="icon5" class="fa-solid fa-ban icon"></i>
+                    <p class="trangThai">Hủy</p>
+                    <p id="thoiGian5" class="thoiGian"></p>
+                </div>
+            </div>
         </div>
     </section>
+
+    <section>
+            <div class="layout__wrapper">
+                <div class="checkout__wrapper containerPage" style="margin-top: 30px;">
+                    <div class="payment_info__wrapper">
+                        <div class="payment_info">
+                            <div id='checkout_form'>
+                                <div class='payment__wrapper'>
+                                    <label>Các sản phẩm đặt mua</label>
+                                    <?php require_once "../../../BackEnd/ManagerBE/ChiTietDonHangBe.php" ;
+
+                                    function formatMoney($amount) {
+                                        return number_format($amount, 0, ',', '.') . 'đ';
+                                    }
+
+                                    if (isset($_GET['maDonHang'])) {
+                                        $totalPrice_Shipping = 0;
+                                        $maDonHang = $_GET['maDonHang'];
+                                        $result2 = getChiTietDonHangByMaDonHang($maDonHang)->data;
+                                            foreach($result2 as $cartProduct){
+                                                $totalPrice_Shipping +=  $cartProduct['ThanhTien'];
+                                                $formattedPrice = formatMoney($cartProduct['DonGia']);
+                                                $formattedTotalPrice = formatMoney($cartProduct['ThanhTien']);
+                                                echo "
+                                                <div class='radio__wrapper'>
+                                                    <div>
+                                                        <div class='cartItem' id='{$cartProduct['MaSanPham']}'>
+                                                            <a href='#' class='img'><img class='img' src='{$cartProduct['AnhMinhHoa']}' /></a>
+                                                            <div class='inforCart'>
+                                                                <div class='nameAndPrice'>
+                                                                    <a href='#' class='nameCart'>{$cartProduct['TenSanPham']}</a>
+                                                                    <p class='priceCart'>$formattedPrice</p>
+                                                                </div>
+                                                                <div class='quantity'>
+                                                                    <div class='txtQuantity'>{$cartProduct['SoLuong']}</div>
+                                                                </div>
+                                                            </div>
+                                                            <div class='wrapTotalPriceOfCart'>
+                                                                <div class='totalPriceOfCart'>
+                                                                    <p class='lablelPrice'>Thành tiền</p>
+                                                                    <p class='valueTotalPrice'>$formattedTotalPrice</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>";
+                                                
+                                            }
+                                        }else{
+                                            echo "<h1> Không in ra được =((( </h1>";
+                                        }
+                                        
+                                    ?>
+                                </div>
+                             
+                        
+
+                                <p class='hotline'>
+                                    * Để được hỗ trợ trực tiếp và nhanh nhất vui lòng liên hệ THug88
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="order_info__wrapper">
+                        <div class="order_info">
+                            <p class="title" style="text-align: center;">Thông tin đơn hàng</p>
+
+                            <?php 
+
+                            require_once "../../../BackEnd/ManagerBE/DonHangBE.php";
+
+
+                            $donHang = getDonHangByMaDonHang($_GET['maDonHang'])->data;
+
+                            echo '<div class="divider"></div>
+                            <div class="info__wrapper order_info2">
+                                <p><span class="span1">Họ tên người nhận:</span><span class="span2" id="spanHoTen">' . $donHang['HoTen'] . '</span></p>
+                                <p><span class="span1">Số điện thoại:</span><span class="span2" id="spanSoDienThoai">' . $donHang['SoDienThoai'] . '</span></p>
+                                <p><span class="span1">Địa chỉ giao hàng:</span><span class="span2" id="spanDiaChi">' . $donHang['DiaChiGiaoHang'] . '</span></p>
+                                <p><span class="span1">Phương thức thanh tóan:</span><span class="span2" id="spanPhuongThucThanhToan">' . $donHang['TenPhuongThuc'] . '</span></p>
+                                <p><span class="span1">Dịch vụ vận chuyển:</span><span class="span2" id="spanDichVuVanChuyen">' . $donHang['TenDichVu'] . '</span></p>
+                            </div>
+                            <div class="divider"></div>
+                            <div class="info__wrapper total__info">
+                                <p>Tổng cộng</p>
+                                <p id="totalPrice">' . formatMoney($donHang['TongGiaTri']) . '</p>
+                            </div>';
+                      
+
+                            ?>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
   
 
@@ -91,8 +199,18 @@
                 // Lấy thông tin trạng thái và thời gian
                 var trangThaiValue = trangThai.TrangThai;
                 var thoiGianValue = trangThai.NgayCapNhat;
-                // Cập nhật màu sắc và thời gian cho container tương ứng
+                console.log(trangThaiValue);
                 setColorAndTime(trangThaiValue, thoiGianValue);
+
+                // if (trangThaiValue == "Huy"){
+                //     setColorAndTime(trangThaiValue, thoiGianValue);
+
+                //     // Cập nhật màu sắc và thời gian cho container tương ứng
+                //     return;
+                // }
+
+
+                
             });
         });
 
@@ -104,21 +222,27 @@
             const $line1 = $('#line1');
             const $line2 = $('#line2');
             const $line3 = $('#line3');
+            const $line4 = $('#line4');
+
 
             const $thoiGian1 = $('#thoiGian1');
             const $thoiGian2 = $('#thoiGian2');
             const $thoiGian3 = $('#thoiGian3');
             const $thoiGian4 = $('#thoiGian4');
+            const $thoiGian5 = $('#thoiGian5');
 
             const $icon1 = $('#icon1');
             const $icon2 = $('#icon2');
             const $icon3 = $('#icon3');
             const $icon4 = $('#icon4');
+            const $icon5 = $('#icon5');
 
             const $circleContainer1 = $('#circle-container1');
             const $circleContainer2 = $('#circle-container2');
             const $circleContainer3 = $('#circle-container3');
             const $circleContainer4 = $('#circle-container4');
+            const $circleContainer5 = $('#circle-container5');
+
 
             // Thực hiện thay đổi CSS sử dụng jQuery
             switch (trangThaiValue) {
@@ -146,6 +270,29 @@
                     $line3.css("color", "green");
                     $circleContainer4.css("border-color", "green");
                     $thoiGian4.html(chuyenDoiNgayThang(thoiGianValue));
+
+                    break;
+                case 'Huy':
+
+                    $icon1.css("color", "rgb(146, 26, 26)");
+                    $circleContainer1.css("border-color", "rgb(146, 26, 26)");
+
+                    $icon2.css("color", "rgb(146, 26, 26)");
+                    $line1.css("color", "rgb(146, 26, 26)");
+                    $circleContainer2.css("border-color", "rgb(146, 26, 26)");
+
+                    $icon3.css("color", "rgb(146, 26, 26)");
+                    $line2.css("color", "rgb(146, 26, 26)");
+                    $circleContainer3.css("border-color", "rgb(146, 26, 26)");
+
+                    $icon4.css("color", "rgb(146, 26, 26)");
+                    $line3.css("color", "rgb(146, 26, 26)");
+                    $circleContainer4.css("border-color", "rgb(146, 26, 26)");
+
+                    $icon5.css("color", "rgb(146, 26, 26)");
+                    $line4.css("color", "rgb(146, 26, 26)");
+                    $circleContainer5.css("border-color", "rgb(146, 26, 26)");
+                    $thoiGian5.html(chuyenDoiNgayThang(thoiGianValue));
 
                     break;
                 default:
