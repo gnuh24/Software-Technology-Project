@@ -5,7 +5,6 @@ CREATE DATABASE IF NOT EXISTS `SoftwareTechnology_Database`;
 -- Sử dụng cơ sở dữ liệu mới hoặc có sẵn
 USE `SoftwareTechnology_Database`;
 
-
 /*______________________________ TÀI KHOẢN VÀ NGƯỜI DÙNG___________________________ */
 
 
@@ -297,6 +296,7 @@ VALUES 								(		1,			"COD"),
 									(		4, 			"Pay Pal"),
 									(		5, 			"Zalo Pay"),
 									(		6, 			"Thẻ tín dụng");
+                                    
 
 
 INSERT INTO `DichVuVanChuyen` 	(`MaDichVu`	 , `TenDichVu`)
