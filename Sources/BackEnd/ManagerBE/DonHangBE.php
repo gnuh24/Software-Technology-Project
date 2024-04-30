@@ -29,7 +29,7 @@ if (isset($_POST['action'])) {
 }
 
 if (isset($_GET['MaDonHang'])) {
-    $MaDonHang = isset($_GET['MaDonHang']);
+    $MaDonHang = $_GET['MaDonHang'];
 
     $result = getDonHangByMaDonHang($MaDonHang);
 
