@@ -1,3 +1,4 @@
+
 <?php
 if (isset($_GET['MaPhieu'])) {
     require_once "../../../BackEnd/ManagerBE/ChiTietPhieuNhapKhoBE.php";
@@ -88,7 +89,7 @@ if (isset($_GET['MaPhieu'])) {
                                     <?php
                                     require_once "../../../BackEnd/ManagerBE/NhaCungCapBE.php";
 
-                                    $result = getAllNhaCungCap();
+                                    $result = getAllNhaCungCapNotPage();
                                     $result1 = $result->data;
                                     foreach ($result1 as $Ketqua) {
                                         if (isset($_GET['MaPhieu'])) {
@@ -131,7 +132,7 @@ if (isset($_GET['MaPhieu'])) {
                                                         echo '<tr style="text-align: center;">
                                                                 <td style="padding: 0.5rem; name=MaSanPham[]">' . $tmp['MaSanPham'] . '</td>
                                                                 <td style="padding: 0.5rem;">' . $tmp['TenSanPham'] . '</td>
-                                                                <td style="padding: 0.5rem;"><input type="text" name="donGia[]" value="' . $tmp['DonGiaNhap'] . '" disabled="true" style=" height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;" ></td>
+                                                                <td style="padding: 0.5rem;"><input type="text" name="donGia[]" value="' . number_format($tmp['DonGiaNhap'], 0, '.', ',') . '" disabled="true" style=" height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;" ></td>
                                                                 <td style="padding: 0.5rem;"><input type="text" name="soLuong[]" value="' . $tmp['SoLuong'] . '" disabled="true" style=" height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;"></td>
                                                             </tr>';
                                                     }
@@ -175,7 +176,7 @@ if (isset($_GET['MaPhieu'])) {
                                     </label>
                                     <label>
                                         <p style="font-size: 1.3rem; font-weight: 700; margin-top: 1rem;">Tổng Giá Trị</p>
-                                        <input id="totalvalue" style=" height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;" value="<?php if (isset($_GET['MaPhieu'])) echo $_GET['TongTien']; ?>" disabled="true" />
+                                        <input id="totalvalue" style=" height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;" value="<?php if (isset($_GET['MaPhieu'])) echo number_format($_GET['TongTien'], 0, '.', ',') . ' ₫'; ?>" disabled="true" />
                                     </label>
                                 </div>
                             </div>
@@ -200,9 +201,8 @@ if (isset($_GET['MaPhieu'])) {
                         <i class="fa fa-search"></i>
                         <input class="input" placeholder="Tìm kiếm sản phẩm" id="timkiemsp" />
                     </div>
-                    <div class="table_wrapper"> <!-- Thêm một wrapper cho bảng sản phẩm -->
-                        <table class="product_table"> <!-- Đặt một lớp mới cho bảng sản phẩm -->
-                            <!-- Phần head của bảng -->
+                    <div class="table_wrapper"> 
+                        <table class="product_table"> 
                             <thead>
                                 <tr style="background-color: rgb(40, 40, 40); color: white;">
                                     <th style="padding: 0.5rem;">Mã Sản Phẩm</th>
@@ -298,10 +298,11 @@ if (isset($_GET['MaPhieu'])) {
                     }
                 }
             });
-
+            var formattedTongGiaTri = totalPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
             var totalPriceElement = document.getElementById('totalvalue');
+            console.log(formattedTongGiaTri);
             if (totalPriceElement) {
-                totalPriceElement.value = totalPrice;
+                totalPriceElement.value = formattedTongGiaTri;
             }
         }
     });
