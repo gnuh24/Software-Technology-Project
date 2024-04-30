@@ -1,3 +1,4 @@
+
 <?php
 if (isset($_GET['MaNguoiDung'])) {
     $hoten = $_POST['hoten'];
@@ -42,7 +43,14 @@ if (isset($_GET['MaNguoiDung'])) {
     <?php require_once "../Header/SignedHeader.php" ?>
     <div class="col-12">
         <div class="my-2 d-flex justify-content-center">
-            <h3>My Profile</h3>
+            <h3 style="    z-index: 1;
+    font-size: 32px;
+    color: #7b181a;
+    position: relative;
+    background-color: white;
+    padding: 0 20px;
+    margin: 30px 0;
+    font-family: Roboto;  font-weight: bold !important;">My Profile</h3>
             <hr>
         </div>
         <div class="row mb-5 gx-5 d-flex justify-content-center " id="contentprofile" style="height: fit-content; margin : 0px;">
@@ -63,7 +71,6 @@ if (isset($_GET['MaNguoiDung'])) {
             <form name="profileForm" action="Profile.php?MaNguoiDung=${userData['MaNguoiDung']}" method="POST" onsubmit="return validateForm()">
                     <div class='bg-secondary-soft px-4 py-5 rounded'>
                         <div class='row g-3' style='text-align:left;'>
-                            <h4 class='my-2 mt-0'>Thông tin cá nhân</h4>
                             <div class='col-md-6'>
                                 <label class='form-label'>Họ tên *</label>
                                 <input type='text' class='form-control' name='hoten' value='${userData['HoTen']}'>

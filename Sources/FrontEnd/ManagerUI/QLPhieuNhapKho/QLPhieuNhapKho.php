@@ -25,29 +25,29 @@
           <div>
             <div>
               <div class="Manager_wrapper__vOYy">
-              <div class="Sidebar_sideBar__CC4MK">
-                    <a class="MenuItemSidebar_menuItem__56b1m" href="../QLLoaiSanPham/QLLoaiSanPham.php">
-                        <span class="MenuItemSidebar_title__LLBtx">Loại Sản Phẩm</span>
-                    </a>
-                    <a class="MenuItemSidebar_menuItem__56b1m" href="../QLSanPham/QLSanPham.php">
-                        <span class="MenuItemSidebar_title__LLBtx">Sản Phẩm</span>
-                    </a>
-                    <a class="MenuItemSidebar_menuItem__56b1m" href="../QLNhaCungCap/QLNhaCungCap.php">
-                        <span class="MenuItemSidebar_title__LLBtx">Nhà Cung Cấp</span>
-                    </a>
-                    <a class="MenuItemSidebar_menuItem__56b1m" href="../QLPhieuNhapKho/QLPhieuNhapKho.php">
-                        <span class="MenuItemSidebar_title__LLBtx">Phiếu Nhập Kho</span>
-                    </a>
-                    <a class="MenuItemSidebar_menuItem__56b1m" href="../QLDonHang/QLDonHang.php">
-                        <span class="MenuItemSidebar_title__LLBtx">Đơn Hàng</span>
-                    </a>
-                    <a class="MenuItemSidebar_menuItem__56b1m" href="../ThongKe/ThongKeDoanhThuChiTieu.php">
-                        <span class="MenuItemSidebar_title__LLBtx">Thống Kê Tài Chính</span>
-                    </a>                         
-                    </a>
-                    <a class="MenuItemSidebar_menuItem__56b1m" href="../ThongKe/ThongKeDonHang.php">
-                        <span class="MenuItemSidebar_title__LLBtx">Thống Kê Đơn Hàng</span>
-                    </a>
+                <div class="Sidebar_sideBar__CC4MK">
+                  <a class="MenuItemSidebar_menuItem__56b1m" href="../QLLoaiSanPham/QLLoaiSanPham.php">
+                    <span class="MenuItemSidebar_title__LLBtx">Loại Sản Phẩm</span>
+                  </a>
+                  <a class="MenuItemSidebar_menuItem__56b1m" href="../QLSanPham/QLSanPham.php">
+                    <span class="MenuItemSidebar_title__LLBtx">Sản Phẩm</span>
+                  </a>
+                  <a class="MenuItemSidebar_menuItem__56b1m" href="../QLNhaCungCap/QLNhaCungCap.php">
+                    <span class="MenuItemSidebar_title__LLBtx">Nhà Cung Cấp</span>
+                  </a>
+                  <a class="MenuItemSidebar_menuItem__56b1m" href="../QLPhieuNhapKho/QLPhieuNhapKho.php">
+                    <span class="MenuItemSidebar_title__LLBtx">Phiếu Nhập Kho</span>
+                  </a>
+                  <a class="MenuItemSidebar_menuItem__56b1m" href="../QLDonHang/QLDonHang.php">
+                    <span class="MenuItemSidebar_title__LLBtx">Đơn Hàng</span>
+                  </a>
+                  <a class="MenuItemSidebar_menuItem__56b1m" href="../ThongKe/ThongKeDoanhThuChiTieu.php">
+                    <span class="MenuItemSidebar_title__LLBtx">Thống Kê Tài Chính</span>
+                  </a>
+                  </a>
+                  <a class="MenuItemSidebar_menuItem__56b1m" href="../ThongKe/ThongKeDonHang.php">
+                    <span class="MenuItemSidebar_title__LLBtx">Thống Kê Đơn Hàng</span>
+                  </a>
                 </div>
 
                 <div style="padding-left: 16%; width: 100%; padding-right: 2rem">
@@ -139,14 +139,32 @@
 
         // Duyệt qua mảng dữ liệu và tạo các hàng mới cho tbody
         data.forEach(function(record) {
+          var ngayNhapKho = record['NgayNhapKho'];
+
+          // Chuyển đổi ngày nhập kho sang đối tượng Date
+          var date = new Date(ngayNhapKho);
+
+          // Lấy các thành phần của ngày nhập kho (giờ, phút, giây, ngày, tháng, năm)
+          var gio = date.getHours();
+          var phut = date.getMinutes();
+          var giay = date.getSeconds();
+          var ngay = date.getDate();
+          var thang = date.getMonth() + 1; // Tháng trong JavaScript đếm từ 0, nên cần cộng thêm 1
+          var nam = date.getFullYear();
+
+          // Định dạng lại chuỗi ngày giờ
+          var ngayNhapKhoFormatted = gio + ":" + phut + ":" + giay + " " + ngay + "/" + thang + "/" + nam;
+
+          var formattedTongGiaTri = record['TongGiaTri'].toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+
           var trContent = `
                 <form id="updateForm_${record['MaPhieu']}" method="post" action="taoPhieuNhapKho.php?MaPhieu=${record['MaPhieu']}&MaNCC=${record['MaNCC']}&MaQuanLy=${record['MaQuanLy']}&TongTien=${record['TongGiaTri']}">
                     <tr>
                         <td class="Table_data" style="width: 130px;">${record['MaPhieu']}</td>
-                        <td class="Table_data">${record['NgayNhapKho']}</td>
+                        <td class="Table_data">${ngayNhapKhoFormatted}</td>
                         <td class="Table_data">${record['TenNCC']}</td>
                         <td class="Table_data">${record['HoTen']}</td>
-                        <td class="Table_data">${record['TongGiaTri']}</td>
+                        <td class="Table_data">${formattedTongGiaTri}</td>
                         <td class="Table_data">
                             <button class="edit" onclick="update(${record['MaPhieu']})">Xem chi tiết</button>
                         </td>
@@ -206,11 +224,11 @@
 
   function update(MaPhieu) {
     // Lấy ra form bằng id của nó
-    var form =  document.querySelector(`#updateForm_${MaPhieu}`);
-    
+    var form = document.querySelector(`#updateForm_${MaPhieu}`);
+
     // Gửi form đi
     form.submit();
-}
+  }
 
 
   // Sự kiện DOMContentLoaded
