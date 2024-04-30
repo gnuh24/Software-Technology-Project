@@ -31,6 +31,7 @@
         padding: 10px 20px;
         border: none;
         cursor: pointer;
+        height: 35px;
         border-radius: 5px;
         margin-right: 10px;
     }
