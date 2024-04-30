@@ -44,6 +44,53 @@ if(isset($_GET['TenNCC']) ) {
 
 }
 
+function getAllNhaCungCapNotPage()
+{
+        
+    // Chuẩn bị trước biến $connection
+    $connection = null;
+    // Mảng chứa điều kiện
+    $where_conditions = [];
+    // Chuẩn bị câu truy vấn gốc
+    $query = "SELECT * FROM `NhaCungCap`";
+  
+    // Khởi tạo kết nối
+    $connection = MysqlConfig::getConnection();   
+     
+
+        // Query dùng để tính tổng số trang của các data trả về
+        $query_total_row = "SELECT COUNT(*) FROM `NhaCungCap`";
+        $statement_total_row = $connection->prepare($query_total_row);
+        $statement_total_row->execute();
+
+
+
+    try {
+        $statement = $connection->prepare($query);
+
+        if ($statement !== false) {
+            $statement->execute();
+            $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+            return (object) [
+                "status" => 200,
+                "message" => "Thành công",
+                "data" => $result,
+            ];
+        } else {
+            throw new PDOException();
+        }
+    } catch (PDOException $e) {
+        return (object) [
+            "status" => 400,
+            "message" => "Lỗi không thể lấy danh sách nhà cung cấp",
+        ];
+    } finally {
+        $connection = null;
+    }
+}
+
+
 function getAllNhaCungCap($page,$search)
 {
         
