@@ -346,12 +346,12 @@
                             <td class="${trClass}"> ${ngayDatFormatted}  </td>
                             <td class="${trClass}"> ${number_format_vnd(record.TongGiaTri)}</td>
                             <td class="${trClass}"> ${record.Email}  </td>  
-                            <td class="${trClass}"><button type="button" onclick="changeOrderStatus(${record.MaDonHang}, '${record.TrangThai}')" class="${order_statuses_classname}">  ${order_statuses}  </button></td>        
+                            <td class="${trClass}"> ${order_statuses} </td>        
                           `;
           if (order_statuses == 'Chờ Duyệt')
-            trContent += `<td class="${trClass}"><a href="./ChiTietDonHang.php?${record.MaDonHang}" class="edit">chi tiết</a> <button class="delete" onclick="setTrangThaiDonHang(${record.MaDonHang},'Huy')"> hủy</button> </td></tr> `;
+            trContent += `<td class="${trClass}"><button type="button" onclick="changeOrderStatus(${record.MaDonHang}, '${record.TrangThai}')" class="${order_statuses_classname}">Đổi trạng thái</button><a href="./ChiTietDonHang.php?${record.MaDonHang}" class="edit">chi tiết</a> <button class="delete" onclick="setTrangThaiDonHang(${record.MaDonHang},'Huy')"> hủy</button> </td></tr> `;
           else
-            trContent += `<td class="${trClass}"><a href="./ChiTietDonHang.php?${record.MaDonHang}" class="edit">chi tiết</a> </td></tr>`;
+            trContent += `<td class="${trClass}"><button type="button" onclick="changeOrderStatus(${record.MaDonHang}, '${record.TrangThai}')" class="${order_statuses_classname}">Đổi trạng thái</button><a href="./ChiTietDonHang.php?${record.MaDonHang}" class="edit">chi tiết</a> </td></tr>`;
           tableContent += trContent; // Thêm nội dung của hàng vào chuỗi tableContent
         });
 

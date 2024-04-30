@@ -53,40 +53,27 @@
                             <div style="padding-left: 16%; width: 100%; padding-right: 2rem">
                                 <div class="wrapper">
                                     <div class="orderManagement_order_history">
-                                        <a class="back" href="./QLDonHang.php">
-                                            <</a>
+                                        <a class="back" href="./QLDonHang.php">back</a>
                                                 <div class="detail__wrapper">
                                                     <p class="title">Chi tiết đơn hàng: <span id="orderID"></span></p>
                                                     <ul class="order_status__wrapper" id="order_status">
-                                                        <?php
-                                                        if ($dataDonHang['TrangThai'] == 'Huy') {
-                                                            echo "  <div class='order_status completed'>
-                                                                <li>Đã đặt hàng</li>
-                                                            </div>
-                                                            <div class='order_status completed'>
-                                                                <li>Đã hủy</li>
-                                                            </div>";
-                                                        } else {
-                                                            echo "<div class='order_status completed'>
-                                                                <li>Đã đặt hàng</li>
-                                                            </div>
-                                                            <div class='order_status ";
-                                                            echo 'completed';
-                                                            echo "'>
-                                                                <li>Đã xác nhận</li>
-                                                            </div>
-                                                            <div class='order_status ";
-                                                            echo 'completed';
-                                                            echo "'>
+
+                                                        <div class='order_status completed'>
+                                                            <li>Đã đặt hàng</li>
+                                                        </div>
+                                                        <div class='order_status 
+                                                             completed'>
+                                                            <li>Đã xác nhận</li>    
+                                                        </div>
+                                                        <div class='order_status 
+                                                             ' completed>
                                                             <li>Đang giao hàng</li>
-                                                            </div>
-                                                            <div class='order_status ";
-                                                            echo 'completed';
-                                                            echo "'>
-                                                                <li>Giao hàng thành công</li>
-                                                            </div>";
-                                                        }
-                                                        ?>
+                                                        </div>
+                                                        <div class='order_status 
+                                                             ' completed>
+                                                            <li>Giao hàng thành công</li>
+                                                        </div>
+
                                                     </ul>
                                                     <div class="transaction_info__wrapper">
                                                         <div class="receive_info__wrapper">
@@ -123,8 +110,8 @@
                                                         <div class="transaction_list">
                                                             <!-- <?php
 
-                                                            foreach ($dataChitiet as $sanPham) {
-                                                                echo "
+                                                                    foreach ($dataChitiet as $sanPham) {
+                                                                        echo "
                                                                     <div class='transaction_item'><img  src='' alt=''>
                                                                         <div class='item_info__wrapper'>
                                                                             <div class='item_info'>
@@ -137,9 +124,9 @@
                                                                         </div>
                                                                     </div>
                                                                     <div class='divider'></div>";
-                                                            }
+                                                                    }
 
-                                                            ?> -->
+                                                                    ?> -->
 
                                                         </div>
                                                     </div>
