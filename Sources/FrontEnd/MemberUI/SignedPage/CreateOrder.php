@@ -237,7 +237,10 @@
                 // Gọi hàm tạo đơn hàng
                 createDonHang(maTaiKhoan, tongGiaTri, maPhuongThuc, maDichVu, diaChiGiaoHang, danhSachChiTietDonHang);
                 
-               window.location.href = "MyOrder.php";
+                var userData = JSON.parse(localStorage.getItem('key'));
+
+                var id = userData.MaTaiKhoan;
+                window.location.href = `MyOrder.php?maTaiKhoan=${id}`;
 
             } else {
                 // Hiển thị thông báo lỗi nếu thiếu thông tin
@@ -340,8 +343,6 @@
                     createTrangThaiDonHang(maDonHang)
 
                     alert("Đặt hàng thành công !!");
-
-                    
 
                 },
                 error: function(xhr, status, error) {
