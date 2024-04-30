@@ -155,6 +155,8 @@
           // Định dạng lại chuỗi ngày giờ
           var ngayNhapKhoFormatted = gio + ":" + phut + ":" + giay + " " + ngay + "/" + thang + "/" + nam;
 
+          var formattedTongGiaTri = record['TongGiaTri'].toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+
           var trContent = `
                 <form id="updateForm_${record['MaPhieu']}" method="post" action="taoPhieuNhapKho.php?MaPhieu=${record['MaPhieu']}&MaNCC=${record['MaNCC']}&MaQuanLy=${record['MaQuanLy']}&TongTien=${record['TongGiaTri']}">
                     <tr>
@@ -162,7 +164,7 @@
                         <td class="Table_data">${ngayNhapKhoFormatted}</td>
                         <td class="Table_data">${record['TenNCC']}</td>
                         <td class="Table_data">${record['HoTen']}</td>
-                        <td class="Table_data">${record['TongGiaTri']}</td>
+                        <td class="Table_data">${formattedTongGiaTri}</td>
                         <td class="Table_data">
                             <button class="edit" onclick="update(${record['MaPhieu']})">Xem chi tiết</button>
                         </td>
