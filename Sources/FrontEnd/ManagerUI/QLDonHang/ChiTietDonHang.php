@@ -202,7 +202,7 @@
                                 </div>
                             </div>
                         </div>
-                    <div class='divider'>${element.ThanhTien}</div>`;
+                    <div class='divider'></div>`;
                 });
                 transaction_list.innerHTML=items;
             },
