@@ -86,15 +86,82 @@
       transform: translateY(0);
     }
   }
-  table {
-    border-collapse: collapse;
+  
+  .Table_table__BWPy {
     width: 100%;
-    border: solid 3px black;
+    border-collapse: collapse;
   }
-  table, th, td {
-    border: 1px solid black;
+  
+  .Table_head__FTUog {
+    background-color: rgb(56, 55, 55);
   }
-  th {
-    background-color: black;
+  
+  .Table_th__hCkcg {
+    font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+    padding: 1rem;
+    text-align: center;
     color: white;
+  }
+  .pagination {
+    height: 50px;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .pagination.single-page {
+    display: none; /* Ẩn nút phân trang khi chỉ có 1 trang */
+  }
+  
+  .pageButton {
+    background-color: whitesmoke;
+    color: black;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    /* Điều chỉnh kích thước nút phân trang tùy theo nhu cầu */
+    height: 30px;
+    /* Điều chỉnh kích thước nút phân trang tùy theo nhu cầu */
+    margin: 0 5px;
+    /* Khoảng cách giữa các nút phân trang */
+    cursor: pointer;
+  }
+  
+  .pageButton.active {
+    background-color: black;
+    /* Màu nút phân trang khi được chọn */
+    color: whitesmoke;
+  }
+  
+  #searchButton {
+    font-weight: 700;
+    font-family: Arial;
+    color: white;
+    background-color: black;
+    border-radius: 10px;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+  }
+  
+  .delete {
+    background-color: rgb(235, 44, 44);
+    color: white;
+    padding: 1rem 1.5rem;
+    font-weight: 700;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-right: 0.5rem;
+  }
+  
+  .edit {
+    background-color: rgb(49, 147, 252);
+    color: white;
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+    font-weight: 700;
+    border-radius: 10px;
   }
