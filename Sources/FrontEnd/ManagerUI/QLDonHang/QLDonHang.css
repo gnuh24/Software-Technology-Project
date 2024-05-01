@@ -195,21 +195,9 @@
     height: 30px;
     border-radius: 5px;
   }
-  
-  .ChoDuyet {
-    color: rgb(137, 144, 0);
-  }
-  .Huy {
-    color: rgb(195, 11, 11);
-  }
-  .DaDuyet {
-    color: rgb(8, 138, 60);
-  }
-  .DangGiao {
-    color: rgb(6, 28, 155);
-  }
-  .GiaoThanhCong {
-    color: rgb(0, 107, 7);
+
+  td:hover{
+    color: darkblue;
   }
 
   .pagination{
