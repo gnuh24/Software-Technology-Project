@@ -119,7 +119,7 @@
         $where_conditions = [];
 
         // Số phần tử mỗi trang
-        $entityPerPage = 20;
+        $entityPerPage = 16;
 
         // Tổng số trang
         $totalPages = null;
@@ -166,7 +166,8 @@
         if ($totalPages === null) {
 
             // Query dùng để tính tổng số trang của các data trả về
-            $query_total_row = "SELECT COUNT(*) FROM `SanPham`";
+            $query_total_row = substr_replace($query, "COUNT(*)", 7, 1);
+
             $statement_total_row = $connection->prepare($query_total_row);
             $statement_total_row->execute();
 

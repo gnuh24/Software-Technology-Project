@@ -175,25 +175,43 @@
     justify-content: end;
 
   }
+
+
+  .orderManagement_order_detail {
+    height: 120px;
+  }
   
-  .orderManagement_order_info, .orderManagement_order_title{
+  .orderManagement_order_title, .orderManagement_order_detail{
     display: flex;
     justify-content: space-around;
+    border: #666666 2px solid;
+    border-top: 0;
+
+
+  }
+
+  .orderManagement_order_info{
+    display: flex;
+    flex-direction: column;
+  }
+  .orderManagement_order_title {
+    height: 50px;
+    border: #666666 2px solid;
+
   }
 
   .orderManagement_order_title > p{
-    color: #7b181a;
+    /* color: #7b181a; */
     font-size: 20px !important;
   }
 
   .orderManagement_order_thanhTien{
     display: flex;
-    flex-direction: column;
-    align-items: end;
+    justify-content: space-between;
   }
 
    .orderManagement_order_thanhTien > p{
-    color: #7b181a;
+    /* color: #7b181a; */
     font-size: 30px !important;
   }
 
@@ -411,7 +429,7 @@
     .orderManagement_order__wrapper
     .orderManagement_total
     span {
-    color: #7b181a;
+    color: #666666;
     font-weight: 500;
     margin-left: 10px;
   }
@@ -433,7 +451,7 @@
   
   /* CSS cho bảng đơn hàng */
 .orderManagement_order_list {
-    border: 2px solid #7b181a;
+    border: 2px solid #666666;
     margin-bottom: 20px;
     padding: 20px 30px;
 }
@@ -443,7 +461,7 @@
     background-color: #ffffff; /* Màu nền trắng */
     color: #7b181a; /* Màu chữ #7b181a */
     border: 2px solid #7b181a; /* Viền màu #7b181a */
-    padding: 10px 20px;
+    padding: 10px 40px;
     margin-right: 10px;
     cursor: pointer;
 }
@@ -461,8 +479,9 @@
 .tenSanPham{
   min-width: 20%;
   display: flex;
-  align-items: center;
+  justify-content: center;
 
+  align-items: center;
 }
 
 

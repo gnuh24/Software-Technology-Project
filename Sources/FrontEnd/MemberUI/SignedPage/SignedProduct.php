@@ -363,7 +363,6 @@
                             });
                             // Trong hàm getAllSanPham, sau khi thay đổi nội dung HTML của sản phẩm, gọi lại hàm createPagination
                             productContainer.html(htmlContent);
-                            createPagination(page, response.totalPages);
 
 
                             // Đưa giao diện về đầu trang
@@ -374,8 +373,11 @@
 
                         } else {
                             // Hiển thị thông báo khi không có sản phẩm
-                            productContainer.html('<p>Không có sản phẩm nào.</p>');
+                            productContainer.html('<p style="font-size: 24px; text-align: center; ">Không có sản phẩm nào.</p>');
                         }
+
+                        createPagination(page, response.totalPages);
+
                     },
                     error: function(xhr, status, error) {
                         console.error("Error:", error);

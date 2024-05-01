@@ -11,7 +11,7 @@
         display: flex;
         align-items: center;
         position: relative;
-        margin-left: 8%;
+        margin-left: 4%;
         gap: 10px;
     }
     .search-input {

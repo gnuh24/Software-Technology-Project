@@ -218,6 +218,9 @@
     padding-bottom: 20px;
     /* position: relative; */
   }
+  .wrapPriceTotal p{
+    font-size: 25px;
+  }
   
   .wrapInfoOrder .infoOrder .wrapPriceTotal {
     width: 100%;

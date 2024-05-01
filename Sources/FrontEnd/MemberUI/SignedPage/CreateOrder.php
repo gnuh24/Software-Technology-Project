@@ -9,8 +9,9 @@
     <title>Thanh toán</title>
 </head>
 <body>
+    <?php require "../Header/SignedHeader.php"; ?>
+
     <div>
-        <?php require "../Header/SignedHeader.php"; ?>
         <section>
             <div class="center-text">
                 <div class="title_section">
@@ -145,7 +146,7 @@
                                 <p><span class="span1">Họ tên người nhận:</span><span class="span2" id="spanHoTen"></span></p>
                                 <p><span class="span1">Số điện thoại:</span><span class="span2" id="spanSoDienThoai"></span></p>
                                 <p><span class="span1">Địa chỉ giao hàng:</span><span class="span2" id="spanDiaChi"></span></p>
-                                <p><span class="span1">Phương thức thanh tóan:</span><span class="span2" id="spanPhuongThucThanhToan"></span></p>
+                                <p><span class="span1">Phương thức thanh toán:</span><span class="span2" id="spanPhuongThucThanhToan"></span></p>
                                 <p><span class="span1">Dịch vụ vận chuyển:</span><span class="span2" id="spanDichVuVanChuyen"></span></p>
 
                             </div>
@@ -171,8 +172,8 @@
             
         });
         function convertPriceToNumber(priceString) {
-            // Loại bỏ ký tự '.'
-            var priceWithoutDot = priceString.replace('.', '');
+            // Loại bỏ tất cả các ký tự '.'
+            var priceWithoutDot = priceString.replace(/\./g, '');
 
             // Loại bỏ ký tự 'đ'
             var priceWithoutDong = priceWithoutDot.replace('đ', '');
@@ -182,6 +183,7 @@
 
             return priceNumber;
         }
+
             
 
         document.getElementById('createOrder').addEventListener('click', function() {
@@ -212,7 +214,10 @@
                 const tenSanPham = item.querySelector('.nameCart').textContent;
                 const donGia = convertPriceToNumber(item.querySelector('.priceCart').textContent);
                 const soLuong = item.querySelector('.txtQuantity').textContent;
+                console.log(`Thanh tien truoc khi chuyển: ${item.querySelector('.valueTotalPrice').textContent}`);
                 const thanhTien = convertPriceToNumber(item.querySelector('.valueTotalPrice').textContent);
+                console.log(`Thanh tien sau khi chuyển: ${thanhTien}`);
+
                 danhSachChiTietDonHang.push({
                     maSanPham: maSanPham,
                     tenSanPham: tenSanPham,

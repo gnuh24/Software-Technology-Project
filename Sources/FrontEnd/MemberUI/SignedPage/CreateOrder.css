@@ -226,6 +226,16 @@
 
     display: flex;
   }
+  .order_info > p {
+    
+    font-size: 30px !important;
+  }
+
+  .order_info2 > p {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
 
   .checkout__wrapper .order_info__wrapper .total__info > p > .span1, 
   .checkout__wrapper .order_info__wrapper .total__info > p > .span2{

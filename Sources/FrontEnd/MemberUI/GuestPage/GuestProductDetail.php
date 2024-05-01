@@ -18,18 +18,7 @@
 </head>
 
 <body>
-    <header class="Home-container-header">
-        <div id="Home-over-Header">
-            <img id="Home-img" src="img/logoWine.jpg" alt="" />
-            <form id="search" class="input__wrapper" action="GuestProduct.php" method="post">
-                <input id="searchSanPham" name="searchSanPham" type="text" class="search-input" placeholder="Tìm kiếm" required=""/>
-                <button id="filter-button"><i class="fa-solid fa-magnifying-glass"></i></button>
-            </form>
-
-            <div id="Home-login">Login</div>
-        </div>
-    </header>
-
+    <?php require_once "../Header/GuestHeader.php"; ?>
 
     <section>
         <div class="center-text">
@@ -136,7 +125,7 @@
                         <button class="secondary">
                             <span>Thêm vào giỏ hàng</span>
                         </button>
-                        <button class="primary">
+                        <button class="primary" style="visibility: hidden;">
                             <span>Mua ngay</span>
                         </button>
                     </div>
@@ -148,64 +137,12 @@
                     exit; // Dừng thực thi của mã PHP tại đây
                 }
                 ?>
-
-
-
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
-    <section id="footer">
-        <div class="contact-info">
-            <div class="first-info">
-                <div style="font-size: 20px;">Thông tin liên hệ</div>
-                <div class="map">
-                    <i class="fa-solid fa-location-dot"></i>
-                    <span>An Dương Vương, Phường 3, Quận 5</span>
-                </div>
-                <div class="phone">
-                    <i class="fa-solid fa-phone-volume"></i>
-                    <span>0325459901</span>
-                </div>
-                <div class="mail">
-                    <i class="fa-solid fa-envelope"></i>
-                    <span>doanhdaigr5.2004@gmail.com</span>
-                </div>
-            </div>
-            <div class="second-info">
-                <h4>CHÍNH SÁCH</h4>
-                <ul>
-                    <li><a href="#">Chính sách bảo mật</a></li>
-                    <li><a href="#">Chính sách giao hàng</a></li>
-                    <li><a href="#">Chính sách thẻ thành viên</a></li>
-                    <li><a href="#">Điều khoản sử dụng</a></li>
-                </ul>
-            </div>
+    <?php require_once "../Footer/Footer.php" ?>
 
-            <div class="third-info">
-                <h4>ABOUT US</h4>
-                <ul>
-                    <li><a href="#">Giới thiệu</a></li>
-                    <li><a href="#">Tuyển dụng</a></li>
-                    <li><a href="#">Nhượng quyền</a></li>
-                    <li><a href="#">Tin tức</a></li>
-                </ul>
-            </div>
-
-            <div class="fourth">
-                <h4>FOLOW US</h4>
-                <a href="https://www.facebook.com/doanhdai.2004"><i id="fb" class="fa-brands fa-facebook" id="fb"></i></a>
-                <a href="https://www.instagram.com"><i id="ig" class="fa-brands fa-instagram"></i></a>
-                <a href="https://github.com/ltgiai/DO_AN_WEBSITE/tree/main"><i id="git" class="fa-brands fa-github"></i></a>
-                <a href="https://twitter.com/?lang=vi"><i id="tw" class="fa-brands fa-square-twitter"></i></a>
-                <a href="http://online.gov.vn/Home/WebDetails/36260"><img src="#" alt="" /></a>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>Copyrights © 2019 by comebuy_vn. All rights reserved.</p>
-        </div>
-    </section>
 </body>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

@@ -6,6 +6,16 @@ if (isset($_GET['maTaiKhoan'])) {
     // Gọi hàm PHP bạn muốn thực thi và trả về kết quả dưới dạng JSON
     $data = getAllDonHangByMaKH($maTaiKhoan);
 }
+
+function convertNumberToVND($number) {
+    // Sử dụng number_format để định dạng số với dấu chấm ngăn cách hàng nghìn và không có phần thập phân
+    $formattedNumber = number_format($number, 0, ',', '.');
+
+    // Thêm ký tự 'đ' ở cuối số
+    $vndString = $formattedNumber . 'đ';
+
+    return $vndString;
+}
 ?>
 
 <html lang="en">
@@ -33,10 +43,11 @@ if (isset($_GET['maTaiKhoan'])) {
     <!-- Phần hiển thị đơn hàng -->
     <div class="orderManagement_order_history">
         <?php
-
-        function formatMoney($amount) {
+        function formatMoney($amount)
+        {
             return number_format($amount, 0, ',', '.') . 'đ';
         }
+
         // Kiểm tra số lượng đơn hàng
         $numberOfProducts = count(array_unique(array_column($data->data, 'MaDonHang')));
 
@@ -46,74 +57,82 @@ if (isset($_GET['maTaiKhoan'])) {
 
         // Hiển thị thông tin đơn hàng
         foreach ($data->data as $hoaDon) {
-            echo "<div class='orderManagement_order_list'>" .
+            ?>
+            <div class='orderManagement_order_list'>
+                <table class='orderManagement_order_info'>
+                    <thead>
+                        <tr class='orderManagement_order_title'>
+                            <th class='anhMinhHoa'>Ảnh minh họa</th>
+                            <th class='tenSanPham'>Tên sản phẩm</th>
+                            <th class='donGia'>Đơn giá</th>
+                            <th class='soLuong'>Số lượng</th>
+                            <th class='thanhTien'>Thành tiền</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        require_once "../../../BackEnd/ManagerBE/ChiTietDonHangBE.php";
 
-                "<div class='orderManagement_order_title'>" .
-                    "<p class='anhMinhHoa'>Ảnh minh họa</p>" .
-                    "<p class='tenSanPham'>Tên sản phẩm</p>" .
-                    "<p class='donGia'> Đơn giá</p>" .
-                    "<p class='soLuong'>Số lượng</p>" .
-                    "<p class='thanhTien'>Thành tiền</p>" .
-                "</div>";
+                        $listCTDH = getChiTietDonHangByMaDonHang($hoaDon["MaDonHang"])->data;
 
-            require_once "../../../BackEnd/ManagerBE/ChiTietDonHangBE.php";
+                        foreach ($listCTDH as $chiTiet) {
+                            ?>
+                            <tr class='orderManagement_order_detail'>
+                                <td class='anhMinhHoa'><img style='width: auto; height: 100px;' src='<?= $chiTiet['AnhMinhHoa'] ?>'></td>
+                                <td class='tenSanPham'><?= $chiTiet['TenSanPham'] ?></td>
+                                <td class='donGia'><?= formatMoney($chiTiet['DonGia']) ?></td>
+                                <td class='soLuong'><?= $chiTiet['SoLuong'] ?></td>
+                                <td class='thanhTien'><?= formatMoney($chiTiet['ThanhTien']) ?></td>
+                            </tr>
+                        <?php } ?>
+                    </tbody>
+                </table>
+                <div class='orderManagement_order_thanhTien'>
 
-            $listCTDH = getChiTietDonHangByMaDonHang($hoaDon["MaDonHang"])->data;
 
-            foreach ($listCTDH as $chiTiet) {
-                echo "<div class='orderManagement_order_info'>" .
-                    "<p class='anhMinhHoa'><img style='width: 100px; height: 100px;' src='{$chiTiet['AnhMinhHoa']}'></p>" .
-                    "<p class='tenSanPham'>{$chiTiet['TenSanPham']}</p>" .
-                    "<p class='donGia'>" . formatMoney($chiTiet['DonGia']) . "</p>" .
-                    "<p class='soLuong'>{$chiTiet['SoLuong']}</p>" .
-                    "<p class='thanhTien'>" . formatMoney($chiTiet['ThanhTien']) . "</p>" .
-                "</div>";
-            }
-            
-            echo "<div class='orderManagement_order_thanhTien'>" .
-                "<p>Trạng thái: ";
-                switch ($hoaDon['TrangThai']) {
-                    case 'ChoDuyet':
-                        echo "Chờ duyệt";
-                        break;
-                    case 'DaDuyet':
-                        echo "Đã được duyệt";
-                        break;
-                    case 'DangGiao':
-                        echo "Đang giao hàng";
-                        break;
-                    case 'GiaoThanhCong':
-                        echo "Giao thành công";
-                        break;
-                    case 'Huy':
-                        echo "Đã hủy";
-                        break;
-                    default:
-                        echo $hoaDon['TrangThai'];
-                }
-                echo "</p>" .
-                    "<p>Tổng giá trị: {$hoaDon['TongGiaTri']}</p>" .
-                    "</div>" .
-                    // Hiển thị nút chi tiết và nút hủy đơn hàng
-                    "<div class='orderManagement_order_actions'>";
+                    <p style="width: 50%;">Trạng thái:
+                        <?php
+                        switch ($hoaDon['TrangThai']) {
+                            case 'ChoDuyet':
+                                echo "Chờ duyệt";
+                                break;
+                            case 'DaDuyet':
+                                echo "Đã được duyệt";
+                                break;
+                            case 'DangGiao':
+                                echo "Đang giao hàng";
+                                break;
+                            case 'GiaoThanhCong':
+                                echo "Giao thành công";
+                                break;
+                            case 'Huy':
+                                echo "Đã hủy";
+                                break;
+                            default:
+                                echo $hoaDon['TrangThai'];
+                        }
+                        ?>
+                    </p>
+                    <p>Tổng giá trị: <?= convertNumberToVND($hoaDon['TongGiaTri']) ?></p>
+                    <?php
+                        // Chuyển danh sách sản phẩm thành chuỗi JSON để truyền vào hàm cancel
+                        $listSanPham = json_encode($listCTDH);
 
-            // Chuyển danh sách sản phẩm thành chuỗi JSON để truyền vào hàm cancel
-            $listSanPham = json_encode($listCTDH);
-
-            if ($hoaDon['TrangThai'] == 'GiaoThanhCong' || $hoaDon['TrangThai'] == 'Huy') {
-                echo "<button class='order_detail_button' onclick='toOrderDetail({$hoaDon["MaDonHang"]})'> Chi tiết</button>";
-            } else {
-                echo "<button class='order_detail_button' onclick='toOrderDetail({$hoaDon["MaDonHang"]}, {$hoaDon["MaKH"]})'> Chi tiết</button>" .
-                    "<button class='cancel_order_button' onclick='cancel({$hoaDon["MaDonHang"]}, \"{$hoaDon['TrangThai']}\", " . json_encode($listSanPham) . ")'>Hủy đơn hàng</button>";
-            }
-            
-            
-            echo "</div>" .
-                "</div>";
-        }
-        ?>
-
+                        if ($hoaDon['TrangThai'] == 'GiaoThanhCong' || $hoaDon['TrangThai'] == 'Huy') {
+                            echo "<button class='order_detail_button' onclick='toOrderDetail({$hoaDon["MaDonHang"]})'> Chi tiết</button>";
+                        } else {
+                            echo "<button class='order_detail_button' onclick='toOrderDetail({$hoaDon["MaDonHang"]}, {$hoaDon["MaKH"]})'> Chi tiết</button>" .
+                                "<button class='cancel_order_button' onclick='cancel({$hoaDon["MaDonHang"]}, \"{$hoaDon['TrangThai']}\", " . json_encode($listSanPham) . ")'>Hủy đơn hàng</button>";
+                        }
+                    ?>
+                </div>
+                <!-- <div class='orderManagement_order_actions'>
+                    
+                </div> -->
+            </div>
+        <?php } ?>
     </div>
+
 
     <?php require_once "../Footer/Footer.php" ?>
 

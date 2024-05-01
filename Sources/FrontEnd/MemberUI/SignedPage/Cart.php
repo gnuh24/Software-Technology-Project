@@ -87,9 +87,9 @@
                 <div class="wrapInfoOrder">
                     <div class="bg_infoOrder"></div>
                     <div class="infoOrder">
-                        <p class="titleOrder">Thông tin đơn hàng</p>
+                        <p class="titleOrder" style="text-align: center;">Thông tin đơn hàng</p>
                         <div class="wrapPriceTotal">
-                            <p class="titlePriceTotal">Tạm tính:</p>
+                            <p class="titlePriceTotal">Tổng giá trị:</p>
                             <p class="priceTotal"><?php
                                                     $total = 0;
                                                     foreach ($data->data as $cartProduct) {
@@ -97,9 +97,7 @@
                                                     }
                                                     echo number_format($total, 0, ',', '.') ?>&nbsp;đ</p>
                         </div>
-                        <!-- <a href="#" class="btnCheckout"> -->
                         <button class="btnCheckout" onclick="thanhToan(<?php echo $_GET["maTaiKhoan"]; ?>)">Tiến hành đặt hàng</button>
-                        <!-- </a> -->
                         <a href=" SignedProduct.php">
                             <button class="btnCheckout_buy" style="border: 2px #7b181a solid;">Tiếp tục mua hàng</button>
                         </a>
