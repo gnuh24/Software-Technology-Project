@@ -323,14 +323,13 @@
                             <td class="${trClass}"><a href="./ChiTietDonHang.php?MaDonHang=${record.MaDonHang}">${record.Email}</a></td>  
                             <td class="${trClass}"><a href="./ChiTietDonHang.php?MaDonHang=${record.MaDonHang}">${order_statuses}</a></td>
                           `;
-          if (record.MaDonHang == 'Huy'){
-            trContent += `<td class="${trClass} order_statuses_complete">${order_statuses}</td></tr>`;
-          tableContent += trContent;
-          }else if(record.MaDonHang == 'GiaoThanhCong'){
-            trContent += `<td class="${trClass} order_statuses_cancel">${order_statuses}</td></tr>`;
+          if (record.TrangThai == 'Huy'){
+            trContent += `<td class="${trClass}" style="color: red;">${order_statuses}</td></tr>`;
+          }else if(record.TrangThai == 'GiaoThanhCong'){
+            trContent += `<td class="${trClass}" style="color: green;">${order_statuses}</td></tr>`;
           }
           else{
-            trContent += `<td class="${trClass}"><button type="button" onclick="changeOrderStatus(${record.MaDonHang}, '${record.TrangThai}')" class="edit">${getTenTrangThai((record.TrangThai))}</button><button class="delete" onclick="setTrangThaiDonHang(${record.MaDonHang},'Huy')"> hủy</button> </td></tr> `;
+            trContent += `<td class="${trClass}"><button type="button" onclick="changeOrderStatus(${record.MaDonHang}, '${record.TrangThai}')" class="edit">${getTenTrangThai(nextState(record.TrangThai))}</button><button class="delete" onclick="setTrangThaiDonHang(${record.MaDonHang},'Huy')"> hủy</button> </td></tr> `;
           }
           tableContent += trContent;
         });

@@ -175,6 +175,13 @@
 
     getDonHangByMaDonHang(MaDonHang);
 
+    function number_format_vnd(number) {
+    return Number(number).toLocaleString('vi-VN', {
+      style: 'currency',
+      currency: 'VND'
+    });
+  }
+
     function getChiTietDonHangByMaDonHang(MaDonHang) {
         $.ajax({
             url: '../../../BackEnd/ManagerBE/ChiTietDonHangBE.php',
@@ -198,7 +205,7 @@
                                 </div>
                                 <div class='item_info'>
                                     <p class='quantity'>${element.SoLuong}</p>
-                                    <p class='price'>${element.DonGia}</p>
+                                    <p class='price'>${number_format_vnd(element.DonGia)}</p>
                                 </div>
                             </div>
                         </div>
@@ -288,10 +295,10 @@
                 document.getElementById("tenphuongthuc").innerHTML = `${data.TenPhuongThuc}<br>`;
                 document.getElementById("tendichvu").innerHTML = `${data.TenDichVu}<br>`;
                 document.getElementById("trangthai").innerText = getTenTrangThai(data.TrangThai);
-                document.getElementById("tongTamTinh").innerText = data.TongGiaTri;
+                document.getElementById("tongTamTinh").innerText = number_format_vnd(data.TongGiaTri);
                 document.getElementById("giamGia");
                 document.getElementById("phiVanChuyen");
-                document.getElementById("totalPrice").innerText = data.TongGiaTri;
+                document.getElementById("totalPrice").innerText = number_format_vnd(data.TongGiaTri);
             },
 
             error: function(xhr, status, error) {

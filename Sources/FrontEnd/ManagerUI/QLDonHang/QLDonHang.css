@@ -195,29 +195,9 @@
     height: 30px;
     border-radius: 5px;
   }
-  
-  .order_statuses_complete{
-    background-image: url(../../public/img/ic_status_active.png);
-    background-size: contain;
-    background-repeat: no-repeat;
-    display: block;
-    height: 16px;
-    width: 16px;
-    margin: 0 auto 14px;
-    position: relative;
-    z-index: 1;
-  }
 
-  .order_statuses_cancel{
-    background-image: url(../../public/img/ic_status_active.png);
-    background-size: contain;
-    background-repeat: no-repeat;
-    display: block;
-    height: 16px;
-    width: 16px;
-    margin: 0 auto 14px;
-    position: relative;
-    z-index: 1;
+  td:hover{
+    color: darkblue;
   }
 
   .pagination{
