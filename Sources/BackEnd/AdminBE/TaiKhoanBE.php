@@ -147,7 +147,7 @@
         $where_conditions=[];
         
         //Số phần tử mỗi trang
-        $entityPerPage = 6;
+        $entityPerPage = 5;
 
         //Tổng số trang
         $totalPages = null;

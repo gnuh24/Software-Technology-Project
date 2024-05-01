@@ -124,9 +124,9 @@
                 var tableBody = document.getElementById("tableBody"); // Lấy thẻ tbody của bảng
                 var tableContent = ""; // Chuỗi chứa nội dung mới của tbody
 
-                // Duyệt qua mảng dữ liệu và tạo các hàng mới cho tbody
-                data.forEach(function(record) {
-                    var trClass = (parseInt(record.MaTaiKhoan) % 2 !== 0) ? "Table_data_quyen_1" : "Table_data_quyen_2"; // Xác định class của hàng
+             // Duyệt qua mảng dữ liệu và tạo các hàng mới cho tbody
+                data.forEach(function(record, index) {
+                    var trClass = (index % 2 !== 0) ? "Table_data_quyen_1" : "Table_data_quyen_2"; // Xác định class của hàng
 
                     var ngayTao = new Date(record.NgayTao);
                     var ngayTaoFormatted = ngayTao.toLocaleString();
@@ -138,22 +138,49 @@
 
                     var trContent = `
                         <form id="updateForm" method="post" action="FormUpdateTaiKhoan.php">
-                            <tr>
+                            <tr style="height: 20%"; max-height: 20%;>
                                 <td class="${trClass}" style="width: 130px;">${record.MaTaiKhoan}</td>
                                 <td class="${trClass}">${record.TenDangNhap}</td>
                                 <td class="${trClass}">${record.Email}</td>
                                 <td class="${trClass}">${ngayTaoFormatted}</td>
                                 <td class="${trClass}">${record.TrangThai === 0 ? "Khóa" : "Hoạt động"}</td>
-                                <td class="${trClass}">${record.Quyen}</td>
-                                <td class="${trClass}">
-                                    <button class="edit" onclick="update(${record.MaTaiKhoan}, '${record.Quyen}', '${record.HoTen}', '${record.GioiTinh}', '${record.Email}', '${record.NgaySinh}', '${record.DiaChi}', '${record.SoDienThoai}')">Sửa</button>
-                                    <button class="${buttonClass}" data-action="${buttonData}" onclick="handleLockUnlock(${record.MaTaiKhoan}, ${record.TrangThai}, '${record.Quyen}')">${buttonText}</button>
-                                </td>
-                            </tr>
-                        </form>`
+                                <td class="${trClass}">${record.Quyen}</td>`;
+
+                    if (record.Quyen != "Admin") {
+                        trContent += 
+                        `<td class="${trClass}">
+                            <button class="edit" onclick="update(${record.MaTaiKhoan}, '${record.Quyen}', '${record.HoTen}', '${record.GioiTinh}', '${record.Email}', '${record.NgaySinh}', '${record.DiaChi}', '${record.SoDienThoai}')">Sửa</button>
+                            <button class="${buttonClass}" data-action="${buttonData}" onclick="handleLockUnlock(${record.MaTaiKhoan}, ${record.TrangThai}, '${record.Quyen}')">${buttonText}</button>
+                        </td>`;
+                    } else {
+                        trContent += `<td class="${trClass}"></td>`; // Tạo một ô trống nếu quyền là "Admin"
+                    }
+                    
+                    trContent += `</tr></form>`;
+
+                    // Nếu chỉ có ít hơn 5 phần tử và đã duyệt đến phần tử cuối cùng, thêm các hàng trống vào
+                    if (data.length < 5 && index === data.length - 1) {
+                        for (var i = data.length; i < 5; i++) {
+                            var emptyTrClass = (i % 2 !== 0) ? "Table_data_quyen_1" : "Table_data_quyen_2"; // Xác định class của hàng trống
+                            trContent += `
+                                <form id="emptyForm" method="post" action="FormUpdateTaiKhoan.php">
+                                    <tr style="height: 20%"; max-height: 20%;>
+                                        <td class="${emptyTrClass}" style="width: 130px;"></td>
+                                        <td class="${emptyTrClass}"></td>
+                                        <td class="${emptyTrClass}"></td>
+                                        <td class="${emptyTrClass}"></td>
+                                        <td class="${emptyTrClass}"></td>
+                                        <td class="${emptyTrClass}"></td>
+                                        <td class="${emptyTrClass}"></td>
+                                    </tr>
+                                </form>`;
+                        }
+                    }
 
                     tableContent += trContent; // Thêm nội dung của hàng vào chuỗi tableContent
                 });
+
+
 
                 // Thiết lập lại nội dung của tbody bằng chuỗi tableContent
                 tableBody.innerHTML = tableContent;
