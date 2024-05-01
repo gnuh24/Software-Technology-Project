@@ -196,20 +196,28 @@
     border-radius: 5px;
   }
   
-  .ChoDuyet {
-    color: rgb(137, 144, 0);
+  .order_statuses_complete{
+    background-image: url(../../public/img/ic_status_active.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    display: block;
+    height: 16px;
+    width: 16px;
+    margin: 0 auto 14px;
+    position: relative;
+    z-index: 1;
   }
-  .Huy {
-    color: rgb(195, 11, 11);
-  }
-  .DaDuyet {
-    color: rgb(8, 138, 60);
-  }
-  .DangGiao {
-    color: rgb(6, 28, 155);
-  }
-  .GiaoThanhCong {
-    color: rgb(0, 107, 7);
+
+  .order_statuses_cancel{
+    background-image: url(../../public/img/ic_status_active.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    display: block;
+    height: 16px;
+    width: 16px;
+    margin: 0 auto 14px;
+    position: relative;
+    z-index: 1;
   }
 
   .pagination{

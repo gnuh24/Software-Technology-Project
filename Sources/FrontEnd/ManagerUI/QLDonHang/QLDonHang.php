@@ -250,22 +250,6 @@
     return order_statuses;
   }
 
-  function getOrderStatusClassName(order_statuses) {
-    var order_statuses_classname;
-    if (order_statuses == 'Chờ Duyệt') {
-      order_statuses_classname = 'ChoDuyet';
-    } else if (order_statuses == 'Đã Hủy') {
-      order_statuses_classname = 'Huy';
-    } else if (order_statuses == 'Đã duyệt') {
-      order_statuses_classname = 'DaDuyet';
-    } else if (order_statuses == 'Đang Giao') {
-      order_statuses_classname = 'DangGiao';
-    } else if (order_statuses == 'Giao Thành Công') {
-      order_statuses_classname = 'GiaoThanhCong';
-    }
-    return order_statuses_classname;
-  }
-
   function createPagination(currentPage, totalPages) {
     var paginationContainer = document.getElementById('pagination');
     // var searchValue = document.querySelector('.Admin_input__LtEE-').value;
@@ -331,20 +315,24 @@
           order_statuses = getTenTrangThai(record.TrangThai);
 
           printed_orders.push(maDonHang);
-          var order_statuses_classname = getOrderStatusClassName(order_statuses);
 
           var trContent = `<tr>
-                            <td class="${trClass}"> ${record.MaDonHang}  </td>
-                            <td class="${trClass}"> ${ngayDatFormatted}  </td>
-                            <td class="${trClass}"> ${number_format_vnd(record.TongGiaTri)}</td>
-                            <td class="${trClass}"> ${record.Email}  </td>  
-                            <td class="${trClass} ${order_statuses_classname}"> ${order_statuses} </td>        
+                            <td class="${trClass}"><a href="./ChiTietDonHang.php?MaDonHang=${record.MaDonHang}">${record.MaDonHang}</a></td>
+                            <td class="${trClass}"><a href="./ChiTietDonHang.php?MaDonHang=${record.MaDonHang}">${ngayDatFormatted}</a></td>
+                            <td class="${trClass}"><a href="./ChiTietDonHang.php?MaDonHang=${record.MaDonHang}">${number_format_vnd(record.TongGiaTri)}</a></td>
+                            <td class="${trClass}"><a href="./ChiTietDonHang.php?MaDonHang=${record.MaDonHang}">${record.Email}</a></td>  
+                            <td class="${trClass}"><a href="./ChiTietDonHang.php?MaDonHang=${record.MaDonHang}">${order_statuses}</a></td>
                           `;
-          if (order_statuses == 'Chờ Duyệt')
-            trContent += `<td class="${trClass}"><button type="button" onclick="changeOrderStatus(${record.MaDonHang}, '${record.TrangThai}')" class="edit">Đổi trạng thái</button><a href="./ChiTietDonHang.php?${record.MaDonHang}" class="edit">chi tiết</a> <button class="delete" onclick="setTrangThaiDonHang(${record.MaDonHang},'Huy')"> hủy</button> </td></tr> `;
-          else
-            trContent += `<td class="${trClass}"><a href="./ChiTietDonHang.php?MaDonHang=${record.MaDonHang}" class="edit">chi tiết</a></td></tr>`;
-          tableContent += trContent; // Thêm nội dung của hàng vào chuỗi tableContent
+          if (record.MaDonHang == 'Huy'){
+            trContent += `<td class="${trClass} order_statuses_complete">${order_statuses}</td></tr>`;
+          tableContent += trContent;
+          }else if(record.MaDonHang == 'GiaoThanhCong'){
+            trContent += `<td class="${trClass} order_statuses_cancel">${order_statuses}</td></tr>`;
+          }
+          else{
+            trContent += `<td class="${trClass}"><button type="button" onclick="changeOrderStatus(${record.MaDonHang}, '${record.TrangThai}')" class="edit">${getTenTrangThai((record.TrangThai))}</button><button class="delete" onclick="setTrangThaiDonHang(${record.MaDonHang},'Huy')"> hủy</button> </td></tr> `;
+          }
+          tableContent += trContent;
         });
 
         // Thiết lập lại nội dung của tbody bằng chuỗi tableContent
