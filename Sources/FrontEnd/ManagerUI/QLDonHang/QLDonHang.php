@@ -23,30 +23,30 @@
         <div>
           <div>
             <div class="Manager_wrapper__vOYy">
-            <div class="Sidebar_sideBar__CC4MK">
-                    <a class="MenuItemSidebar_menuItem__56b1m" href="../QLLoaiSanPham/QLLoaiSanPham.php">
-                        <span class="MenuItemSidebar_title__LLBtx">Loại Sản Phẩm</span>
-                    </a>
-                    <a class="MenuItemSidebar_menuItem__56b1m" href="../QLSanPham/QLSanPham.php">
-                        <span class="MenuItemSidebar_title__LLBtx">Sản Phẩm</span>
-                    </a>
-                    <a class="MenuItemSidebar_menuItem__56b1m" href="../QLNhaCungCap/QLNhaCungCap.php">
-                        <span class="MenuItemSidebar_title__LLBtx">Nhà Cung Cấp</span>
-                    </a>
-                    <a class="MenuItemSidebar_menuItem__56b1m" href="../QLPhieuNhapKho/QLPhieuNhapKho.php">
-                        <span class="MenuItemSidebar_title__LLBtx">Phiếu Nhập Kho</span>
-                    </a>
-                    <a class="MenuItemSidebar_menuItem__56b1m" href="../QLDonHang/QLDonHang.php">
-                        <span class="MenuItemSidebar_title__LLBtx">Đơn Hàng</span>
-                    </a>
-                    <a class="MenuItemSidebar_menuItem__56b1m" href="../ThongKe/ThongKeDoanhThuChiTieu.php">
-                        <span class="MenuItemSidebar_title__LLBtx">Thống Kê Tài Chính</span>
-                    </a>                         
-                    </a>
-                    <a class="MenuItemSidebar_menuItem__56b1m" href="../ThongKe/ThongKeDonHang.php">
-                        <span class="MenuItemSidebar_title__LLBtx">Thống Kê Đơn Hàng</span>
-                    </a>
-                </div>
+              <div class="Sidebar_sideBar__CC4MK">
+                <a class="MenuItemSidebar_menuItem__56b1m" href="../QLLoaiSanPham/QLLoaiSanPham.php">
+                  <span class="MenuItemSidebar_title__LLBtx">Loại Sản Phẩm</span>
+                </a>
+                <a class="MenuItemSidebar_menuItem__56b1m" href="../QLSanPham/QLSanPham.php">
+                  <span class="MenuItemSidebar_title__LLBtx">Sản Phẩm</span>
+                </a>
+                <a class="MenuItemSidebar_menuItem__56b1m" href="../QLNhaCungCap/QLNhaCungCap.php">
+                  <span class="MenuItemSidebar_title__LLBtx">Nhà Cung Cấp</span>
+                </a>
+                <a class="MenuItemSidebar_menuItem__56b1m" href="../QLPhieuNhapKho/QLPhieuNhapKho.php">
+                  <span class="MenuItemSidebar_title__LLBtx">Phiếu Nhập Kho</span>
+                </a>
+                <a class="MenuItemSidebar_menuItem__56b1m" href="../QLDonHang/QLDonHang.php">
+                  <span class="MenuItemSidebar_title__LLBtx">Đơn Hàng</span>
+                </a>
+                <a class="MenuItemSidebar_menuItem__56b1m" href="../ThongKe/ThongKeDoanhThuChiTieu.php">
+                  <span class="MenuItemSidebar_title__LLBtx">Thống Kê Tài Chính</span>
+                </a>
+                </a>
+                <a class="MenuItemSidebar_menuItem__56b1m" href="../ThongKe/ThongKeDonHang.php">
+                  <span class="MenuItemSidebar_title__LLBtx">Thống Kê Đơn Hàng</span>
+                </a>
+              </div>
               <div style="padding-left: 16%; width: 100%; padding-right: 2rem">
                 <div class="wrapper">
                   <div class="Admin_rightBar__RXnS9">
@@ -196,13 +196,12 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-
   console.log("Quản lý đơn hàng");
 
-  var udPage=0; 
-  var udminNgayTao=0;
-  var udmaxNgayTao=0;
-  var udtrangThai=0;
+  var udPage = 0;
+  var udminNgayTao = 0;
+  var udmaxNgayTao = 0;
+  var udtrangThai = 0;
 
   function clearTable() {
     var tableBody = document.getElementById("tableBody");
@@ -231,7 +230,7 @@
     return formattedDate;
   }
 
-  function getTenTrangThai(order_statuses){
+  function getTenTrangThai(order_statuses) {
     if (order_statuses == 'ChoDuyet') {
       order_statuses = 'Chờ Duyệt';
     }
@@ -267,14 +266,14 @@
         paginationHTML += '<button class="pageButton">' + i + '</button>';
       }
     }
-    if(totalPages>1){
+    if (totalPages > 1) {
       paginationContainer.innerHTML = paginationHTML;
     }
-   
+
     paginationContainer.querySelectorAll('.pageButton').forEach(function(button, index) {
       button.addEventListener('click', function() {
         // Gọi hàm fetchDataAndUpdateTable khi người dùng click vào nút phân trang
-        fetchDataAndUpdateTable(index + 1,udminNgayTao, udmaxNgayTao, udtrangThai); // Thêm 1 vào index để chuyển đổi về trang 1-indexed
+        fetchDataAndUpdateTable(index + 1, udminNgayTao, udmaxNgayTao, udtrangThai); // Thêm 1 vào index để chuyển đổi về trang 1-indexed
       });
     });
   }
@@ -323,13 +322,12 @@
                             <td class="${trClass}"><a href="./ChiTietDonHang.php?MaDonHang=${record.MaDonHang}">${record.Email}</a></td>  
                             <td class="${trClass}"><a href="./ChiTietDonHang.php?MaDonHang=${record.MaDonHang}">${order_statuses}</a></td>
                           `;
-          if (record.TrangThai == 'Huy'){
+          if (record.TrangThai == 'Huy') {
             trContent += `<td class="${trClass}" style="color: red;">${order_statuses}</td></tr>`;
-          }else if(record.TrangThai == 'GiaoThanhCong'){
+          } else if (record.TrangThai == 'GiaoThanhCong') {
             trContent += `<td class="${trClass}" style="color: green;">${order_statuses}</td></tr>`;
-          }
-          else{
-            trContent += `<td class="${trClass}"><button type="button" onclick="changeOrderStatus(${record.MaDonHang}, '${record.TrangThai}')" class="edit">${getTenTrangThai(nextState(record.TrangThai))}</button><button class="delete" onclick="setTrangThaiDonHang(${record.MaDonHang},'Huy')"> hủy</button> </td></tr> `;
+          } else {
+            trContent += `<td class="${trClass}"><button type="button" onclick="changeOrderStatus(${record.MaDonHang}, '${record.TrangThai}')" class="edit">${getTenTrangThai(nextState(record.TrangThai))}</button><button class="delete" onclick="changeOrderStatus(${record.MaDonHang}, 'Huy')"> hủy</button> </td></tr> `;
           }
           tableContent += trContent;
         });
@@ -398,21 +396,50 @@
     fetchDataAndUpdateTable(1, minNgayTao, maxNgayTao, trangThai);
   });
 
-  const EnumTrangThai = ['ChoDuyet', 'DaDuyet', 'DangGiao', 'GiaoThanhCong'];
+  
+  function getChiTietDonHangByMaDonHang(MaDonHang) {
+    var chiTietDonHang=[];
+    $.ajax({
+      url: '../../../BackEnd/ManagerBE/ChiTietDonHangBE.php',
+      type: 'GET',
+      dataType: "json",
+      data: {
+        MaDonHang: MaDonHang,
+      },
+      success: function(response) {
+        chiTietDonHang = response.data;
+        console.log(chiTietDonHang);
+      },
 
-  function nextState(TrangThai) {
-    var currentIndex = EnumTrangThai.indexOf(TrangThai);
-    return EnumTrangThai[currentIndex+1];
+      error: function(xhr, status, error) {
+        console.error('Lỗi khi gọi API: ', error);
+      }
+    });
+    console.log(chiTietDonHang);
+    return chiTietDonHang;
   }
 
-  function changeOrderStatus(MaDonHang, TrangThai) {
-    if (TrangThai == "Huy" || TrangThai == "GiaoThanhCong") {
-      return;
-    }
-    TrangThai = nextState(TrangThai);
-    setTrangThaiDonHang(MaDonHang, TrangThai);
+  function thayDoiSoLuongSanPham(action, maSanPham, soLuongTang) {
+    $.ajax({
+      url: '../../../BackEnd/ManagerBE/SanPhamBE.php',
+      type: 'POST',
+      dataType: "json",
+      data: {
+        action: action,
+        maSanPham: maSanPham,
+        soLuongTang: soLuongTang
+      },
+      success: function(response) {
+        console.log(response);
+      },
+      error: function(xhr, status, error) {
+        Swal.fire({
+          icon: 'error',
+          text: 'Cập nhật trạng thái thất bại.'
+        });
+      }
+    })
   }
-
 
 
   function setTrangThaiDonHang(MaDonHang, TrangThai) {
@@ -425,11 +452,6 @@
         TrangThai: TrangThai
       },
       success: function(response) {
-        console.log(udPage)
-        console.log(udminNgayTao)
-        console.log(udmaxNgayTao)
-        console.log(udtrangThai)
-        fetchDataAndUpdateTable(udPage, udminNgayTao, udmaxNgayTao, udtrangThai);
         console.log(response);
         Swal.fire({
           icon: 'success',
@@ -443,6 +465,33 @@
         });
       }
     })
+  }
+
+
+  const EnumTrangThai = ['ChoDuyet', 'DaDuyet', 'DangGiao', 'GiaoThanhCong'];
+
+  function nextState(TrangThai) {
+    var currentIndex = EnumTrangThai.indexOf(TrangThai);
+    return EnumTrangThai[currentIndex + 1];
+  }
+
+  function changeOrderStatus(MaDonHang, TrangThai) {
+    if(TrangThai == "Huy"){
+      var chiTietDonHang = getChiTietDonHangByMaDonHang(MaDonHang);
+      chiTietDonHang.forEach(element => {
+        thayDoiSoLuongSanPham('up', element.MaSanPham, element.SoLuong);
+      });
+    } else {
+      TrangThai = nextState(TrangThai);
+    }
+    if (TrangThai == 'DaDuyet') {
+      var chiTietDonHang = getChiTietDonHangByMaDonHang(MaDonHang);
+      chiTietDonHang.forEach(element => {
+        thayDoiSoLuongSanPham('up', element.MaSanPham, -element.SoLuong);
+      });
+    }
+    setTrangThaiDonHang(MaDonHang, TrangThai);
+    fetchDataAndUpdateTable(udPage, udminNgayTao, udmaxNgayTao, udtrangThai);
   }
 
   // Example usage:
