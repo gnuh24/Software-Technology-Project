@@ -197,6 +197,10 @@
 
 <script>
   console.log("Quản lý đơn hàng");
+  var danhSachSanPham = <?php
+                        require_once "../../../BackEnd/ManagerBE/SanPhamBE.php";
+                        $danhSachSanPham = getAllSanPham(1, "", null, null, null, null, null, null, 1, null)->data;
+                        echo json_encode($danhSachSanPham); ?>;
 
   var udPage = 0;
   var udminNgayTao = 0;
@@ -248,6 +252,7 @@
     }
     return order_statuses;
   }
+
   function getTenTrangThai2(order_statuses) {
     if (order_statuses == 'DaDuyet') {
       order_statuses = 'Duyệt';
@@ -308,7 +313,7 @@
         var tableContent = ""; // Chuỗi chứa nội dung mới của tbody
         var printed_orders = [];
         var order_statuses;
-        var count=0;
+        var count = 0;
         // Duyệt qua mảng dữ liệu và tạo các hàng mới cho tbody
 
         data.forEach(function(record) {
@@ -339,7 +344,7 @@
           } else if (record.TrangThai == 'GiaoThanhCong') {
             trContent += `<td class="${trClass}" style="color: green;">${order_statuses}</td></tr>`;
           } else {
-            trContent += `<td class="${trClass}"><button type="button" onclick="changeOrderStatus(${record.MaDonHang}, '${record.TrangThai}')" class="edit">${getTenTrangThai2(nextState(record.TrangThai))}</button><button class="delete" onclick="changeOrderStatus(${record.MaDonHang}, 'Huy')"> hủy</button> </td></tr> `;
+            trContent += `<td class="${trClass}"><button type="button" onclick="changeOrderStatus(${record.MaDonHang}, '${record.TrangThai}', '${record.TrangThai}')" class="edit">${getTenTrangThai2(nextState(record.TrangThai))}</button><button class="delete" onclick="changeOrderStatus(${record.MaDonHang}, 'Huy', '${record.TrangThai}')"> hủy</button> </td></tr> `;
           }
           tableContent += trContent;
         });
@@ -358,6 +363,11 @@
   function fetchDataAndUpdateTable(page, minNgayTao, maxNgayTao, trangThai) {
     //Clear dữ liệu cũ
     clearTable();
+    
+    danhSachSanPham = <?php
+                        require_once "../../../BackEnd/ManagerBE/SanPhamBE.php";
+                        $danhSachSanPham = getAllSanPham(1, "", null, null, null, null, null, null, 1, null)->data;
+                        echo json_encode($danhSachSanPham); ?>;
 
     udPage = page;
     udminNgayTao = minNgayTao;
@@ -408,9 +418,8 @@
     fetchDataAndUpdateTable(1, minNgayTao, maxNgayTao, trangThai);
   });
 
-  
-  function getChiTietDonHangByMaDonHang(MaDonHang) {
-    var chiTietDonHang=[];
+
+  function getChiTietDonHangByMaDonHangHuy(MaDonHang, TrangThai, TrangThaiHienTai) {
     $.ajax({
       url: '../../../BackEnd/ManagerBE/ChiTietDonHangBE.php',
       type: 'GET',
@@ -419,17 +428,67 @@
         MaDonHang: MaDonHang,
       },
       success: function(response) {
-        chiTietDonHang = response.data;
-        console.log(chiTietDonHang);
+        if (TrangThaiHienTai != "ChoDuyet") {
+          var chiTietDonHang = response.data;
+          chiTietDonHang.forEach(element => {
+            var maSanPham = element.MaSanPham;
+            var soLuong = element.SoLuong;
+            tangSoLuongSanPham(maSanPham, soLuong)
+          });
+        }
+        setTrangThaiDonHang(MaDonHang, TrangThai);
+        fetchDataAndUpdateTable(udPage, udminNgayTao, udmaxNgayTao, udtrangThai);
       },
-
       error: function(xhr, status, error) {
         console.error('Lỗi khi gọi API: ', error);
       }
     });
-    console.log(chiTietDonHang);
-    return chiTietDonHang;
   }
+
+
+  function getChiTietDonHangByMaDonHangDaDuyet(MaDonHang, TrangThai, danhSachSanPham) {
+    $.ajax({
+      url: '../../../BackEnd/ManagerBE/ChiTietDonHangBE.php',
+      type: 'GET',
+      dataType: "json",
+      data: {
+        MaDonHang: MaDonHang,
+      },
+      success: function(response) {
+        var chiTietDonHang = response.data;
+        var flagAllProductsAvailable = true;
+        chiTietDonHang.forEach(function(element) {
+          var sanPham = getSanPhamByMaSanPham(danhSachSanPham,element.MaSanPham);
+          if(sanPham.SoLuongConLai < element.SoLuong){
+            flagAllProductsAvailable=false;
+          }
+        });
+        if (flagAllProductsAvailable) {
+          chiTietDonHang.forEach(function(element) {
+            var maSanPham = element.MaSanPham;
+            var soLuong = element.SoLuong;
+            giamSoLuongSanPham(maSanPham, soLuong);
+            setTrangThaiDonHang(MaDonHang, TrangThai);
+            fetchDataAndUpdateTable(udPage, udminNgayTao, udmaxNgayTao, udtrangThai);
+
+          });
+        }
+      },
+      error: function(xhr, status, error) {
+        console.error('Lỗi khi gọi API ChiTietDonHangBE.php: ', error);
+      }
+    });
+  }
+
+  function getSanPhamByMaSanPham(danhSachSanPham, MaSanPham) {
+    var sanPham;
+    danhSachSanPham.forEach(element => {
+      if (element.MaSanPham == MaSanPham)
+        sanPham = element;
+    });
+    return sanPham;
+  }
+
 
   function tangSoLuongSanPham(maSanPham, soLuongTang) {
     $.ajax({
@@ -441,10 +500,10 @@
         maSanPham: maSanPham,
         soLuongTang: soLuongTang
       },
-      success: function(response) {;
+      success: function(response) {
+        console.log(response)
       },
-      error: function(xhr, status, error) {
-      }
+      error: function(xhr, status, error) {}
     })
   }
 
@@ -458,30 +517,13 @@
         maSanPham: maSanPham,
         soLuongGiam: soLuongGiam
       },
-      success: function(response) {;
+      success: function(response) {
+        console.log(response)
       },
-      error: function(xhr, status, error) {
-      }
+      error: function(xhr, status, error) {}
     })
   }
 
-  function getSanPhamByMaSanPham(MaSanPham) {
-    var SanPham;
-    $.ajax({
-      url: '../../../BackEnd/ManagerBE/SanPhamBE.php',
-      type: 'GET',
-      dataType: "json",
-      data: {
-        MaSanPham:MaSanPham
-      },
-      success: function(response) {;
-        SanPham=response.data;
-      },
-      error: function(xhr, status, error) {
-      }
-    })
-    return SanPham;
-  }
 
 
   function setTrangThaiDonHang(MaDonHang, TrangThai) {
@@ -493,7 +535,7 @@
         MaDonHang: MaDonHang,
         TrangThai: TrangThai
       },
-      success: function(response) {;
+      success: function(response) {
         Swal.fire({
           icon: 'success',
           text: 'Cập nhật trạng thái thành công.'
@@ -516,41 +558,18 @@
     return EnumTrangThai[currentIndex + 1];
   }
 
-  function changeOrderStatus(MaDonHang, TrangThai) {
-    if(TrangThai == "Huy"){
-      var chiTietDonHang = getChiTietDonHangByMaDonHang(MaDonHang);
-      chiTietDonHang.forEach(element => {
-        var maSanPham = element.MaSanPham;
-        var soLuong = element.SoLuong;
-        tangSoLuongSanPham(maSanPham, soLuong);
-      });
+  function changeOrderStatus(MaDonHang, TrangThai, TrangThaiHienTai) {
+    if (TrangThai == "Huy") {
+      getChiTietDonHangByMaDonHangHuy(MaDonHang, TrangThai, TrangThaiHienTai);
     } else {
       TrangThai = nextState(TrangThai);
-    }
-    if (TrangThai == 'DaDuyet') {
-      var chiTietDonHang = getChiTietDonHangByMaDonHang(MaDonHang);
-      var flagKhongDuHang=false;
-      chiTietDonHang.forEach(element => {
-        var sanPham =getSanPhamByMaSanPham(element.MaSanPham);
-        if(sanPham.SoLuongConLai<element.SoLuong){
-          Swal.fire({
-            text: `Số lượng tồn kho của sản phẩm ${sanPham.TenSanPham} không đủ`,
-            icon: 'error',
-          });
-          flagKhongDuHang=true;
-          return;
-        }
-      })
-      if(flagKhongDuHang){
-        return;
+      if (TrangThai == 'DaDuyet') {
+        getChiTietDonHangByMaDonHangDaDuyet(MaDonHang, TrangThai, danhSachSanPham);
+      } else {
+        setTrangThaiDonHang(MaDonHang, TrangThai);
       }
-      chiTietDonHang.forEach(element => {
-        var maSanPham = element.MaSanPham;
-        var soLuong = element.SoLuong;
-        giamSoLuongSanPham(maSanPham, soLuong);
-      });
     }
-    setTrangThaiDonHang(MaDonHang, TrangThai);
+
     fetchDataAndUpdateTable(udPage, udminNgayTao, udmaxNgayTao, udtrangThai);
   }
 

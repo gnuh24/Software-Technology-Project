@@ -57,7 +57,7 @@
             echo json_encode($result);
         }
     } else if (isset($_GET['MaSanPham'])){
-        $maSanPham = $_POST['MaSanPham'];
+        $maSanPham = $_GET['MaSanPham'];
         $result = getSanPhamByMaSanPham($maSanPham);
         echo json_encode($result);
     }
