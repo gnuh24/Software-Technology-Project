@@ -302,7 +302,6 @@
         trangThai: trangThai
       },
       success: function(response) {
-        console.log(response)
         var totalPages = response.totalPages;
         var data = response.data;
         var tableBody = document.getElementById("tableBody"); // Lấy thẻ tbody của bảng
@@ -432,36 +431,34 @@
     return chiTietDonHang;
   }
 
-  function tangSoLuongSanPham(action, maSanPham, soLuongTang) {
+  function tangSoLuongSanPham(maSanPham, soLuongTang) {
     $.ajax({
       url: '../../../BackEnd/ManagerBE/SanPhamBE.php',
       type: 'POST',
       dataType: "json",
       data: {
-        action: action,
+        action: 'up',
         maSanPham: maSanPham,
         soLuongTang: soLuongTang
       },
-      success: function(response) {
-        console.log(response);
+      success: function(response) {;
       },
       error: function(xhr, status, error) {
       }
     })
   }
 
-  function giamSoLuongSanPham(action, maSanPham, soLuongGiam) {
+  function giamSoLuongSanPham(maSanPham, soLuongGiam) {
     $.ajax({
       url: '../../../BackEnd/ManagerBE/SanPhamBE.php',
       type: 'POST',
       dataType: "json",
       data: {
-        action: action,
+        action: 'down',
         maSanPham: maSanPham,
         soLuongGiam: soLuongGiam
       },
-      success: function(response) {
-        console.log(response);
+      success: function(response) {;
       },
       error: function(xhr, status, error) {
       }
@@ -477,8 +474,7 @@
       data: {
         MaSanPham:MaSanPham
       },
-      success: function(response) {
-        console.log(response);
+      success: function(response) {;
         SanPham=response.data;
       },
       error: function(xhr, status, error) {
@@ -497,8 +493,7 @@
         MaDonHang: MaDonHang,
         TrangThai: TrangThai
       },
-      success: function(response) {
-        console.log(response);
+      success: function(response) {;
         Swal.fire({
           icon: 'success',
           text: 'Cập nhật trạng thái thành công.'
@@ -524,6 +519,16 @@
   function changeOrderStatus(MaDonHang, TrangThai) {
     if(TrangThai == "Huy"){
       var chiTietDonHang = getChiTietDonHangByMaDonHang(MaDonHang);
+      chiTietDonHang.forEach(element => {
+        var maSanPham = element.MaSanPham;
+        var soLuong = element.SoLuong;
+        tangSoLuongSanPham(maSanPham, soLuong);
+      });
+    } else {
+      TrangThai = nextState(TrangThai);
+    }
+    if (TrangThai == 'DaDuyet') {
+      var chiTietDonHang = getChiTietDonHangByMaDonHang(MaDonHang);
       var flagKhongDuHang=false;
       chiTietDonHang.forEach(element => {
         var sanPham =getSanPhamByMaSanPham(element.MaSanPham);
@@ -532,23 +537,17 @@
             text: `Số lượng tồn kho của sản phẩm ${sanPham.TenSanPham} không đủ`,
             icon: 'error',
           });
-          flag=true;
+          flagKhongDuHang=true;
           return;
         }
       })
-      if(flag){
+      if(flagKhongDuHang){
         return;
       }
       chiTietDonHang.forEach(element => {
-        giamSoLuongSanPham('down', element.MaSanPham, element.SoLuong);
-      });
-    } else {
-      TrangThai = nextState(TrangThai);
-    }
-    if (TrangThai == 'DaDuyet') {
-      var chiTietDonHang = getChiTietDonHangByMaDonHang(MaDonHang);
-      chiTietDonHang.forEach(element => {
-        tangSoLuongSanPham('up', element.MaSanPham, -element.SoLuong);
+        var maSanPham = element.MaSanPham;
+        var soLuong = element.SoLuong;
+        giamSoLuongSanPham(maSanPham, soLuong);
       });
     }
     setTrangThaiDonHang(MaDonHang, TrangThai);
