@@ -1,162 +1,104 @@
 <?php
+
 require_once __DIR__ . "/../../Configure/MysqlConfig.php";
 
- //Dùng để call List nhà cung cấp
- if(isset($_GET['page'])) {
+
+if (isset($_GET['page'])) {
     $page = $_GET['page'];
-    $search = isset($_GET['search']) ? $_GET['search'] : "";
-
-    // Gọi hàm PHP bạn muốn thực thi và trả về kết quả dưới dạng JSON
-    $result = getAllNhaCungCap($page, $search);
-
+    $datenhapkho = isset($_GET['datenhapkho']) ? $_GET['datenhapkho'] : null;
+    $result = getAllphieunhapkho($page, $datenhapkho);
     echo json_encode($result);
 }
 
-//Dùng để update thông tin nhà cung cấp
-if(isset($_POST['MaNCC']) && isset($_POST['TenNCC']) && isset($_POST['Email']) && isset($_POST['SoDienThoai'])) {
-    $MaNCC = $_POST['MaNCC'];
-    $TenNCC = $_POST['TenNCC'];
-    $Email = $_POST['Email'];
-    $SoDienThoai = $_POST['SoDienThoai'];
-        $result = updateNhaCungCap($MaNCC, $TenNCC, $Email, $SoDienThoai);
-    
-
-    echo json_encode($result);
-}
-
-//Dùng để thêm nhà cung cấp
-if(isset($_POST['TenNCC']) && isset($_POST['Email']) && isset($_POST['SoDienThoai'])) {
-    $TenNCC = $_POST['TenNCC'];
-    $Email = $_POST['Email'];
-    $SoDienThoai = $_POST['SoDienThoai'];
-
-    // Gọi hàm createNhaCungCap và trả về kết quả dưới dạng JSON
-    $result = createNhaCungCap($TenNCC, $Email, $SoDienThoai);
-
-    echo json_encode($result);
-}
-
-//Dùng để xoá nhà cung cấp
-if(isset($_GET['MaNCC'])) {
-    $MaNCC = $_GET['MaNCC'];
-
-    // Gọi hàm deleteNhaCungCap và trả về kết quả dưới dạng JSON
-    $result = deleteNhaCungCap($MaNCC);
-
-    echo json_encode($result);
-}
-
-//Dùng để kiểm tra xem TenNCC có tồn tại hay không ?
-if(isset($_GET['TenNCC']) ) {
-    $TenNCC = $_GET['TenNCC'];
-
-    $result = isTenNhaCungCapExists($TenNCC);
-
-    echo json_encode($result);
-
-}
-
-function getAllNhaCungCapNotPage()
+function getAllphieunhapkho($page, $datenhapkho = null)
 {
-        
-    // Chuẩn bị trước biến $connection
-    $connection = null;
-    // Mảng chứa điều kiện
+    $connection = MysqlConfig::getConnection();
+    $query = "SELECT MaPhieu, NgayNhapKho, pnk.MaNCC, TongGiaTri, pnk.MaQuanLy, TenNCC, nguoidung.HoTen, pnk.TrangThai AS PhieuTrangThai 
+              FROM PhieuNhapKho AS pnk 
+              JOIN nhacungcap ON pnk.MaNCC = nhacungcap.MaNCC 
+              JOIN taikhoan AS tk ON pnk.MaQuanLy = tk.MaTaiKhoan 
+              JOIN NguoiDung ON tk.MaTaiKhoan = NguoiDung.MaNguoiDung";
     $where_conditions = [];
-    // Chuẩn bị câu truy vấn gốc
-    $query = "SELECT * FROM `NhaCungCap`";
-  
-    // Khởi tạo kết nối
-    $connection = MysqlConfig::getConnection();   
-     
-
-        // Query dùng để tính tổng số trang của các data trả về
-        $query_total_row = "SELECT COUNT(*) FROM `NhaCungCap`";
-        $statement_total_row = $connection->prepare($query_total_row);
-        $statement_total_row->execute();
-
-
-
-    try {
-        $statement = $connection->prepare($query);
-
-        if ($statement !== false) {
-            $statement->execute();
-            $result = $statement->fetchAll(PDO::FETCH_ASSOC);
-
-            return (object) [
-                "status" => 200,
-                "message" => "Thành công",
-                "data" => $result,
-            ];
-        } else {
-            throw new PDOException();
-        }
-    } catch (PDOException $e) {
-        return (object) [
-            "status" => 400,
-            "message" => "Lỗi không thể lấy danh sách nhà cung cấp",
-        ];
-    } finally {
-        $connection = null;
-    }
-}
-
-
-function getAllNhaCungCap($page,$search)
-{
-        
-    // Chuẩn bị trước biến $connection
-    $connection = null;
-    // Mảng chứa điều kiện
-    $where_conditions = [];
-    // Chuẩn bị câu truy vấn gốc
-    $query = "SELECT * FROM `NhaCungCap`";
-    // Số phần tử mỗi trang
-    $entityPerPage = 6;
-    // Tổng số trang
+    $entityPerPage = 10;
     $totalPages = null;
-    // Khởi tạo kết nối
-    $connection = MysqlConfig::getConnection();   
-     // Lọc theo search
-     if (!empty($search)) {
-        $where_conditions[] = "`TenNCC` LIKE '%" . $search . "%'";
-    }   
-    // Kết nối các điều kiện lại với nhau (Nếu không có thì skip)
+    if ($datenhapkho !== null && $datenhapkho !== "") {
+        $where_conditions[] = "`NgayNhapKho` = :NgayNhapKho";
+    }
     if (!empty($where_conditions)) {
         $query .= " WHERE " . implode(" AND ", $where_conditions);
     }
-     
-    // Tính toán tổng số trang
     if ($totalPages === null) {
-
-        // Query dùng để tính tổng số trang của các data trả về
-        $query_total_row = "SELECT COUNT(*) FROM `NhaCungCap`";
-        $statement_total_row = $connection->prepare($query_total_row);
-        $statement_total_row->execute();
-
-        // Làm tròn lên -> Tính ra tổng số trang
-        $totalPages = ceil($statement_total_row->fetchColumn() / $entityPerPage);
+        $query_total_row = "SELECT COUNT(*) FROM (" . $query . ") AS subquery";
+        if (strpos($query_total_row, ":NgayNhapKho") !== false) {
+            $statement_total_row = $connection->prepare($query_total_row);
+            if ($datenhapkho !== null && $datenhapkho !== "") {
+                $statement_total_row->execute([':NgayNhapKho' => $datenhapkho]);
+            } else {
+                $statement_total_row->execute();
+            }
+        } else {
+            $statement_total_row = $connection->prepare($query_total_row);
+        }
+        $totalRows = $statement_total_row->fetchColumn();
+        $totalPages = ceil($totalRows / $entityPerPage);
     }
-
-    // Kiểm tra tham số phân trang
-    $current_page = isset($page) ? $page : 1;
-    $start_from = ($current_page - 1) * $entityPerPage;
-
+    $start_from = ($page - 1) * $entityPerPage;
     $query .= " LIMIT $entityPerPage OFFSET $start_from";
 
     try {
         $statement = $connection->prepare($query);
+        if ($datenhapkho !== null && $datenhapkho !== "") {
+            $statement->execute([':NgayNhapKho' => $datenhapkho]);
+        } else {
+            $statement->execute();
+        }
+        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+        return (object) [
+            "status" => 200,
+            "message" => "Thành công",
+            "data" => $result,
+            "totalPages" => $totalPages
+        ];
+    } catch (PDOException $e) {
+        return (object) [
+            "status" => 400,
+            "message" => "Lỗi không thể lấy danh sách nhập kho: " . $e->getMessage(),
+        ];
+    } finally {
+        $connection = null;
+    }
+}
+
+function getPhieuNhapByMaPhieuNhap($maPhieuNhap)
+{
+    //Chuẩn bị trước biến $connection
+    $connection = null;
+
+    //Chuẩn bị câu truy vấn gốc
+    $query = "SELECT * FROM `PhieuNhapKho` WHERE `MaPhieu` = :maPhieuNhap";
+
+    // Khởi tạo kết nối
+    $connection = MysqlConfig::getConnection();
+
+
+    // Khởi tạo kết nối đến cơ sở dữ liệu
+    try {
+
+        $statement = $connection->prepare($query);
 
         if ($statement !== false) {
+
+            $statement->bindValue(':maTaiKhoan', $maPhieuNhap, PDO::PARAM_INT);
+
             $statement->execute();
+
             $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 
             return (object) [
                 "status" => 200,
                 "message" => "Thành công",
                 "data" => $result,
-                "totalPages" => $totalPages
             ];
         } else {
             throw new PDOException();
@@ -164,247 +106,53 @@ function getAllNhaCungCap($page,$search)
     } catch (PDOException $e) {
         return (object) [
             "status" => 400,
-            "message" => "Lỗi không thể lấy danh sách nhà cung cấp",
+            "message" => "Lỗi không thể lấy quyền",
         ];
     } finally {
         $connection = null;
     }
 }
 
-function getNhaCungCapByID($MaNCC)
+function createPhieuNhapKho($NgayNhapKho, $TongGiaTri, $MaNCC, $MaQuanLy)
 {
-    // Khởi tạo kết nối
-    $connection = null;
-
-    // Chuẩn bị câu truy vấn gốc
-    $query = "SELECT * FROM `NhaCungCap` WHERE `MaNCC` = :MaNCC";
 
     // Khởi tạo kết nối
     $connection = MysqlConfig::getConnection();
 
-    try {
-        $statement = $connection->prepare($query);
+    $query = "INSERT INTO `PhieuNhapKho`(`NgayNhapKho`,`TongGiaTri`, `MaNCC`, `MaQuanLy`) 
+                                VALUES (:NgayNhapKho, :TongGiaTri, :MaNCC,:MaQuanLy)";
 
-        if ($statement !== false) {
-            $statement->bindValue(':MaNCC', $MaNCC, PDO::PARAM_INT);
-
-            $statement->execute();
-
-            $result = $statement->fetch(PDO::FETCH_ASSOC);
-
-            return (object) [
-                "status" => 200,
-                "message" => "Truy vấn thành công!",
-                "data" => $result
-            ];
-        } else {
-            throw new PDOException();
-        }
-    } catch (PDOException $e) {
-        return (object) [
-            "status" => 400,
-            "message" => "Lỗi không thể lấy thông tin nhà cung cấp",
-        ];
-    } finally {
-        $connection = null;
-    }
-}
-function getNhaCungCapBySDT($SoDienThoai)
-{
-    // Khởi tạo kết nối
-    $connection = null;
-
-    // Chuẩn bị câu truy vấn gốc
-    $query = "SELECT * FROM `NhaCungCap` WHERE `SoDienThoai` = :SoDienThoai";
-
-    // Khởi tạo kết nối
-    $connection = MysqlConfig::getConnection();
 
     try {
+
         $statement = $connection->prepare($query);
 
-        if ($statement !== false) {
-            $statement->bindValue(':SoDienThoai', $SoDienThoai, PDO::PARAM_INT);
+        if ($statement  !== false) {
 
-            $statement->execute();
+            // Bind giá trị vào tham số :tenTaiKhoan trong câu truy vấn
+            $statement->bindValue(':NgayNhapKho', $NgayNhapKho,        PDO::PARAM_STR);
+            $statement->bindValue(':TongGiaTri', $TongGiaTri,            PDO::PARAM_STR);
+            $statement->bindValue(':MaNCC', $MaNCC,              PDO::PARAM_INT);
+            $statement->bindValue(':MaQuanLy', $MaQuanLy,              PDO::PARAM_INT);
 
-            $result = $statement->fetch(PDO::FETCH_ASSOC);
+            // Thực hiện truy vấn
+            $statement = $statement->execute();
 
-            return (object) [
-                "status" => 200,
-                "message" => "Truy vấn thành công!",
-                "data" => $result
-            ];
-        } else {
-            throw new PDOException();
-        }
-    } catch (PDOException $e) {
-        return (object) [
-            "status" => 400,
-            "message" => "Lỗi không thể lấy thông tin nhà cung cấp",
-        ];
-    } finally {
-        $connection = null;
-    }
-}
-
-function isEmailExists($Email) {
-    // Chuẩn bị biến kết nối
-    $connection = null;
-
-    // Chuẩn bị câu truy vấn gốc
-    $query = "SELECT * FROM `nhacungcap` WHERE `Email` = :Email";
-
-    try {
-        // Khởi tạo kết nối đến cơ sở dữ liệu
-        $connection = MysqlConfig::getConnection();
-
-        // Chuẩn bị câu truy vấn
-        $statement = $connection->prepare($query);
-
-        // Kiểm tra câu truy vấn
-        if ($statement !== false) {
-            // Bind giá trị vào tham số của câu truy vấn
-            $statement->bindValue(':Email', $Email, PDO::PARAM_STR);
-
-            // Thực thi câu truy vấn
-            $statement->execute();
-
-            // Lấy kết quả
-            $result = $statement->fetchAll(PDO::FETCH_ASSOC);
-
-            // Kiểm tra xem email có tồn tại hay không
-            $isExists = !empty($result) ? true : false;
-
-            // Trả về kết quả dưới dạng object
-            return (object) [
-                "status" => 200,
-                "message" => "Truy vấn thành công !!",
-                "isExists" => $isExists
-            ];
-        } else {
-            throw new PDOException();
-        }
-    } catch (PDOException $e) {
-        // Xử lý ngoại lệ PDOException
-        return (object) [
-            "status" => 400,
-            "message" => "Lỗi không thể lấy dữ liệu từ cơ sở dữ liệu",
-            "isExists" => false
-        ];
-    } finally {
-        // Đóng kết nối
-        $connection = null;
-    }
-}
-
-function isTenNhaCungCapExists($TenNCC)
-{
-    // Khởi tạo kết nối
-    $connection = null;
-
-    // Chuẩn bị câu truy vấn gốc
-    $query = "SELECT * FROM `NhaCungCap` WHERE `TenNCC` = :TenNCC";
-
-    // Khởi tạo kết nối
-    $connection = MysqlConfig::getConnection();
-
-    try {
-        $statement = $connection->prepare($query);
-
-        if ($statement !== false) {
-            $statement->bindValue(':TenNCC', $TenNCC, PDO::PARAM_STR);
-
-            $statement->execute();
-
-            $result = $statement->fetchAll(PDO::FETCH_ASSOC);
-
-            $isExists = !empty($result) ? 1 : 0;
-
-            return (object) [
-                "status" => 200,
-                "message" => "Truy vấn thành công!",
-                "isExists" => $isExists
-            ];
-        } else {
-            throw new PDOException();
-        }
-    } catch (PDOException $e) {
-        return (object) [
-            "status" => 400,
-            "message" => "Lỗi không thể kiểm tra nhà cung cấp",
-        ];
-    } finally {
-        $connection = null;
-    }
-}
-
-function isTenNhaCungCapBelongToMaNhaCungCap($MaNCC, $TenNCC)
-{
-    // Khởi tạo kết nối
-    $connection = null;
-
-    // Chuẩn bị câu truy vấn gốc
-    $query = "SELECT * FROM `NhaCungCap` WHERE `MaNCC` = :MaNCC AND `TenNCC` = :TenNCC";
-
-    // Khởi tạo kết nối
-    $connection = MysqlConfig::getConnection();
-
-    try {
-        $statement = $connection->prepare($query);
-
-        if ($statement !== false) {
-            $statement->bindValue(':MaNCC', $MaNCC, PDO::PARAM_INT);
-            $statement->bindValue(':TenNCC', $TenNCC, PDO::PARAM_STR);
-
-            $statement->execute();
-
-            $result = $statement->fetchAll(PDO::FETCH_ASSOC);
-
-            $isExists = !empty($result) ? 1 : 0;
-
-            return (object) [
-                "status" => 200,
-                "message" => "Truy vấn thành công!",
-                "isExists" => $isExists
-            ];
-        } else {
-            throw new PDOException();
-        }
-    } catch (PDOException $e) {
-        return (object) [
-            "status" => 400,
-            "message" => "Lỗi không thể kiểm tra nhà cung cấp",
-        ];
-    } finally {
-        $connection = null;
-    }
-}
-
-function createNhaCungCap($TenNCC, $SoDienThoai, $Email)
-{
-    // Khởi tạo kết nối
-    $connection = MysqlConfig::getConnection();
-
-    $query = "INSERT INTO `NhaCungCap` (`TenNCC`,`SoDienThoai`,`Email`) VALUES (:TenNCC,:SoDienThoai,:Email)";
-
-    try {
-        $statement = $connection->prepare($query);
-
-        if ($statement !== false) {
-            $statement->bindValue(':TenNCC', $TenNCC, PDO::PARAM_STR);
-            $statement->bindValue(':SoDienThoai', $SoDienThoai, PDO::PARAM_STR);
-            $statement->bindValue(':Email', $Email, PDO::PARAM_STR);
-
-            $statement->execute();
-
+            //Mã phiếu nhập vừa khởi tạo
             $id = $connection->lastInsertId();
 
-            return (object) [
-                "status" => 200,
-                "message" => "Thành công",
-                "data" => $id
-            ];
+
+            if ($statement !== false) {
+                // Trả về ID của bản ghi vừa chèn
+                return (object) [
+                    "status" => 200,
+                    "message" => "Thành công",
+                    "data" => $id
+                ];
+            } else {
+                // Trả về false nếu không thành công
+                throw new PDOException();
+            }
         }
     } catch (PDOException $e) {
         return (object) [
@@ -415,37 +163,45 @@ function createNhaCungCap($TenNCC, $SoDienThoai, $Email)
         $connection = null;
     }
 }
-
-function updateNhaCungCap($MaNCC, $TenNCC, $SoDienThoai, $Email)
+function updatePhieuNhapKho($MaPhieuNhapKho, $TongGiaTri, $MaNCC, $TrangThai)
 {
-    // Khởi tạo kết nối
     $connection = MysqlConfig::getConnection();
-
-    $query = "UPDATE `NhaCungCap` SET 
-                `TenNCC` = :TenNCC,
-                `soDienThoai`=:soDienThoai,
-                `Email` =:Email
-              WHERE `MaNCC` = :MaNCC";
+    $currentStatus = getCurrentPhieuNhapKhoStatus($MaPhieuNhapKho);
+    $query = "UPDATE `PhieuNhapKho` 
+              SET `TongGiaTri` = :TongGiaTri, 
+                  `MaNCC` = :MaNCC, 
+                  `TrangThai` = :TrangThai
+              WHERE `MaPhieu` = :MaPhieuNhapKho";
 
     try {
         $statement = $connection->prepare($query);
 
         if ($statement !== false) {
+            // Bind giá trị vào tham số của câu truy vấn
+            $statement->bindValue(':MaPhieuNhapKho', $MaPhieuNhapKho, PDO::PARAM_INT);
+            $statement->bindValue(':TongGiaTri', $TongGiaTri, PDO::PARAM_STR);
             $statement->bindValue(':MaNCC', $MaNCC, PDO::PARAM_INT);
-            $statement->bindValue(':TenNCC', $TenNCC, PDO::PARAM_STR);
-            $statement->bindValue(':SoDienThoai', $SoDienThoai, PDO::PARAM_STR);
-            $statement->bindValue(':Email', $Email, PDO::PARAM_STR);
-
-
+            // Bind giá trị vào tham số của câu truy vấn
+            $statement->bindValue(':TrangThai', $TrangThai, PDO::PARAM_STR); // Sử dụng PDO::PARAM_STR cho kiểu ENUM
             $statement->execute();
+            $rowCount = $statement->rowCount();
 
-            if ($statement->rowCount() > 0) {
+            if ($rowCount >= 0) {
+                if (strtolower($TrangThai) === strtolower($currentStatus)) {
+                    $status = 200;
+                } else {
+                    $status = 300;
+                }
+                
                 return (object) [
-                    "status" => 200,
-                    "message" => "Thành công",
+                    "status" => $status,
+                    "message" => "Cập nhật thành công"
                 ];
             } else {
-                throw new PDOException("Không có bản ghi nào được cập nhật");
+                return (object) [
+                    "status" => 404,
+                    "message" => "Không tìm thấy phiếu nhập kho"
+                ];
             }
         }
     } catch (PDOException $e) {
@@ -458,50 +214,30 @@ function updateNhaCungCap($MaNCC, $TenNCC, $SoDienThoai, $Email)
     }
 }
 
-function deleteNhaCungCap($MaNCC)
+function getCurrentPhieuNhapKhoStatus($MaPhieuNhapKho)
 {
-    // Khởi tạo kết nối
+    // Câu truy vấn SQL để lấy trạng thái hiện tại của phiếu nhập kho
+    $query = "SELECT `TrangThai` FROM `PhieuNhapKho` WHERE `MaPhieu` = :MaPhieuNhapKho";
     $connection = MysqlConfig::getConnection();
 
     try {
-        // Bắt đầu transaction
-        $connection->beginTransaction();
+        $statement = $connection->prepare($query);
 
-        // Lấy danh sách các phiếu nhập kho thuộc nhà cung cấp cần xóa
-        $query_select_PNKS = "SELECT `MaNCC` FROM `PhieuNhapKho` WHERE `MaNCC` = :MaNCC";
-        $statement_select_PNKS = $connection->prepare($query_select_PNKS);
-        $statement_select_PNKS->bindValue(':MaNCC', $MaNCC, PDO::PARAM_INT);
-        $statement_select_PNKS->execute();
-        $PNKS = $statement_select_PNKS->fetchAll(PDO::FETCH_ASSOC);
+        if ($statement !== false) {
+            // Bind giá trị vào tham số của câu truy vấn
+            $statement->bindValue(':MaPhieuNhapKho', $MaPhieuNhapKho, PDO::PARAM_INT);
 
-        // Cập nhật mã nhà cung cấp của các phiếu nhập kho đó sang mã nhà cung cấp mặc định (id = 1)
-        $query_update_PNKS = "UPDATE `PhieuNhapKho` SET `MaNCC` = 1 WHERE `MaNCC` = :MaNCC";
-        $statement_update_PNKS = $connection->prepare($query_update_PNKS);
-        $statement_update_PNKS->bindValue(':MaNCC', $MaNCC, PDO::PARAM_INT);
-        $statement_update_PNKS->execute();
+            // Thực thi truy vấn
+            $statement->execute();
 
-        // Xóa loại nhà cung cáp
-        $query_delete_nha_cung_cap = "DELETE FROM `NhaCungCap` WHERE `MaNCC` = :MaNCC";
-        $statement_delete_nha_cung_cap = $connection->prepare($query_delete_nha_cung_cap);
-        $statement_delete_nha_cung_cap->bindValue(':MaNCC', $MaNCC, PDO::PARAM_INT);
-        $statement_delete_nha_cung_cap->execute();
+            // Lấy kết quả truy vấn
+            $result = $statement->fetch(PDO::FETCH_ASSOC);
 
-        // Commit transaction nếu mọi thứ diễn ra suôn sẻ
-        $connection->commit();
-
-        return (object) [
-            "status" => 200,
-            "message" => "Thành công",
-        ];
+            // Trả về trạng thái hiện tại
+            return $result['TrangThai'];
+        }
     } catch (PDOException $e) {
-        // Rollback transaction nếu có lỗi xảy ra
-        $connection->rollBack();
-
-        return (object) [
-            "status" => 400,
-            "message" => $e->getMessage()
-        ];
-    } finally {
-        $connection = null;
+        // Xử lý ngoại lệ nếu có
+        return false;
     }
 }
