@@ -1,4 +1,3 @@
-
 <?php
 if (isset($_GET['MaPhieu'])) {
     require_once "../../../BackEnd/ManagerBE/ChiTietPhieuNhapKhoBE.php";
@@ -53,7 +52,7 @@ if (isset($_GET['MaPhieu'])) {
                         </a>
                         <a class="MenuItemSidebar_menuItem__56b1m" href="../ThongKe/ThongKeDoanhThuChiTieu.php">
                             <span class="MenuItemSidebar_title__LLBtx">Thống Kê Tài Chính</span>
-                        </a>                         
+                        </a>
                         </a>
                         <a class="MenuItemSidebar_menuItem__56b1m" href="../ThongKe/ThongKeDonHang.php">
                             <span class="MenuItemSidebar_title__LLBtx">Thống Kê Đơn Hàng</span>
@@ -151,28 +150,9 @@ if (isset($_GET['MaPhieu'])) {
                                     </label>
                                     <label>
                                         <p style="font-size: 1.3rem; font-weight: 700; margin-top: 1rem;">Tên Người Quản Lý</p>
-                                        <select id="maquanly" style="height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;" <?php if (isset($_GET['MaPhieu'])) echo 'disabled="true"';  ?>>
-                                            <?php
-                                            require_once "../../../BackEnd/AdminBE/TaiKhoanBE.php";
-                                            $result = getAllTaiKhoan1("Manager");
-                                            $result1 = $result->data;
-                                            foreach ($result1 as $Ketqua) {
-                                                if (isset($_GET['MaQuanLy']))
-                                                    if ($_GET['MaQuanLy'] == $Ketqua["MaTaiKhoan"])
-                                                        echo '
-                                                            <option value="' . $Ketqua["MaTaiKhoan"] . '" selected>' . $Ketqua["HoTen"] . '</option>
-                                                            ';
-                                                    else
-                                                        echo '
-                                                            <option value="' . $Ketqua["MaTaiKhoan"] . '" >' . $Ketqua["HoTen"] . '</option>
-                                                            ';
-                                                else
-                                                    echo '
-                                                        <option value="' . $Ketqua["MaTaiKhoan"] . '" >' . $Ketqua["HoTen"] . '</option>
-                                                        ';
-                                            }
-                                            ?>
-                                        </select>
+                                        <input id="maquanly" style="height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;" value="<?php if(isset($_GET['MaPhieu'])) echo $_GET['HoTen'];?>" disabled="true";  >
+
+                                        </input>
                                     </label>
                                     <label>
                                         <p style="font-size: 1.3rem; font-weight: 700; margin-top: 1rem;">Tổng Giá Trị</p>
@@ -227,7 +207,10 @@ if (isset($_GET['MaPhieu'])) {
     // Function to handle form submission
     function handleSubmit() {
         var maNhaCungCap = document.getElementById('manhacungcap').value;
-        var maQuanLy = document.getElementById('maquanly').value;
+        var userData = localStorage.getItem("key");
+        userData = JSON.parse(userData);
+
+        var maQuanLy = userData.MaTaiKhoan;
         var totalValue = document.getElementById('totalvalue').value;
         var productData = [];
         if (maNhaCungCap === '') {
@@ -280,6 +263,15 @@ if (isset($_GET['MaPhieu'])) {
     }
 
     document.addEventListener('DOMContentLoaded', function() {
+        // Lấy dữ liệu từ localStorage
+        var quanLyData = JSON.parse(localStorage.getItem("key"));
+
+        var inputElement = document.getElementById("maquanly");
+        inputElement.innerHTML = '';
+        if (quanLyData && !inputElement.value) {
+            inputElement.value = quanLyData.HoTen;
+        }
+
         loaddatasp();
         calculateTotalPrice();
         setInterval(calculateTotalPrice, 3000);
@@ -298,7 +290,10 @@ if (isset($_GET['MaPhieu'])) {
                     }
                 }
             });
-            var formattedTongGiaTri = totalPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+            var formattedTongGiaTri = totalPrice.toLocaleString('vi-VN', {
+                style: 'currency',
+                currency: 'VND'
+            });
             var totalPriceElement = document.getElementById('totalvalue');
             console.log(formattedTongGiaTri);
             if (totalPriceElement) {
@@ -318,7 +313,7 @@ if (isset($_GET['MaPhieu'])) {
                 var selectedProductHTML = '<tr style="text-align: center;">' +
                     '<td style="padding: 0.5rem; name=MaSanPham[]">' + productId + '</td>' +
                     '<td style="padding: 0.5rem;">' + productName + '</td>' +
-                    '<td style="padding: 0.5rem;"><input type="text" name="donGia[]" onblur="validateDonGia(this)" value="0" style="height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;"></td>' +
+                    '<td style="padding: 0.5rem;"><input type="text" name="donGia[]" onblur="validateDonGia(this)" value="1" style="height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;"></td>' +
                     '<td style="padding: 0.5rem;"><input type="text" name="soLuong[]" value="1" onblur="validateSoLuong(this)" style="height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;"></td>' +
                     '</tr>';
                 $('#tableBody').append(selectedProductHTML);
@@ -328,9 +323,9 @@ if (isset($_GET['MaPhieu'])) {
 
     function validateDonGia(input) {
         var donGia = parseFloat(input.value);
-        if (donGia < 0) {
-            alert("Đơn giá không được nhỏ hơn 0");
-            input.value = "0";
+        if (donGia < 1) {
+            alert("Đơn giá không được nhỏ hơn 1");
+            input.value = "1";
         }
     }
 
