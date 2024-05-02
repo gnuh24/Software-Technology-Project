@@ -11,8 +11,15 @@ if (isset($_GET['MaNhaCungCap']) && isset($_GET['MaQuanLy']) && isset($_GET['Tot
     $productData = json_decode($_GET['ProductData'], true); // Giải mã chuỗi JSON thành mảng PHP
 
     // Create a new DateTime object and format the date as a string
-    $date1 = new DateTime();
-    $formattedDate = $date1->format('Y-m-d H:i:s');
+// Thiết lập múi giờ của Việt Nam
+$dateZone = new DateTimeZone('Asia/Ho_Chi_Minh');
+
+// Tạo đối tượng DateTime với múi giờ của Việt Nam
+$date1 = new DateTime('now', $dateZone);
+
+// Định dạng ngày giờ
+$formattedDate = $date1->format('Y-m-d H:i:s');
+
 
     // Tạo phiếu nhập kho
     $ketqua1 = createPhieuNhapKho($formattedDate, $totalValue, $maNhaCungCap, $maQuanLy);
