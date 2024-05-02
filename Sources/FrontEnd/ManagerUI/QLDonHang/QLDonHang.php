@@ -428,36 +428,36 @@
     return chiTietDonHang;
   }
 
-  function tangSoLuongSanPham(action, maSanPham, soLuongTang) {
+  function tangSoLuongSanPham(maSanPham, soLuongTang) {
     $.ajax({
       url: '../../../BackEnd/ManagerBE/SanPhamBE.php',
       type: 'POST',
       dataType: "json",
       data: {
-        action: action,
+        action: 'up',
         maSanPham: maSanPham,
         soLuongTang: soLuongTang
       },
       success: function(response) {
-        console.log("Tăng:", response);
+        console.log(response);
       },
       error: function(xhr, status, error) {
       }
     })
   }
 
-  function giamSoLuongSanPham(action, maSanPham, soLuongGiam) {
+  function giamSoLuongSanPham(maSanPham, soLuongGiam) {
     $.ajax({
       url: '../../../BackEnd/ManagerBE/SanPhamBE.php',
       type: 'POST',
       dataType: "json",
       data: {
-        action: action,
+        action: 'down',
         maSanPham: maSanPham,
         soLuongGiam: soLuongGiam
       },
       success: function(response) {
-        console.log("Giảm:" , response);
+        console.log(response);
       },
       error: function(xhr, status, error) {
       }
@@ -493,6 +493,7 @@
         TrangThai: TrangThai
       },
       success: function(response) {
+        console.log(response);
         Swal.fire({
           icon: 'success',
           text: 'Cập nhật trạng thái thành công.'
@@ -519,13 +520,7 @@
     var chiTietDonHang = getChiTietDonHangByMaDonHang(MaDonHang);
 
     if(TrangThai == "Huy"){
-      chiTietDonHang.forEach(element => {
-        tangSoLuongSanPham('up', element.MaSanPham, element.SoLuong);
-      });
-    } else {
-      TrangThai = nextState(TrangThai);
-    }
-    if (TrangThai == 'DaDuyet') {
+      var chiTietDonHang = getChiTietDonHangByMaDonHang(MaDonHang);
       var flagKhongDuHang=false;
       chiTietDonHang.forEach(element => {
         var sanPham =getSanPhamByMaSanPham(element.MaSanPham);
@@ -542,8 +537,9 @@
         return;
       }
       chiTietDonHang.forEach(element => {
-        alert(`Giảm ${element.MaSanPham} với số lượng là ${element.SoLuong}`)
-        giamSoLuongSanPham('down', element.MaSanPham, element.SoLuong);
+        var maSanPham = element.MaSanPham;
+        var soLuong = element.SoLuong;
+        giamSoLuongSanPham(maSanPham, soLuong);
       });
     }
     setTrangThaiDonHang(MaDonHang, TrangThai);
