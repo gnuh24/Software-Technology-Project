@@ -9,21 +9,7 @@
     </head>
 
     <body>
-        <header class="Home-container-header">
-            <div id="Home-over-Header">
-                <img id="Home-img" src="../GuestPage/img/logoWine.jpg" alt="" />
-                <form id="search" class="input__wrapper" method="post" action="SignedProduct.php">
-                    <input id="searchSanPham" name="searchFromAnotherPage" type="text" class="search-input" placeholder="Tìm kiếm" required=""/>
-                    <button id="filter-button"><i class="fa-solid fa-magnifying-glass"></i></button>
-                    <div class="header-option"><a href="Cart.php"><i class="fa-solid fa-cart-shopping"></i></a></div>
-                    <div class="header-option"><a href="Profile.php"><i class="fa-solid fa-user"></i></a></div>
-                    <div class="header-option"><a href="../Login/LoginUI.php"><i class="fa-solid fa-right-from-bracket"></i></a></div>
-        
-                </form>
-
-            </div>
-
-        </header>
+        <?php require_once "../Header/SignedHeader.php" ?>
 
         <section id="poster" style="width: 100%; height: auto; padding: 0 5%;">
             <img src="../GuestPage/img/poster.jpg" style="max-width: 100%;">
@@ -146,55 +132,8 @@
         </div>
         </section>
 
-        <!-- Footer -->
-        <section id="footer">
-        <div class="contact-info">
-            <div class="first-info">
-            <div style="font-size: 20px;">Thông tin liên hệ</div>
-            <div class="map">
-                <i class="fa-solid fa-location-dot"></i>
-                <span>An Dương Vương, Phường 3, Quận 5</span>
-            </div>
-            <div class="phone">
-                <i class="fa-solid fa-phone-volume"></i>
-                <span>0325459901</span>
-            </div>
-            <div class="mail">
-                <i class="fa-solid fa-envelope"></i>
-                <span>doanhdaigr5.2004@gmail.com</span>
-            </div>
-            </div>
-            <div class="second-info">
-            <h4>CHÍNH SÁCH</h4>
-            <ul>
-                <li><a href="#">Chính sách bảo mật</a></li>
-                <li><a href="#">Chính sách giao hàng</a></li>
-                <li><a href="#">Chính sách thẻ thành viên</a></li>
-                <li><a href="#">Điều khoản sử dụng</a></li>
-            </ul>
-            </div>
-            <div class="third-info">
-            <h4>ABOUT US</h4>
-            <ul>
-                <li><a href="#">Giới thiệu</a></li>
-                <li><a href="#">Tuyển dụng</a></li>
-                <li><a href="#">Nhượng quyền</a></li>
-                <li><a href="#">Tin tức</a></li>
-            </ul>
-            </div>
-            <div class="fourth">
-            <h4>FOLOW US</h4>
-            <a href="https://www.facebook.com/doanhdai.2004"><i id="fb" class="fa-brands fa-facebook" id="fb"></i></a>
-            <a href="https://www.instagram.com"><i id="ig" class="fa-brands fa-instagram"></i></a>
-            <a href="https://github.com/ltgiai/DO_AN_WEBSITE/tree/main"><i id="git" class="fa-brands fa-github"></i></a>
-            <a href="https://twitter.com/?lang=vi"><i id="tw" class="fa-brands fa-square-twitter"></i></a>
-            <a href="http://online.gov.vn/Home/WebDetails/36260"><img src="#" alt="" /></a>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>Copyrights © 2019 by comebuy_vn. All rights reserved.</p>
-        </div>
-        </section>
+        <?php require_once "../Footer/Footer.php" ?>
+
     </body>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -210,6 +149,7 @@
             return number.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
         }
 
+        
         // Lắng nghe sự kiện click vào Poster
         document
             .getElementById("poster")
@@ -217,21 +157,14 @@
                 window.location.href = 'SignedProduct.php';
         });
 
-        // Lắng nghe sự kiện click vào id "Person"
-        document
-            .getElementById("filter-button")
-            .addEventListener("click", function () {
-                const form =  document.getElementById() // Lấy giúp tôi cái form
-                const searchValue =  document.getElementById() // Lấy giúp tôi giá trị của search
-        });
+        
 
 
         // Lắng nghe sự kiện click vào Xem thêm
-        document
-            .getElementById("btn-load-more")
-            .addEventListener("click", function () {
+        document.getElementById("btn-load-more").addEventListener("click", function () {
                 window.location.href = 'SignedProduct.php';
         });
+
 
         // Gọi hàm getAllLoaiSanPham khi trang được tải
         $(document).ready(function() {
@@ -239,7 +172,7 @@
         });
 
 
-        // Hàm getAllSanPham
+        // Hàm getAllSanPham -> Load sản phẩm nổi bật
         function getAllSanPham() {
             // Gọi API để lấy dữ liệu sản phẩm
             $.ajax({
@@ -266,15 +199,15 @@
                             var imageSrc = product.AnhMinhHoa;
                             htmlContent += `
                                 <div class="row">
-                                        <a href="SignedProductDetail.php?maSanPham=${product.MaSanPham}" onclick="detail(${product.MaSanPham})">
+                                        <a href="SignedProductDetail.php?maSanPham=${product.MaSanPham}&soLuong=${product.SoLuongConLai}" onclick="detail(${product.MaSanPham})">
                                         <img src="${imageSrc}" alt="" style=" height: 300px;" onclick="detail(${product.MaSanPham})">
                                         <div class="product-card-content">
                                             <div class="price">
                                                 <h4 class="name-product">${product.TenSanPham}</h4>
                                                 <p class="price-tea">${formatCurrency(product.Gia)}</p>
                                             </div>
-                                            <div class="buy-btn-container">
-                                                <a href="../Login/LoginUI.php">mua ngay</a>
+                                            <div class="buy-btn-container" onclick="detail(${product.MaSanPham})>
+                                                <a href="">Xem chi tiết</a>
                                             </div>
                                         </div>
                                     </a>
@@ -296,25 +229,17 @@
             });
         }
 
-        document.getElementById("Home-img").addEventListener("click", function () {
-            // Chuyển hướng về trang chủ khi click vào hình ảnh
-            window.location.href = "SignedHomePage.php";
-        });
-
+        
+        //Sự kiện xem chi tiết sản phẩm
         function detail(maSanPham){
             const form = document.getElementById(`productForm_${maSanPham}`);
+            
             form.submit();
         }
+    
+
         
-        document.getElementById("filter-button").addEventListener("click", function (event) {
-            event.preventDefault();
 
-            const form = document.getElementById("search");
-            const searchValue  = document.getElementById("searchSanPham").value;
-            form.action = `SignedProduct.php?searchFromAnotherPage=${searchValue}`;
-            form.submit();
-
-        });
 
     </script>
 </html>

@@ -209,6 +209,10 @@
       padding: 10px 20px;
       cursor: pointer; 
     }
+
+    #tableBody{
+      height: 400px;
+    }
   
 
   

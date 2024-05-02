@@ -12,12 +12,33 @@
     echo json_encode($result);
 }
 
-//Dùng để thêm loại sản phẩm
+//Dùng để update thông tin nhà cung cấp
+if(isset($_POST['MaLoaiSanPham']) && isset($_POST['TenLoaiSanPham'])) {
+    $MaLoaiSanPham = $_POST['MaLoaiSanPham'];
+    $TenLoaiSanPham = $_POST['TenLoaiSanPham'];
+
+    $result = updateLoaiSanPham($MaLoaiSanPham, $TenLoaiSanPham);
+    
+
+    echo json_encode($result);
+}
+
+//Dùng để thêm nhà cung cấp
 if(isset($_POST['TenLoaiSanPham'])) {
     $TenLoaiSanPham = $_POST['TenLoaiSanPham'];
 
-    // Gọi hàm createLoaiSanPham và trả về kết quả dưới dạng JSON
+    // Gọi hàm createNhaCungCap và trả về kết quả dưới dạng JSON
     $result = createLoaiSanPham($TenLoaiSanPham);
+
+    echo json_encode($result);
+}
+
+//Dùng để xoá nhà cung cấp
+if(isset($_GET['MaLoaiSanPham'])) {
+    $MaLoaiSanPham = $_GET['MaLoaiSanPham'];
+
+    // Gọi hàm deleteNhaCungCap và trả về kết quả dưới dạng JSON
+    $result = deleteLoaiSanPham($MaLoaiSanPham);
 
     echo json_encode($result);
 }
@@ -43,7 +64,7 @@ function getAllLoaiSanPham($page,$search){
     $query = "SELECT * FROM `LoaiSanPham`";
 
      // Số phần tử mỗi trang
-     $entityPerPage = 6;
+     $entityPerPage = 5;
 
      // Tổng số trang
      $totalPages = null;

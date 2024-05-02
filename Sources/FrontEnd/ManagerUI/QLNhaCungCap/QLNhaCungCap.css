@@ -121,6 +121,10 @@
   justify-content: center;
 }
 
+.pagination.single-page {
+  display: none; /* Ẩn nút phân trang khi chỉ có 1 trang */
+}
+
 .pageButton {
   background-color: whitesmoke;
   color: black;
@@ -150,4 +154,23 @@
   border: none;
   padding: 10px 20px;
   cursor: pointer;
+}
+
+.delete {
+  background-color: rgb(235, 44, 44);
+  color: white;
+  padding: 1rem 1.5rem;
+  font-weight: 700;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-right: 0.5rem;
+}
+
+.edit {
+  background-color: rgb(49, 147, 252);
+  color: white;
+  padding: 1rem 1.5rem;
+  cursor: pointer;
+  font-weight: 700;
+  border-radius: 10px;
 }

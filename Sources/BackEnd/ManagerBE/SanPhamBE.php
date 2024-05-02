@@ -43,6 +43,23 @@
         $search = $_GET['search'];
         $result = getAllSanPhamnotpagination($search);
         echo json_encode($result);
+    } else if (isset($_POST['action'])){
+        if ($_POST['action'] == "up"){
+            $maSanPham = $_POST['maSanPham'];
+            $soLuongTang = $_POST['soLuongTang'];
+            $result = tangSoLuongSanPham($maSanPham, $soLuongTang);
+            echo json_encode($result);
+        }
+        if ($_POST['action'] == "down"){
+            $maSanPham = $_POST['maSanPham'];
+            $soLuongGiam = $_POST['soLuongGiam'];
+            $result = tangSoLuongSanPham($maSanPham, $soLuongGiam);
+            echo json_encode($result);
+        }
+    } else if (isset($_GET['MaSanPham'])){
+        $maSanPham = $_POST['MaSanPham'];
+        $result = getSanPhamByMaSanPham($maSanPham);
+        echo json_encode($result);
     }
 
     function getAllSanPhamnotpagination($search = null){
@@ -112,7 +129,7 @@
         $where_conditions = [];
 
         // Số phần tử mỗi trang
-        $entityPerPage = 20;
+        $entityPerPage = 16;
 
         // Tổng số trang
         $totalPages = null;
@@ -159,7 +176,8 @@
         if ($totalPages === null) {
 
             // Query dùng để tính tổng số trang của các data trả về
-            $query_total_row = "SELECT COUNT(*) FROM `SanPham`";
+            $query_total_row = substr_replace($query, "COUNT(*)", 7, 1);
+
             $statement_total_row = $connection->prepare($query_total_row);
             $statement_total_row->execute();
 
@@ -198,10 +216,45 @@
             $connection = null;
         }
     }
-
-
     
+
+    function tangSoLuongSanPham($maSanPham, $soLuongTang){
+        // Khởi tạo kết nối
+        $connection = null;
     
+        // Chuẩn bị câu truy vấn
+        $query = "UPDATE `SanPham` SET `SoLuongConLai` = `SoLuongConLai` + :soLuongTang WHERE `MaSanPham` = :maSanPham";
+    
+        // Khởi tạo kết nối
+        $connection = MysqlConfig::getConnection();
+    
+        try {
+            $statement = $connection->prepare($query);
+    
+            if ($statement !== false) {
+                $statement->bindValue(':soLuongTang', $soLuongTang, PDO::PARAM_INT);
+                $statement->bindValue(':maSanPham', $maSanPham, PDO::PARAM_INT);
+    
+                $statement->execute();
+    
+                return (object) [
+                    "status" => 200,
+                    "message" => "Tăng số lượng sản phẩm thành công!"
+                ];
+            } else {
+                throw new PDOException();
+            }
+        } catch (PDOException $e) {
+            return (object) [
+                "status" => 400,
+                "message" => "Lỗi không thể tăng số lượng sản phẩm"
+            ];
+        } finally {
+            $connection = null;
+        }
+    }
+    
+
 
     function getSanPhamByMaSanPham($maSanPham) {
         // Khởi tạo kết nối
@@ -412,6 +465,42 @@
             return (object) [
                 "status" => 400,
                 "message" => $e->getMessage()
+            ];
+        } finally {
+            $connection = null;
+        }
+    }
+
+    function giamSoLuongSanPham($maSanPham, $soLuongGiam){
+        // Khởi tạo kết nối
+        $connection = null;
+    
+        // Chuẩn bị câu truy vấn
+        $query = "UPDATE `SanPham` SET `SoLuongConLai` = `SoLuongConLai` - :soLuongGiam WHERE `MaSanPham` = :maSanPham";
+    
+        // Khởi tạo kết nối
+        $connection = MysqlConfig::getConnection();
+    
+        try {
+            $statement = $connection->prepare($query);
+    
+            if ($statement !== false) {
+                $statement->bindValue(':soLuongGiam', $soLuongGiam, PDO::PARAM_INT);
+                $statement->bindValue(':maSanPham', $maSanPham, PDO::PARAM_INT);
+    
+                $statement->execute();
+    
+                return (object) [
+                    "status" => 200,
+                    "message" => "Giảm số lượng sản phẩm thành công!"
+                ];
+            } else {
+                throw new PDOException();
+            }
+        } catch (PDOException $e) {
+            return (object) [
+                "status" => 400,
+                "message" => "Lỗi không thể tăng số lượng sản phẩm"
             ];
         } finally {
             $connection = null;

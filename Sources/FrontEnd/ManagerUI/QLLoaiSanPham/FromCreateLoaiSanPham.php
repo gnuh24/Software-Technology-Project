@@ -136,7 +136,7 @@
     });
 
     
-    function isTenNhaCungCapExists(value) {
+    function isTenLoaiSanPhamExists(value) {
         let exists = false;
         $.ajax({
             url: '../../../BackEnd/ManagerBE/LoaiSanPhamBE.php',

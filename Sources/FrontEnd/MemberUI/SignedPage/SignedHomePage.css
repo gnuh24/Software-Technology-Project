@@ -49,30 +49,7 @@
     flex-direction: row;
     justify-content: center;
   }
-  #Home-img {
-    width: 110px;
-    height: 80px;
-  }
   
-  .input__wrapper {
-    display: flex;
-    align-items: center;
-    position: relative;
-    margin-left: 8%;
-    gap: 10px;
-  }
-  
-  .search-input {
-    padding-left: 25px; /* Kích thước của icon + khoảng cách */
-    background-image: url("../img/search.png");
-    background-size: 20px; /* Kích thước của icon */
-    background-repeat: no-repeat;
-    background-position: 5px center; /* Khoảng cách giữa icon và chữ trong input */
-    width: 800px;
-    height: 35px;
-    border: 2px solid rgb(133, 6, 6);
-    border-radius: 20px;
-  }
   #Home-over-Header {
     background-color:rgb(146, 26, 26);
     display: flex;
@@ -184,17 +161,6 @@
     display: grid;
     grid-template-columns: repeat(6, 1fr);
     gap: 12px 33px;
-  }
-
-  /* Style cho nút "Tìm kiếm" */
-  #filter-button {
-    background-color: white; /* Màu nền */
-    color: rgb(146, 26, 26); /* Màu chữ */
-    padding: 10px 20px; /* Kích thước padding */
-    border: none; /* Không viền */
-    cursor: pointer; /* Con trỏ tương tác */
-    border-radius: 5px; /* Bo góc */
-    margin-right: 10px; /* Khoảng cách phải */
   }
 
   /* Style cho nút "Reset" */
@@ -402,7 +368,7 @@
   }
   .row .buy-btn-container:hover {
     background-color: white;
-    /* color: white; */
+    color: rgb(146, 26, 26);
   }
   .cart {
     width: 30%;
@@ -713,11 +679,7 @@
     outline: none;
     border: none;
   }
-  
-  textarea:focus,
-  input:focus {
-    border-color: transparent !important;
-  }
+
   
   input:focus::-webkit-input-placeholder {
     color: transparent;
@@ -1052,15 +1014,3 @@
   }
 
  
-  .header-option, .header-option > *{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: white; /* Màu nền */
-    color: rgb(146, 26, 26); /* Màu chữ */
-    padding: 5px 15px; /* Kích thước padding */
-    border: none; /* Không viền */
-    cursor: pointer; /* Con trỏ tương tác */
-    border-radius: 5px; /* Bo góc */
-  
-  }

@@ -168,3 +168,57 @@ function CreateChiTietPhieuNhap($SoLuong, $DonGiaNhap, $MaPhieu, $MaSanPham)
         $connection = null;
     }
 }
+
+function UpdateChiTietPhieuNhap($MaPhieu, $MaSanPham, $SoLuong, $DonGiaNhap)
+{
+    // Khởi tạo kết nối
+    $connection = MysqlConfig::getConnection();
+
+    $query = "UPDATE `CTPNK` 
+              SET `SoLuong` = :SoLuong, 
+                  `DonGiaNhap` = :DonGiaNhap, 
+                  `ThanhTien` = :ThanhTien
+              WHERE `MaPhieu` = :MaPhieu 
+              AND `MaSanPham` = :MaSanPham";
+
+    try {
+        $statement = $connection->prepare($query);
+
+        if ($statement !== false) {
+            // Tính toán ThanhTien
+            $ThanhTien = $SoLuong * $DonGiaNhap;
+
+            // Bind giá trị vào tham số của câu truy vấn
+            $statement->bindValue(':MaPhieu', $MaPhieu, PDO::PARAM_INT);
+            $statement->bindValue(':MaSanPham', $MaSanPham, PDO::PARAM_INT);
+            $statement->bindValue(':SoLuong', $SoLuong, PDO::PARAM_INT);
+            $statement->bindValue(':DonGiaNhap', $DonGiaNhap, PDO::PARAM_STR);
+            $statement->bindValue(':ThanhTien', $ThanhTien, PDO::PARAM_STR);
+
+            // Thực thi truy vấn
+            $statement->execute();
+
+            // Kiểm tra số hàng đã được cập nhật
+            $rowCount = $statement->rowCount();
+
+            if ($rowCount > 0) {
+                return (object) [
+                    "status" => 200,
+                    "message" => "Cập nhật thành công"
+                ];
+            } else {
+                return (object) [
+                    "status" => 404,
+                    "message" => "Không tìm thấy chi tiết phiếu nhập với Mã Phiếu và Mã Sản Phẩm đã cung cấp"
+                ];
+            }
+        }
+    } catch (PDOException $e) {
+        return (object) [
+            "status" => 400,
+            "message" => $e->getMessage()
+        ];
+    } finally {
+        $connection = null;
+    }
+}

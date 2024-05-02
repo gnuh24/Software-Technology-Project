@@ -23,30 +23,30 @@
         <div>
           <div>
             <div class="Manager_wrapper__vOYy">
-            <div class="Sidebar_sideBar__CC4MK">
-                    <a class="MenuItemSidebar_menuItem__56b1m" href="../QLLoaiSanPham/QLLoaiSanPham.php">
-                        <span class="MenuItemSidebar_title__LLBtx">Loại Sản Phẩm</span>
-                    </a>
-                    <a class="MenuItemSidebar_menuItem__56b1m" href="../QLSanPham/QLSanPham.php">
-                        <span class="MenuItemSidebar_title__LLBtx">Sản Phẩm</span>
-                    </a>
-                    <a class="MenuItemSidebar_menuItem__56b1m" href="../QLNhaCungCap/QLNhaCungCap.php">
-                        <span class="MenuItemSidebar_title__LLBtx">Nhà Cung Cấp</span>
-                    </a>
-                    <a class="MenuItemSidebar_menuItem__56b1m" href="../QLPhieuNhapKho/QLPhieuNhapKho.php">
-                        <span class="MenuItemSidebar_title__LLBtx">Phiếu Nhập Kho</span>
-                    </a>
-                    <a class="MenuItemSidebar_menuItem__56b1m" href="../QLDonHang/QLDonHang.php">
-                        <span class="MenuItemSidebar_title__LLBtx">Đơn Hàng</span>
-                    </a>
-                    <a class="MenuItemSidebar_menuItem__56b1m" href="../ThongKe/ThongKeDoanhThuChiTieu.php">
-                        <span class="MenuItemSidebar_title__LLBtx">Thống Kê Tài Chính</span>
-                    </a>                         
-                    </a>
-                    <a class="MenuItemSidebar_menuItem__56b1m" href="../ThongKe/ThongKeDonHang.php">
-                        <span class="MenuItemSidebar_title__LLBtx">Thống Kê Đơn Hàng</span>
-                    </a>
-                </div>
+              <div class="Sidebar_sideBar__CC4MK">
+                <a class="MenuItemSidebar_menuItem__56b1m" href="../QLLoaiSanPham/QLLoaiSanPham.php">
+                  <span class="MenuItemSidebar_title__LLBtx">Loại Sản Phẩm</span>
+                </a>
+                <a class="MenuItemSidebar_menuItem__56b1m" href="../QLSanPham/QLSanPham.php">
+                  <span class="MenuItemSidebar_title__LLBtx">Sản Phẩm</span>
+                </a>
+                <a class="MenuItemSidebar_menuItem__56b1m" href="../QLNhaCungCap/QLNhaCungCap.php">
+                  <span class="MenuItemSidebar_title__LLBtx">Nhà Cung Cấp</span>
+                </a>
+                <a class="MenuItemSidebar_menuItem__56b1m" href="../QLPhieuNhapKho/QLPhieuNhapKho.php">
+                  <span class="MenuItemSidebar_title__LLBtx">Phiếu Nhập Kho</span>
+                </a>
+                <a class="MenuItemSidebar_menuItem__56b1m" href="../QLDonHang/QLDonHang.php">
+                  <span class="MenuItemSidebar_title__LLBtx">Đơn Hàng</span>
+                </a>
+                <a class="MenuItemSidebar_menuItem__56b1m" href="../ThongKe/ThongKeDoanhThuChiTieu.php">
+                  <span class="MenuItemSidebar_title__LLBtx">Thống Kê Tài Chính</span>
+                </a>
+                </a>
+                <a class="MenuItemSidebar_menuItem__56b1m" href="../ThongKe/ThongKeDonHang.php">
+                  <span class="MenuItemSidebar_title__LLBtx">Thống Kê Đơn Hàng</span>
+                </a>
+              </div>
               <div style="padding-left: 16%; width: 100%; padding-right: 2rem">
                 <div class="wrapper">
                   <div class="Admin_rightBar__RXnS9">
@@ -196,11 +196,12 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
+  console.log("Quản lý đơn hàng");
 
-  var udPage=0; 
-  var udminNgayTao=0;
-  var udmaxNgayTao=0;
-  var udtrangThai=0;
+  var udPage = 0;
+  var udminNgayTao = 0;
+  var udmaxNgayTao = 0;
+  var udtrangThai = 0;
 
   function clearTable() {
     var tableBody = document.getElementById("tableBody");
@@ -215,29 +216,21 @@
   }
 
   function formatDate(originalDate) {
-    // Parse the original date string
     var dateObj = new Date(originalDate);
 
-    // Extract date components
-    var month = dateObj.getMonth() + 1; // Months are zero-based, so add 1
+    var month = dateObj.getMonth() + 1;
     var day = dateObj.getDate();
     var year = dateObj.getFullYear();
     var hours = dateObj.getHours();
     var minutes = dateObj.getMinutes();
     var seconds = dateObj.getSeconds();
-    var meridian = hours >= 12 ? 'PM' : 'AM';
+    const pad = (num) => (num < 10 ? '0' : '') + num;
 
-    // Adjust hours to 12-hour format
-    hours = hours % 12;
-    hours = hours ? hours : 12; // Handle midnight (0 hours)
-
-    // Format the date string
-    var formattedDate = month + '/' + day + '/' + year + ', ' + hours + ':' + minutes + ':' + seconds + ' ' + meridian;
-
+    const formattedDate = `${pad(hours)}:${pad(minutes)}:${pad(seconds)} ${pad(day)}/${pad(month)}/${year}`;
     return formattedDate;
   }
 
-  function getTenTrangThai(order_statuses){
+  function getTenTrangThai(order_statuses) {
     if (order_statuses == 'ChoDuyet') {
       order_statuses = 'Chờ Duyệt';
     }
@@ -255,21 +248,17 @@
     }
     return order_statuses;
   }
-
-  function getOrderStatusClassName(order_statuses) {
-    var order_statuses_classname;
-    if (order_statuses == 'Chờ Duyệt') {
-      order_statuses_classname = 'ChoDuyet';
-    } else if (order_statuses == 'Đã Hủy') {
-      order_statuses_classname = 'Huy';
-    } else if (order_statuses == 'Đã duyệt') {
-      order_statuses_classname = 'DaDuyet';
-    } else if (order_statuses == 'Đang Giao') {
-      order_statuses_classname = 'DangGiao';
-    } else if (order_statuses == 'Giao Thành Công') {
-      order_statuses_classname = 'GiaoThanhCong';
+  function getTenTrangThai2(order_statuses) {
+    if (order_statuses == 'DaDuyet') {
+      order_statuses = 'Duyệt';
     }
-    return order_statuses_classname;
+    if (order_statuses == 'DangGiao') {
+      order_statuses = 'Đang Giao';
+    }
+    if (order_statuses == 'GiaoThanhCong') {
+      order_statuses = 'Giao Thành Công';
+    }
+    return order_statuses;
   }
 
   function createPagination(currentPage, totalPages) {
@@ -289,16 +278,14 @@
         paginationHTML += '<button class="pageButton">' + i + '</button>';
       }
     }
-
-    // Thiết lập nút phân trang vào paginationContainer
-    paginationContainer.innerHTML = paginationHTML;
-
-    // Thêm sự kiện click cho từng nút phân trang
+    if (totalPages > 1) {
+      paginationContainer.innerHTML = paginationHTML;
+    }
 
     paginationContainer.querySelectorAll('.pageButton').forEach(function(button, index) {
       button.addEventListener('click', function() {
         // Gọi hàm fetchDataAndUpdateTable khi người dùng click vào nút phân trang
-        fetchDataAndUpdateTable(index + 1); // Thêm 1 vào index để chuyển đổi về trang 1-indexed
+        fetchDataAndUpdateTable(index + 1, udminNgayTao, udmaxNgayTao, udtrangThai); // Thêm 1 vào index để chuyển đổi về trang 1-indexed
       });
     });
   }
@@ -322,11 +309,12 @@
         var tableContent = ""; // Chuỗi chứa nội dung mới của tbody
         var printed_orders = [];
         var order_statuses;
+        var count=0;
         // Duyệt qua mảng dữ liệu và tạo các hàng mới cho tbody
 
         data.forEach(function(record) {
-          var trClass = (parseInt(record.MaDonHang) % 2 !== 0) ? "Table_data_quyen_1" : "Table_data_quyen_2";
-
+          var trClass = (count % 2 !== 0) ? "Table_data_quyen_1" : "Table_data_quyen_2";
+          count++;
           var maDonHang = record.MaDonHang;
 
           var ngayDatFormatted = formatDate(record.NgayDat);
@@ -339,20 +327,22 @@
           order_statuses = getTenTrangThai(record.TrangThai);
 
           printed_orders.push(maDonHang);
-          var order_statuses_classname = getOrderStatusClassName(order_statuses);
 
           var trContent = `<tr>
-                            <td class="${trClass}"> ${record.MaDonHang}  </td>
-                            <td class="${trClass}"> ${ngayDatFormatted}  </td>
-                            <td class="${trClass}"> ${number_format_vnd(record.TongGiaTri)}</td>
-                            <td class="${trClass}"> ${record.Email}  </td>  
-                            <td class="${trClass}"><button type="button" onclick="changeOrderStatus(${record.MaDonHang}, '${record.TrangThai}')" class="${order_statuses_classname}">  ${order_statuses}  </button></td>        
+                            <td class="${trClass}"><a href="./ChiTietDonHang.php?MaDonHang=${record.MaDonHang}">${record.MaDonHang}</a></td>
+                            <td class="${trClass}"><a href="./ChiTietDonHang.php?MaDonHang=${record.MaDonHang}">${ngayDatFormatted}</a></td>
+                            <td class="${trClass}"><a href="./ChiTietDonHang.php?MaDonHang=${record.MaDonHang}">${number_format_vnd(record.TongGiaTri)}</a></td>
+                            <td class="${trClass}"><a href="./ChiTietDonHang.php?MaDonHang=${record.MaDonHang}">${record.Email}</a></td>  
+                            <td class="${trClass}"><a href="./ChiTietDonHang.php?MaDonHang=${record.MaDonHang}">${order_statuses}</a></td>
                           `;
-          if (order_statuses == 'Chờ Duyệt')
-            trContent += `<td class="Table_data_quyen_1"><a href="./ChiTietDonHang.php" class="edit"> chi tiết</a> <button class="delete" onclick="setTrangThaiDonHang(${record.MaDonHang},'Huy')"> hủy</button> </td></tr> `;
-          else
-            trContent += `<td class="Table_data_quyen_1"><a href="./ChiTietDonHang.php" class="edit"> chi tiết</a> </td></tr>`;
-          tableContent += trContent; // Thêm nội dung của hàng vào chuỗi tableContent
+          if (record.TrangThai == 'Huy') {
+            trContent += `<td class="${trClass}" style="color: red;">${order_statuses}</td></tr>`;
+          } else if (record.TrangThai == 'GiaoThanhCong') {
+            trContent += `<td class="${trClass}" style="color: green;">${order_statuses}</td></tr>`;
+          } else {
+            trContent += `<td class="${trClass}"><button type="button" onclick="changeOrderStatus(${record.MaDonHang}, '${record.TrangThai}')" class="edit">${getTenTrangThai2(nextState(record.TrangThai))}</button><button class="delete" onclick="changeOrderStatus(${record.MaDonHang}, 'Huy')"> hủy</button> </td></tr> `;
+          }
+          tableContent += trContent;
         });
 
         // Thiết lập lại nội dung của tbody bằng chuỗi tableContent
@@ -419,20 +409,84 @@
     fetchDataAndUpdateTable(1, minNgayTao, maxNgayTao, trangThai);
   });
 
-  const EnumTrangThai = ['ChoDuyet', 'DaDuyet', 'DangGiao', 'GiaoThanhCong'];
+  
+  function getChiTietDonHangByMaDonHang(MaDonHang) {
+    var chiTietDonHang=[];
+    $.ajax({
+      url: '../../../BackEnd/ManagerBE/ChiTietDonHangBE.php',
+      type: 'GET',
+      dataType: "json",
+      data: {
+        MaDonHang: MaDonHang,
+      },
+      success: function(response) {
+        chiTietDonHang = response.data;
+        console.log(chiTietDonHang);
+      },
 
-  function nextState(TrangThai) {
-    var currentIndex = EnumTrangThai.indexOf(TrangThai);
-    return EnumTrangThai[currentIndex+1];
+      error: function(xhr, status, error) {
+        console.error('Lỗi khi gọi API: ', error);
+      }
+    });
+    console.log(chiTietDonHang);
+    return chiTietDonHang;
   }
 
-  function changeOrderStatus(MaDonHang, TrangThai) {
-    if (TrangThai == "Huy" || TrangThai == "GiaoThanhCong") {
-      return;
-    }
-    TrangThai = nextState(TrangThai);
-    setTrangThaiDonHang(MaDonHang, TrangThai);
+  function tangSoLuongSanPham(action, maSanPham, soLuongTang) {
+    $.ajax({
+      url: '../../../BackEnd/ManagerBE/SanPhamBE.php',
+      type: 'POST',
+      dataType: "json",
+      data: {
+        action: action,
+        maSanPham: maSanPham,
+        soLuongTang: soLuongTang
+      },
+      success: function(response) {
+        console.log(response);
+      },
+      error: function(xhr, status, error) {
+      }
+    })
   }
+
+  function giamSoLuongSanPham(action, maSanPham, soLuongGiam) {
+    $.ajax({
+      url: '../../../BackEnd/ManagerBE/SanPhamBE.php',
+      type: 'POST',
+      dataType: "json",
+      data: {
+        action: action,
+        maSanPham: maSanPham,
+        soLuongGiam: soLuongGiam
+      },
+      success: function(response) {
+        console.log(response);
+      },
+      error: function(xhr, status, error) {
+      }
+    })
+  }
+
+  function getSanPhamByMaSanPham(MaSanPham) {
+    var SanPham;
+    $.ajax({
+      url: '../../../BackEnd/ManagerBE/SanPhamBE.php',
+      type: 'GET',
+      dataType: "json",
+      data: {
+        MaSanPham:MaSanPham
+      },
+      success: function(response) {
+        console.log(response);
+        SanPham=response.data;
+      },
+      error: function(xhr, status, error) {
+      }
+    })
+    return SanPham;
+  }
+
 
   function setTrangThaiDonHang(MaDonHang, TrangThai) {
     $.ajax({
@@ -444,11 +498,6 @@
         TrangThai: TrangThai
       },
       success: function(response) {
-        console.log(udPage)
-        console.log(udminNgayTao)
-        console.log(udmaxNgayTao)
-        console.log(udtrangThai)
-        fetchDataAndUpdateTable(udPage, udminNgayTao, udmaxNgayTao, udtrangThai);
         console.log(response);
         Swal.fire({
           icon: 'success',
@@ -462,6 +511,48 @@
         });
       }
     })
+  }
+
+
+  const EnumTrangThai = ['ChoDuyet', 'DaDuyet', 'DangGiao', 'GiaoThanhCong'];
+
+  function nextState(TrangThai) {
+    var currentIndex = EnumTrangThai.indexOf(TrangThai);
+    return EnumTrangThai[currentIndex + 1];
+  }
+
+  function changeOrderStatus(MaDonHang, TrangThai) {
+    if(TrangThai == "Huy"){
+      var chiTietDonHang = getChiTietDonHangByMaDonHang(MaDonHang);
+      var flagKhongDuHang=false;
+      chiTietDonHang.forEach(element => {
+        var sanPham =getSanPhamByMaSanPham(element.MaSanPham);
+        if(sanPham.SoLuongConLai<element.SoLuong){
+          Swal.fire({
+            text: `Số lượng tồn kho của sản phẩm ${sanPham.TenSanPham} không đủ`,
+            icon: 'error',
+          });
+          flag=true;
+          return;
+        }
+      })
+      if(flag){
+        return;
+      }
+      chiTietDonHang.forEach(element => {
+        giamSoLuongSanPham('down', element.MaSanPham, element.SoLuong);
+      });
+    } else {
+      TrangThai = nextState(TrangThai);
+    }
+    if (TrangThai == 'DaDuyet') {
+      var chiTietDonHang = getChiTietDonHangByMaDonHang(MaDonHang);
+      chiTietDonHang.forEach(element => {
+        tangSoLuongSanPham('up', element.MaSanPham, -element.SoLuong);
+      });
+    }
+    setTrangThaiDonHang(MaDonHang, TrangThai);
+    fetchDataAndUpdateTable(udPage, udminNgayTao, udmaxNgayTao, udtrangThai);
   }
 
   // Example usage:
