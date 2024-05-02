@@ -2,6 +2,25 @@
     require_once __DIR__ . "/../../Configure/MysqlConfig.php";
 
     //Dùng để call List loại sản phẩm
+    if(isset($_GET['isDemoHome'])) {
+    
+        $result = getAllLoaiSanPhamNoPaging();
+    
+        echo json_encode($result);
+    }
+
+    //Dùng để call List loại sản phẩm
+    if(isset($_GET['page'])) {
+        $page = $_GET['page'];
+        $search = isset($_GET['search']) ? $_GET['search'] : "";
+    
+        // Gọi hàm PHP bạn muốn thực thi và trả về kết quả dưới dạng JSON
+        $result = getAllLoaiSanPham($page, $search);
+    
+        echo json_encode($result);
+    }
+
+    //Dùng để call List loại sản phẩm
  if(isset($_GET['page'])) {
     $page = $_GET['page'];
     $search = isset($_GET['search']) ? $_GET['search'] : "";
@@ -52,6 +71,54 @@ if(isset($_GET['TenLoaiSanPham']) ) {
     echo json_encode($result);
 
 }
+
+function getAllLoaiSanPhamNoPaging(){
+    // Chuẩn bị trước biến $connection
+    $connection = null;
+
+    // Mảng chứa điều kiện
+    $where_conditions = [];
+
+    // Chuẩn bị câu truy vấn gốc
+    $query = "SELECT * FROM `LoaiSanPham`";
+
+    // Khởi tạo kết nối
+    $connection = MysqlConfig::getConnection();
+
+    // Lọc theo search
+    if (!empty($search)) {
+        $where_conditions[] = "`TenLoaiSanPham` LIKE '%" . $search . "%'";
+    }   
+    // Kết nối các điều kiện lại với nhau (Nếu không có thì skip)
+    if (!empty($where_conditions)) {
+        $query .= " WHERE " . implode(" AND ", $where_conditions);
+    }
+    
+    try {
+        $statement = $connection->prepare($query);
+
+        if ($statement !== false) {
+            $statement->execute();
+            $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+            return (object) [
+                "status" => 200,
+                "message" => "Thành công",
+                "data" => $result
+            ];
+        } else {
+            throw new PDOException();
+        }
+    } catch (PDOException $e) {
+        return (object) [
+            "status" => 400,
+            "message" => "Lỗi không thể lấy danh sách loại sản phẩm",
+        ];
+    } finally {
+        $connection = null;
+    }
+}
+
 
 function getAllLoaiSanPham($page,$search){
     // Chuẩn bị trước biến $connection

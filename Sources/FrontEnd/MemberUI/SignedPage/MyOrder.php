@@ -116,13 +116,14 @@ function convertNumberToVND($number) {
                     <p>Tổng giá trị: <?= convertNumberToVND($hoaDon['TongGiaTri']) ?></p>
                     <?php
                         // Chuyển danh sách sản phẩm thành chuỗi JSON để truyền vào hàm cancel
+                        
                         $listSanPham = json_encode($listCTDH);
 
                         if ($hoaDon['TrangThai'] == 'GiaoThanhCong' || $hoaDon['TrangThai'] == 'Huy') {
                             echo "<button class='order_detail_button' onclick='toOrderDetail({$hoaDon["MaDonHang"]})'> Chi tiết</button>";
                         } else {
                             echo "<button class='order_detail_button' onclick='toOrderDetail({$hoaDon["MaDonHang"]}, {$hoaDon["MaKH"]})'> Chi tiết</button>" .
-                                "<button class='cancel_order_button' onclick='cancel({$hoaDon["MaDonHang"]}, \"{$hoaDon['TrangThai']}\", " . json_encode($listSanPham) . ")'>Hủy đơn hàng</button>";
+                                "<button class='cancel_order_button' onclick='cancel({$hoaDon["MaDonHang"]}, \"{$hoaDon['TrangThai']}\", " . $listSanPham . ")'>Hủy đơn hàng</button>";
                         }
                     ?>
                 </div>
@@ -140,6 +141,7 @@ function convertNumberToVND($number) {
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
        function cancel(maDonHang, trangThai, listSanPham){
+
             // Hiển thị hộp thoại xác thực
             var confirmation = confirm("Bạn có chắc muốn hủy đơn hàng này?");
             

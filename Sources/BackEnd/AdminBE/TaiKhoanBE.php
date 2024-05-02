@@ -517,15 +517,13 @@
             $statement = $connection->prepare($query);
         
             if ($statement  !== false) {
+                
                 // Bind giá trị vào tham số :tenTaiKhoan trong câu truy vấn
                 $statement->bindValue(':maTaiKhoan', $maTaiKhoan, PDO::PARAM_INT);
                 $statement->bindValue(':quyen', $quyen, PDO::PARAM_STR);
         
-        
                 // Thực hiện truy vấn
                 $statement = $statement->execute();
-        
-            
         
         
                 if ($statement !== false) {

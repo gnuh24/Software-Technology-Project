@@ -87,7 +87,6 @@
                                                                 <div>
                                                                     <p class="text">Quyền</p>
                                                                     <select name="quyen" id="quyen" class="input">
-                                                                        <option value="Admin">Admin</option>
                                                                         <option value="Manager">Manager</option>
                                                                         <option value="Member" selected>Member</option>
                                                                     </select>
@@ -185,6 +184,16 @@
 
         if (!ngaySinh.value.trim()) {
             alert("Ngày sinh không được để trống");
+            ngaySinh.focus();
+            event.preventDefault();
+            return;
+        }
+
+        // Kiểm tra tuổi
+        let ngaySinhDate = new Date(ngaySinh.value);
+        let tuoi = new Date().getFullYear() - ngaySinhDate.getFullYear();
+        if (tuoi < 18) {
+            alert("Bạn phải đủ 18 tuổi để đăng ký tài khoản");
             ngaySinh.focus();
             event.preventDefault();
             return;
