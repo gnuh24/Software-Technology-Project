@@ -125,68 +125,75 @@
 
     // Hàm getAllphieunhapkho
     function getAllphieunhapkho(page, datenhapkho) {
-      $.ajax({
+
+    $.ajax({
         url: '../../../BackEnd/ManagerBE/PhieuNhapKhoBE.php',
         type: 'GET',
         dataType: "json",
         data: {
-          page: page,
-          datenhapkho: datenhapkho
+            page: page,
+            datenhapkho: datenhapkho
         },
         success: function(response) {
-          var data = response.data;
-          var tableBody = document.getElementById("tableBody"); // Lấy thẻ tbody của bảng
-          var tableContent = ""; // Chuỗi chứa nội dung mới của tbody
-          console.log(data);
-          // Duyệt qua mảng dữ liệu và tạo các hàng mới cho tbody
-          data.forEach(function(record) {
-            var ngayNhapKho = record['NgayNhapKho'];
+            var data = response.data;
+            var tableBody = document.getElementById("tableBody"); // Lấy thẻ tbody của bảng
+            var tableContent = ""; // Chuỗi chứa nội dung mới của tbody
+            // Duyệt qua mảng dữ liệu và tạo các hàng mới cho tbody
+            data.forEach(function(record) {
+                var ngayNhapKho = record['NgayNhapKho'];
 
-            // Chuyển đổi ngày nhập kho sang đối tượng Date
-            var date = new Date(ngayNhapKho);
+                // Chuyển đổi ngày nhập kho sang đối tượng Date
+                var date = new Date(ngayNhapKho);
 
-            // Lấy các thành phần của ngày nhập kho (giờ, phút, giây, ngày, tháng, năm)
-            var gio = date.getHours();
-            var phut = date.getMinutes();
-            var giay = date.getSeconds();
-            var ngay = date.getDate();
-            var thang = date.getMonth() + 1; // Tháng trong JavaScript đếm từ 0, nên cần cộng thêm 1
-            var nam = date.getFullYear();
-            console.log(data);
-            // Định dạng lại chuỗi ngày giờ
-            var ngayNhapKhoFormatted = gio + ":" + phut + ":" + giay + " " + ngay + "/" + thang + "/" + nam;
+                // Lấy các thành phần của ngày nhập kho (giờ, phút, giây, ngày, tháng, năm)
+                var gio = date.getHours();
+                var phut = date.getMinutes();
+                var giay = date.getSeconds();
+                var ngay = date.getDate();
+                var thang = date.getMonth() + 1; // Tháng trong JavaScript đếm từ 0, nên cần cộng thêm 1
+                var nam = date.getFullYear();
+                // Định dạng lại chuỗi ngày giờ
+                var ngayNhapKhoFormatted = gio + ":" + phut + ":" + giay + " " + ngay + "/" + thang + "/" + nam;
 
-            var formattedTongGiaTri = record['TongGiaTri'].toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+                var formattedTongGiaTri = record['TongGiaTri'].toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+                var trangthai = "";
+                if (record['PhieuTrangThai'] === 'ChoDuyet')
+                    trangthai = "Chờ duyệt";
+                else if (record['PhieuTrangThai'] === 'Huy')
+                    trangthai = "Hủy";
+                else
+                    trangthai = "Đã duyệt";
 
-            var trContent = `
-                  <form id="updateForm_${record['MaPhieu']}" method="post" action="taoPhieuNhapKho.php?MaPhieu=${record['MaPhieu']}&MaNCC=${record['MaNCC']}&MaQuanLy=${record['MaQuanLy']}&TongTien=${record['TongGiaTri']}&HoTen=${record['HoTen']}&trangthai=${record['phieu_trangthai']}">
-                      <tr>
-                          <td class="Table_data" style="width: 130px;">${record['MaPhieu']}</td>
-                          <td class="Table_data">${ngayNhapKhoFormatted}</td>
-                          <td class="Table_data">${record['TenNCC']}</td>
-                          <td class="Table_data">${record['HoTen']}</td>
-                          <td class="Table_data">${formattedTongGiaTri}</td>
-                          <td class="Table_data">${record['phieu_trangthai']}</td>
-                          <td class="Table_data">
-                              <button class="edit" onclick="update(${record['MaPhieu']})">Xem chi tiết</button>
-                          </td>
-                      </tr>
-                  </form>
-                  `;
+                var trContent = `
+                    <form id="updateForm_${record['MaPhieu']}" method="post" action="taoPhieuNhapKho.php?MaPhieu=${record['MaPhieu']}&MaNCC1=${record['MaNCC']}&MaQuanLy=${record['MaQuanLy']}&TongTien=${record['TongGiaTri']}&HoTen=${record['HoTen']}&trangthai=${record['PhieuTrangThai']}">
+                        <tr>
+                            <td class="Table_data" style="width: 130px;">${record['MaPhieu']}</td>
+                            <td class="Table_data">${ngayNhapKhoFormatted}</td>
+                            <td class="Table_data">${record['TenNCC']}</td>
+                            <td class="Table_data">${record['HoTen']}</td>
+                            <td class="Table_data">${formattedTongGiaTri}</td>
+                            <td class="Table_data">${trangthai}</td>
+                            <td class="Table_data">
+                                <button class="edit" onclick="update(${record['MaPhieu']})">Xem chi tiết</button>
+                            </td>
+                        </tr>
+                    </form>
+                `;
 
-            tableContent += trContent; // Thêm nội dung của hàng vào chuỗi tableContent
-          });
+                tableContent += trContent; // Thêm nội dung của hàng vào chuỗi tableContent
+            });
 
-          // Thiết lập lại nội dung của tbody bằng chuỗi tableContent
-          tableBody.innerHTML = tableContent;
-          // Tạo phân trang
-          createPagination(page, response.totalPages);
+            // Thiết lập lại nội dung của tbody bằng chuỗi tableContent
+            tableBody.innerHTML = tableContent;
+            // Tạo phân trang
+            createPagination(page, response.totalPages);
         },
         error: function(xhr, status, error) {
-          console.error('Lỗi khi gọi API: ', error);
+            console.error('Lỗi khi gọi API: ', error);
         }
-      });
-    }
+    });
+}
+
 
     // Hàm để gọi getAllphieunhapkho và cập nhật dữ liệu và phân trang
     function fetchDataAndUpdateTable(page, datenhapkho) {
@@ -258,6 +265,6 @@
 
       // Khởi tạo trang hiện tại
       var currentPage = 1;
-      fetchDataAndUpdateTable(currentPage, '');
+      fetchDataAndUpdateTable(currentPage,null);
     });
   </script>
