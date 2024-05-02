@@ -72,6 +72,7 @@
 
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     
     <script>
@@ -107,62 +108,112 @@
             let ngaySinh = document.getElementById("ngaySinh");
 
             if (!tenDangNhap.value.trim()) {
-                alert("Tên đăng nhập không được để trống");
+                Swal.fire({
+                    title: 'Lỗi!',
+                    text: 'Tên đăng nhập không được để trống',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
                 tenDangNhap.focus();
                 event.preventDefault();
                 return;
             }
             if (!matKhau.value.trim()) {
-                alert("Mật khẩu không được để trống");
+                Swal.fire({
+                    title: 'Lỗi!',
+                    text: 'Mật khẩu không được để trống',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
                 matKhau.focus();
                 event.preventDefault();
                 return;
             }
 
             if (!xacNhanMatKhau.value.trim()) {
-                alert("Mật khẩu xác nhận không được để trống");
+                Swal.fire({
+                    title: 'Lỗi!',
+                    text: 'Mật khẩu xác nhận không được để trống',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
                 xacNhanMatKhau.focus();
                 event.preventDefault();
                 return;
             }
             if (matKhau.value !== xacNhanMatKhau.value) {
-                alert("Mật khẩu xác nhận và mật khẩu phải giống nhau");
+                Swal.fire({
+                    title: 'Lỗi!',
+                    text: 'Mật khẩu xác nhận và mật khẩu phải giống nhau',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
                 xacNhanMatKhau.focus();
                 event.preventDefault();
                 return;
             }
             if (!hoTen.value.trim()) {
-                alert("Họ Tên không được để trống");
+                Swal.fire({
+                    title: 'Lỗi!',
+                    text: 'Họ Tên không được để trống',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
                 hoTen.focus();
                 event.preventDefault();
                 return;
             }
             if (!email.value.trim()) {
-                alert("Email không được để trống");
+                Swal.fire({
+                    title: 'Lỗi!',
+                    text: 'Email không được để trống',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
                 email.focus();
                 event.preventDefault();
                 return;
             }
             if (!sdt.value.trim()) {
-                alert("Số điện thoại không được để trống");
+                Swal.fire({
+                    title: 'Lỗi!',
+                    text: 'Số điện thoại không được để trống',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
                 sdt.focus();
                 event.preventDefault();
                 return;
             }
             if (!diaChi.value.trim()) {
-                alert("Địa chỉ không được để trống");
+                Swal.fire({
+                    title: 'Lỗi!',
+                    text: 'Địa chỉ không được để trống',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
                 diaChi.focus();
                 event.preventDefault();
                 return;
             }
             if (!gioiTinhMale.checked && !gioiTinhFemale.checked) {
-                alert("Vui lòng chọn giới tính");
+                Swal.fire({
+                    title: 'Lỗi!',
+                    text: 'Vui lòng chọn giới tính',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
                 event.preventDefault();
                 return;
             }
 
             if (!ngaySinh.value.trim()) {
-                alert("Ngày sinh không được để trống");
+                Swal.fire({
+                    title: 'Lỗi!',
+                    text: 'Ngày sinh không được để trống',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
                 ngaySinh.focus();
                 event.preventDefault();
                 return;
@@ -170,16 +221,42 @@
 
             // Kiểm tra định dạng Email
             if (!isValidEmail(email.value.trim())) {
-                alert("Email không hợp lệ");
+                Swal.fire({
+                    title: 'Lỗi!',
+                    text: 'Email không hợp lệ',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
                 email.focus();
                 event.preventDefault();
                 return;
             }
+
+             // Kiểm tra tuổi
+            let ngaySinhDate = new Date(ngaySinh.value);
+            let tuoi = new Date().getFullYear() - ngaySinhDate.getFullYear();
+            if (tuoi < 18) {
+                Swal.fire({
+                    title: 'Lỗi!',
+                    text: "Bạn phải đủ 18 tuổi để đăng ký tài khoản",
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+                ngaySinh.focus();
+                event.preventDefault();
+                return;
+            }
+
         
 
             //Kiểm tra tên đăng nhập
             if (checkTenDangNhap(tenDangNhap.value.trim())) {
-                alert("Tên đăng nhập đã tồn tại");
+                Swal.fire({
+                    title: 'Lỗi!',
+                    text: 'Tên đăng nhập đã tồn tại',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
                 tenDangNhap.focus();
                 event.preventDefault();
                 return;
@@ -187,7 +264,12 @@
 
             //Kiểm tra xem email đã tồn tại hay chưa
             if (checkEmailTonTai(email.value.trim())) {
-                alert("Email đã tồn tại");
+                Swal.fire({
+                    title: 'Lỗi!',
+                    text: 'Email đã tồn tại',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
                 email.focus();
                 event.preventDefault();
                 return;
@@ -216,10 +298,16 @@
 
             
             //Sau khi tạo xong chuyển về trang QLTaiKHoan
-            alert("Tạo tài khoản mới thành công !!");
-            window.location.href = 'LoginUI.php';
-
-            
+            Swal.fire({
+                title: 'Thành công!',
+                text: 'Tạo tài khoản mới thành công !!',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = 'LoginUI.php';
+                }
+            });
         });
 
         function isValidEmail(email) {
@@ -332,12 +420,22 @@
         loginButton.addEventListener("click", (event) => {
             event.preventDefault();
             if (tenDangNhap.value.trim() === ""){
-                alert("Bạn không được để trống tên đăng nhập !!");
+                Swal.fire({
+                    title: 'Lỗi!',
+                    text: 'Bạn không được để trống tên đăng nhập !!',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
                 tenDangNhap.focus();
                 return
             }
             if (matKhau.value.trim() === ""){
-                alert("Bạn không được để trống mật khẩu !!");
+                Swal.fire({
+                    title: 'Lỗi!',
+                    text: 'Bạn không được để trống mật khẩu !!',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
                 matKhau.focus();
                 return
             }
@@ -362,54 +460,56 @@
                     // console.log(data.data.TrangThai);
                     if (data.status === 200 && data.data && data.data.MatKhau === matKhau.value) {
                         if (data.data.TrangThai == 0) {
-                            alert("Tài khoản của bạn đã bị khóa !!");
+                            Swal.fire({
+                                title: 'Lỗi!',
+                                text: 'Tài khoản của bạn đã bị khóa !!',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
                         } else {
-                            alert("Đăng nhập thành công!");
+                            Swal.fire({
+                                title: 'Thành công!',
+                                text: 'Đăng nhập thành công!',
+                                icon: 'success',
+                                confirmButtonText: 'OK'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    quyen = data.data.Quyen
+                                    
+                                    // Lưu dữ liệu vào localStorage
+                                    localStorage.setItem('key', JSON.stringify(data.data) );
 
-                            quyen = data.data.Quyen
-                            
-                            // Lưu dữ liệu vào localStorage
-                            localStorage.setItem('key', JSON.stringify(data.data) );
+                                    if (quyen === "Admin"){
+                                        window.location.href = `../../AdminUI/QLTaiKhoan.php`;
 
-                            if (quyen === "Admin"){
-                                window.location.href = `../../AdminUI/QLTaiKhoan.php`;
+                                    }else if(quyen === "Manager"){
+                                        window.location.href = `../../ManagerUI/QLLoaiSanPham/QLLoaiSanPham.php`;
 
-                            }else if(quyen === "Manager"){
-                                window.location.href = `../../ManagerUI/QLLoaiSanPham/QLLoaiSanPham.php`;
+                                    }else{
+                                        window.location.href = `../SignedPage/SignedHomePage.php`;
 
-                            }else{
-                                window.location.href = `../SignedPage/SignedHomePage.php`;
-
-                            }
-
-                            object = localStoeage.getItem('key');
-
-                            // console.log(object);
-
-                            // const bcrypt = require('bcryptjs');
-
-                            // const saltRounds = 10; // Số vòng lặp để tạo salt
-
-                            // // Mã hóa mật khẩu
-                            // bcrypt.hash("123456", saltRounds, function(err, hash) {
-                            //     if (err) {
-                            //         console.error('Error:', err);
-                            //     } else {
-                            //         console.log('Mật khẩu đã được mã hóa:', hash);
-                            //     }
-                            // });
-
-
-
+                                    }
+                                }
+                            });
                         }
                     } else {
-                        alert("Đăng nhập thất bại, hãy kiểm tra lại tên đăng nhập và mật khẩu !!");
+                        Swal.fire({
+                            title: 'Lỗi!',
+                            text: 'Đăng nhập thất bại, hãy kiểm tra lại tên đăng nhập và mật khẩu !!',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
                     }
 
                 },
                 error: function(xhr, status, error) {
                     console.error('Lỗi:', error);
-                    alert("Đã xảy ra lỗi khi kiểm tra tài khoản!");
+                    Swal.fire({
+                        title: 'Lỗi!',
+                        text: 'Đã xảy ra lỗi khi kiểm tra tài khoản!',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
                 }
             });
         }

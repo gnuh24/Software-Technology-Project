@@ -177,6 +177,17 @@ if (isset($_GET['maTaiKhoan'])) {
             return;
         }
 
+        
+        // Kiểm tra tuổi
+        let ngaySinhDate = new Date(ngaySinh.value);
+        let tuoi = new Date().getFullYear() - ngaySinhDate.getFullYear();
+        if (tuoi < 18) {
+            alert("Bạn phải trên 18 tuổi để có thể sử dụng dịch vụ này.");
+            ngaySinh.focus();
+            event.preventDefault();
+            return;
+        }
+
         if (!ngaySinh.value.trim()) {
             alert("Ngày sinh không được để trống");
             ngaySinh.focus();

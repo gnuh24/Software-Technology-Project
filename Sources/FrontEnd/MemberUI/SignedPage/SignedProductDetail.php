@@ -145,6 +145,7 @@
 </body>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
 
@@ -189,7 +190,12 @@
                     thanhTien: thanhTien
                 },
                 success: function (response) {
-                    alert("Bạn đã thêm vào giỏ hàng thành công !!");
+                    Swal.fire({
+                        title: 'Thành công!',
+                        text: 'Bạn đã thêm vào giỏ hàng thành công !!',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    });
                 },
                 error: function (xhr, status, error) {
                     console.error("Error:", error);
