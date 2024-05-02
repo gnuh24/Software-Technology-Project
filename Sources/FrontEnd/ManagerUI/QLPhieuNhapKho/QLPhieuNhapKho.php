@@ -200,7 +200,7 @@
     var date = document.querySelector('.datesearch').value;
     // Xóa nút phân trang cũ (nếu có)
     paginationContainer.innerHTML = '';
-
+    if(totalPages != 1){
     // Tạo nút cho từng trang và thêm vào chuỗi HTML
     var paginationHTML = '';
     for (var i = 1; i <= totalPages; i++) {
@@ -219,7 +219,8 @@
     });
 
     // Đánh dấu trang hiện tại
-    paginationContainer.querySelector('.pageButton:nth-child(' + currentPage + ')').classList.add('active'); // Sửa lại để chỉ chọn trang hiện tại
+    paginationContainer.querySelector('.pageButton:nth-child(' + currentPage + ')').classList.add('active');
+   } // Sửa lại để chỉ chọn trang hiện tại
   }
 
   function update(MaPhieu) {
