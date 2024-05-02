@@ -309,11 +309,12 @@
         var tableContent = ""; // Chuỗi chứa nội dung mới của tbody
         var printed_orders = [];
         var order_statuses;
+        var count=0;
         // Duyệt qua mảng dữ liệu và tạo các hàng mới cho tbody
 
         data.forEach(function(record) {
-          var trClass = (parseInt(record.MaDonHang) % 2 !== 0) ? "Table_data_quyen_1" : "Table_data_quyen_2";
-
+          var trClass = (count % 2 !== 0) ? "Table_data_quyen_1" : "Table_data_quyen_2";
+          count++;
           var maDonHang = record.MaDonHang;
 
           var ngayDatFormatted = formatDate(record.NgayDat);
@@ -431,7 +432,7 @@
     return chiTietDonHang;
   }
 
-  function thayDoiSoLuongSanPham(action, maSanPham, soLuongTang) {
+  function tangSoLuongSanPham(action, maSanPham, soLuongTang) {
     $.ajax({
       url: '../../../BackEnd/ManagerBE/SanPhamBE.php',
       type: 'POST',
@@ -445,12 +446,45 @@
         console.log(response);
       },
       error: function(xhr, status, error) {
-        Swal.fire({
-          icon: 'error',
-          text: 'Cập nhật trạng thái thất bại.'
-        });
       }
     })
+  }
+
+  function giamSoLuongSanPham(action, maSanPham, soLuongGiam) {
+    $.ajax({
+      url: '../../../BackEnd/ManagerBE/SanPhamBE.php',
+      type: 'POST',
+      dataType: "json",
+      data: {
+        action: action,
+        maSanPham: maSanPham,
+        soLuongGiam: soLuongGiam
+      },
+      success: function(response) {
+        console.log(response);
+      },
+      error: function(xhr, status, error) {
+      }
+    })
+  }
+
+  function getSanPhamByMaSanPham(MaSanPham) {
+    var SanPham;
+    $.ajax({
+      url: '../../../BackEnd/ManagerBE/SanPhamBE.php',
+      type: 'GET',
+      dataType: "json",
+      data: {
+        MaSanPham:MaSanPham
+      },
+      success: function(response) {
+        console.log(response);
+        SanPham=response.data;
+      },
+      error: function(xhr, status, error) {
+      }
+    })
+    return SanPham;
   }
 
 
@@ -490,8 +524,23 @@
   function changeOrderStatus(MaDonHang, TrangThai) {
     if(TrangThai == "Huy"){
       var chiTietDonHang = getChiTietDonHangByMaDonHang(MaDonHang);
+      var flagKhongDuHang=false;
       chiTietDonHang.forEach(element => {
-        thayDoiSoLuongSanPham('up', element.MaSanPham, element.SoLuong);
+        var sanPham =getSanPhamByMaSanPham(element.MaSanPham);
+        if(sanPham.SoLuongConLai<element.SoLuong){
+          Swal.fire({
+            text: `Số lượng tồn kho của sản phẩm ${sanPham.TenSanPham} không đủ`,
+            icon: 'error',
+          });
+          flag=true;
+          return;
+        }
+      })
+      if(flag){
+        return;
+      }
+      chiTietDonHang.forEach(element => {
+        giamSoLuongSanPham('down', element.MaSanPham, element.SoLuong);
       });
     } else {
       TrangThai = nextState(TrangThai);
@@ -499,7 +548,7 @@
     if (TrangThai == 'DaDuyet') {
       var chiTietDonHang = getChiTietDonHangByMaDonHang(MaDonHang);
       chiTietDonHang.forEach(element => {
-        thayDoiSoLuongSanPham('up', element.MaSanPham, -element.SoLuong);
+        tangSoLuongSanPham('up', element.MaSanPham, -element.SoLuong);
       });
     }
     setTrangThaiDonHang(MaDonHang, TrangThai);

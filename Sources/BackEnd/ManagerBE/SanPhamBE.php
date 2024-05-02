@@ -50,6 +50,16 @@
             $result = tangSoLuongSanPham($maSanPham, $soLuongTang);
             echo json_encode($result);
         }
+        if ($_POST['action'] == "down"){
+            $maSanPham = $_POST['maSanPham'];
+            $soLuongGiam = $_POST['soLuongGiam'];
+            $result = tangSoLuongSanPham($maSanPham, $soLuongGiam);
+            echo json_encode($result);
+        }
+    } else if (isset($_GET['MaSanPham'])){
+        $maSanPham = $_POST['MaSanPham'];
+        $result = getSanPhamByMaSanPham($maSanPham);
+        echo json_encode($result);
     }
 
     function getAllSanPhamnotpagination($search = null){
@@ -455,6 +465,42 @@
             return (object) [
                 "status" => 400,
                 "message" => $e->getMessage()
+            ];
+        } finally {
+            $connection = null;
+        }
+    }
+
+    function giamSoLuongSanPham($maSanPham, $soLuongGiam){
+        // Khởi tạo kết nối
+        $connection = null;
+    
+        // Chuẩn bị câu truy vấn
+        $query = "UPDATE `SanPham` SET `SoLuongConLai` = `SoLuongConLai` - :soLuongGiam WHERE `MaSanPham` = :maSanPham";
+    
+        // Khởi tạo kết nối
+        $connection = MysqlConfig::getConnection();
+    
+        try {
+            $statement = $connection->prepare($query);
+    
+            if ($statement !== false) {
+                $statement->bindValue(':soLuongGiam', $soLuongGiam, PDO::PARAM_INT);
+                $statement->bindValue(':maSanPham', $maSanPham, PDO::PARAM_INT);
+    
+                $statement->execute();
+    
+                return (object) [
+                    "status" => 200,
+                    "message" => "Giảm số lượng sản phẩm thành công!"
+                ];
+            } else {
+                throw new PDOException();
+            }
+        } catch (PDOException $e) {
+            return (object) [
+                "status" => 400,
+                "message" => "Lỗi không thể tăng số lượng sản phẩm"
             ];
         } finally {
             $connection = null;
