@@ -248,6 +248,18 @@
     }
     return order_statuses;
   }
+  function getTenTrangThai2(order_statuses) {
+    if (order_statuses == 'DaDuyet') {
+      order_statuses = 'Duyệt';
+    }
+    if (order_statuses == 'DangGiao') {
+      order_statuses = 'Đang Giao';
+    }
+    if (order_statuses == 'GiaoThanhCong') {
+      order_statuses = 'Giao Thành Công';
+    }
+    return order_statuses;
+  }
 
   function createPagination(currentPage, totalPages) {
     var paginationContainer = document.getElementById('pagination');
@@ -327,7 +339,7 @@
           } else if (record.TrangThai == 'GiaoThanhCong') {
             trContent += `<td class="${trClass}" style="color: green;">${order_statuses}</td></tr>`;
           } else {
-            trContent += `<td class="${trClass}"><button type="button" onclick="changeOrderStatus(${record.MaDonHang}, '${record.TrangThai}')" class="edit">${getTenTrangThai(nextState(record.TrangThai))}</button><button class="delete" onclick="changeOrderStatus(${record.MaDonHang}, 'Huy')"> hủy</button> </td></tr> `;
+            trContent += `<td class="${trClass}"><button type="button" onclick="changeOrderStatus(${record.MaDonHang}, '${record.TrangThai}')" class="edit">${getTenTrangThai2(nextState(record.TrangThai))}</button><button class="delete" onclick="changeOrderStatus(${record.MaDonHang}, 'Huy')"> hủy</button> </td></tr> `;
           }
           tableContent += trContent;
         });
