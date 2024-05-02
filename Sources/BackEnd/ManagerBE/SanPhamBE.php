@@ -53,7 +53,7 @@
         if ($_POST['action'] == "down"){
             $maSanPham = $_POST['maSanPham'];
             $soLuongGiam = $_POST['soLuongGiam'];
-            $result = tangSoLuongSanPham($maSanPham, $soLuongGiam);
+            $result = giamSoLuongSanPham($maSanPham, $soLuongGiam);
             echo json_encode($result);
         }
     } else if (isset($_GET['MaSanPham'])){
