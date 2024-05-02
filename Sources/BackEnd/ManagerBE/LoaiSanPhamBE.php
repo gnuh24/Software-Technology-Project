@@ -17,7 +17,7 @@ if(isset($_POST['MaLoaiSanPham']) && isset($_POST['TenLoaiSanPham'])) {
     $MaLoaiSanPham = $_POST['MaLoaiSanPham'];
     $TenLoaiSanPham = $_POST['TenLoaiSanPham'];
 
-        $result = updateLoaiSanPham($MaLoaiSanPham, $TenLoaiSanPham);
+    $result = updateLoaiSanPham($MaLoaiSanPham, $TenLoaiSanPham);
     
 
     echo json_encode($result);
@@ -64,7 +64,7 @@ function getAllLoaiSanPham($page,$search){
     $query = "SELECT * FROM `LoaiSanPham`";
 
      // Số phần tử mỗi trang
-     $entityPerPage = 6;
+     $entityPerPage = 5;
 
      // Tổng số trang
      $totalPages = null;

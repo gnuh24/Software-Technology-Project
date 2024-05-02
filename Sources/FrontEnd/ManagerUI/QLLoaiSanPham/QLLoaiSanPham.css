@@ -90,6 +90,7 @@
   .Table_table__BWPy {
     width: 100%;
     border-collapse: collapse;
+    height: 400px;
   }
   
   .Table_head__FTUog {
@@ -112,8 +113,12 @@
     justify-content: center;
   }
   
-  .pagination.single-page {
-    display: none; /* Ẩn nút phân trang khi chỉ có 1 trang */
+  /* .pagination.single-page {
+    display: none;
+  } */
+
+  td{
+    height: 80px;
   }
   
   .pageButton {

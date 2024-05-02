@@ -224,7 +224,7 @@
                 $statement->execute();
     
                 // Kiểm tra xem có bản ghi nào được cập nhật không
-                if ($statement->rowCount() > 0) {
+                if ($statement->rowCount() >= 0) {
                     // Trả về thành công nếu có bản ghi được cập nhật
                     return (object) [
                         "status" => 200,
