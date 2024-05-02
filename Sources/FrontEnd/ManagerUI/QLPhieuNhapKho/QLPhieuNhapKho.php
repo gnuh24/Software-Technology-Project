@@ -158,7 +158,7 @@
           var formattedTongGiaTri = record['TongGiaTri'].toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
 
           var trContent = `
-                <form id="updateForm_${record['MaPhieu']}" method="post" action="taoPhieuNhapKho.php?MaPhieu=${record['MaPhieu']}&MaNCC=${record['MaNCC']}&MaQuanLy=${record['MaQuanLy']}&TongTien=${record['TongGiaTri']}">
+                <form id="updateForm_${record['MaPhieu']}" method="post" action="taoPhieuNhapKho.php?MaPhieu=${record['MaPhieu']}&MaNCC=${record['MaNCC']}&MaQuanLy=${record['MaQuanLy']}&TongTien=${record['TongGiaTri']}&HoTen=${record['HoTen']}">
                     <tr>
                         <td class="Table_data" style="width: 130px;">${record['MaPhieu']}</td>
                         <td class="Table_data">${ngayNhapKhoFormatted}</td>
