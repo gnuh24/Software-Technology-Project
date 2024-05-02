@@ -176,3 +176,50 @@ function createPhieuNhapKho($NgayNhapKho, $TongGiaTri, $MaNCC,$MaQuanLy) {
         $connection = null;
     }
 }
+function updatePhieuNhapKho($MaPhieuNhapKho, $TongGiaTri, $MaNCC) {
+    // Khởi tạo kết nối
+    $connection = MysqlConfig::getConnection();
+
+    // Câu truy vấn SQL để cập nhật thông tin phiếu nhập kho
+    $query = "UPDATE `PhieuNhapKho` 
+              SET `NgayNhapKho` = :NgayNhapKho, 
+                  `TongGiaTri` = :TongGiaTri, 
+                  `MaNCC` = :MaNCC, 
+              WHERE `MaPhieuNhapKho` = :MaPhieuNhapKho";
+
+    try {
+        $statement = $connection->prepare($query);
+
+        if ($statement !== false) {
+            // Bind giá trị vào tham số của câu truy vấn
+            $statement->bindValue(':MaPhieuNhapKho', $MaPhieuNhapKho, PDO::PARAM_INT);
+            $statement->bindValue(':TongGiaTri', $TongGiaTri, PDO::PARAM_STR);
+            $statement->bindValue(':MaNCC', $MaNCC, PDO::PARAM_INT);
+
+            // Thực thi truy vấn
+            $statement->execute();
+
+            // Kiểm tra số hàng đã được cập nhật
+            $rowCount = $statement->rowCount();
+
+            if ($rowCount > 0) {
+                return (object) [
+                    "status" => 200,
+                    "message" => "Cập nhật thành công"
+                ];
+            } else {
+                return (object) [
+                    "status" => 404,
+                    "message" => "Không tìm thấy phiếu nhập kho"
+                ];
+            }
+        }
+    } catch (PDOException $e) {
+        return (object) [
+            "status" => 400,
+            "message" => $e->getMessage()
+        ];
+    } finally {
+        $connection = null;
+    }
+}
