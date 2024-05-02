@@ -150,7 +150,7 @@ if (isset($_GET['MaPhieu'])) {
                                     </label>
                                     <label>
                                         <p style="font-size: 1.3rem; font-weight: 700; margin-top: 1rem;">Tên Người Quản Lý</p>
-                                        <input id="maquanly" style="height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;" value="<?php if(isset($_GET['MaPhieu'])) echo $_GET['HoTen'];?>" disabled="true";  >
+                                        <input id="maquanly" style="height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;" value="<?php if (isset($_GET['MaPhieu'])) echo $_GET['HoTen']; ?>" disabled="true" ;>
 
                                         </input>
                                     </label>
@@ -158,6 +158,30 @@ if (isset($_GET['MaPhieu'])) {
                                         <p style="font-size: 1.3rem; font-weight: 700; margin-top: 1rem;">Tổng Giá Trị</p>
                                         <input id="totalvalue" style=" height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;" value="<?php if (isset($_GET['MaPhieu'])) echo number_format($_GET['TongTien'], 0, '.', ',') . ' ₫'; ?>" disabled="true" />
                                     </label>
+                                    <?php
+                                    if (isset($_GET['MaPhieu']))
+                                    if ($_GET['trangthai'] == 'DaDuyet') {
+                                        echo ' <select id="status">
+                                                <option value="choduyet">Chờ duyệt</option>
+                                                <option value="daduyet" selected>Đã duyệt</option>
+                                                <option value="huy">Hủy</option>
+                                              </select>';
+                                    } elseif ($_GET['trangthai'] == 'ChoDuyet') {
+                                        echo ' <select id="status">
+                                                <option value="choduyet" selected>Chờ duyệt</option>
+                                                <option value="daduyet">Đã duyệt</option>
+                                                <option value="huy">Hủy</option>
+                                              </select>';
+                                    } else {
+                                        echo ' <select id="status">
+                                                <option value="choduyet">Chờ duyệt</option>
+                                                <option value="daduyet">Đã duyệt</option>
+                                                <option value="huy" selected>Hủy</option>
+                                              </select>';
+                                    }
+                                    
+                                         ?>
+
                                 </div>
                             </div>
                         </div>
