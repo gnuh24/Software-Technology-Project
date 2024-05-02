@@ -15,7 +15,8 @@
     $connection = null;
 
     //Chuẩn bị câu truy vấn gốc
-    $query = "SELECT * FROM `PhieuNhapKho` JOIN `nhacungcap` ON PhieuNhapKho.MaNCC = nhacungcap.MaNCC JOIN `taikhoan` ON PhieuNhapKho.MaQuanLy = taikhoan.MaTaiKhoan  JOIN `NguoiDung` ON `TaiKhoan`.`MaTaiKhoan` = `NguoiDung`.`MaNguoiDung`" ;
+    $query = "SELECT MaPhieu,NgayNhapKho,pnk.MaNCC,TongGiaTri,MaQuanLy,tk.TrangThai,TenNCC,nguoidung.SoDienThoai,nguoidung.Email,TenDangNhap,matkhau,NgayTao,HoTen,ngaysinh,gioitinh,diachi,pnk.trangthai as phieu_trangthai FROM PhieuNhapKho AS pnk JOIN nhacungcap ON pnk.MaNCC = nhacungcap.MaNCC JOIN taikhoan AS tk ON pnk.MaQuanLy = tk.MaTaiKhoan JOIN NguoiDung ON tk.MaTaiKhoan = NguoiDung.MaNguoiDung;
+    ";
 
     //Mảng chứa điều kiện
 
@@ -164,6 +165,53 @@ function createPhieuNhapKho($NgayNhapKho, $TongGiaTri, $MaNCC,$MaQuanLy) {
             } else {
                 // Trả về false nếu không thành công
                 throw new PDOException();
+            }
+        }
+    } catch (PDOException $e) {
+        return (object) [
+            "status" => 400,
+            "message" => $e->getMessage()
+        ];
+    } finally {
+        $connection = null;
+    }
+}
+function updatePhieuNhapKho($MaPhieuNhapKho, $TongGiaTri, $MaNCC) {
+    // Khởi tạo kết nối
+    $connection = MysqlConfig::getConnection();
+
+    // Câu truy vấn SQL để cập nhật thông tin phiếu nhập kho
+    $query = "UPDATE `PhieuNhapKho` 
+              SET `NgayNhapKho` = :NgayNhapKho, 
+                  `TongGiaTri` = :TongGiaTri, 
+                  `MaNCC` = :MaNCC, 
+              WHERE `MaPhieuNhapKho` = :MaPhieuNhapKho";
+
+    try {
+        $statement = $connection->prepare($query);
+
+        if ($statement !== false) {
+            // Bind giá trị vào tham số của câu truy vấn
+            $statement->bindValue(':MaPhieuNhapKho', $MaPhieuNhapKho, PDO::PARAM_INT);
+            $statement->bindValue(':TongGiaTri', $TongGiaTri, PDO::PARAM_STR);
+            $statement->bindValue(':MaNCC', $MaNCC, PDO::PARAM_INT);
+
+            // Thực thi truy vấn
+            $statement->execute();
+
+            // Kiểm tra số hàng đã được cập nhật
+            $rowCount = $statement->rowCount();
+
+            if ($rowCount > 0) {
+                return (object) [
+                    "status" => 200,
+                    "message" => "Cập nhật thành công"
+                ];
+            } else {
+                return (object) [
+                    "status" => 404,
+                    "message" => "Không tìm thấy phiếu nhập kho"
+                ];
             }
         }
     } catch (PDOException $e) {

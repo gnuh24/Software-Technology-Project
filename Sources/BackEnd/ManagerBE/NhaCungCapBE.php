@@ -12,6 +12,19 @@ require_once __DIR__ . "/../../Configure/MysqlConfig.php";
     echo json_encode($result);
 }
 
+//Dùng để update thông tin nhà cung cấp
+if(isset($_POST['MaNCC']) && isset($_POST['TenNCC']) && isset($_POST['Email']) && isset($_POST['SoDienThoai'])) {
+    $MaNCC = $_POST['MaNCC'];
+    $TenNCC = $_POST['TenNCC'];
+    $Email = $_POST['Email'];
+    $SoDienThoai = $_POST['SoDienThoai'];
+
+        $result = updateNhaCungCap($MaNCC, $TenNCC, $Email, $SoDienThoai);
+    
+
+    echo json_encode($result);
+}
+
 //Dùng để thêm nhà cung cấp
 if(isset($_POST['TenNCC']) && isset($_POST['Email']) && isset($_POST['SoDienThoai'])) {
     $TenNCC = $_POST['TenNCC'];
