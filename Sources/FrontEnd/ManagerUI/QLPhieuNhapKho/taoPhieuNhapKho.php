@@ -64,7 +64,7 @@ if (isset($_GET['MaPhieu'])) {
                             <div style="display: flex; padding-top: 1rem; padding-bottom: 1rem;">
                                 <h2>Phiếu Nhập Kho</h2>
                                 <div style="margin-left: auto;">
-                                    <button style="font-family: Arial; font-size: 1.5rem; font-weight: 700; color: white; color: rgb(65, 64, 64); border: 1px solid rgb(65, 64, 64); background-color: white; padding: 1rem; border-radius: 0.6rem; cursor: pointer;" onclick="navigate('/system/manager/inventory')">
+                                    <button style="font-family: Arial; font-size: 1.5rem; font-weight: 700; color: white; color: rgb(65, 64, 64); border: 1px solid rgb(65, 64, 64); background-color: white; padding: 1rem; border-radius: 0.6rem; cursor: pointer;">
                                         <a href="QLPhieuNhapKho.php">
                                             <?php
                                             if (!isset($_GET['MaPhieu'])) echo 'Hủy';
@@ -82,17 +82,16 @@ if (isset($_GET['MaPhieu'])) {
                                 </div>
                             </div>
                             <div class="boxFeature">
-                                <select style="height: 3rem; padding: 0.3rem; width: 50rem;" id="manhacungcap" <?php if (isset($_GET['MaPhieu'])) echo 'disabled="true"'; ?>>
-                                    <option value="" disabled selected hidden>Chọn nhà cung cấp</option>
-                                    Nhà Cung Cấp
+                                <select style="height: 3rem; padding: 0.3rem; width: 50rem;" id="manhacungcap" <?php if (isset($_GET['MaPhieu']) && $_GET['trangthai'] !== 'ChoDuyet') echo 'disabled="true"'; ?>>
+                                    <option value="">Chọn nhà cung cấp</option>
                                     <?php
                                     require_once "../../../BackEnd/ManagerBE/NhaCungCapBE.php";
-
                                     $result = getAllNhaCungCapNotPage();
                                     $result1 = $result->data;
                                     foreach ($result1 as $Ketqua) {
+                                        echo $Ketqua["MaNCC"];
                                         if (isset($_GET['MaPhieu'])) {
-                                            if ($Ketqua["MaNCC"] == $MaNCC)
+                                            if ($Ketqua["MaNCC"] == $_GET['MaNCC1'])
                                                 echo '<option value="' . $Ketqua["MaNCC"] . '" selected>' . $Ketqua["TenNCC"] . '</option>';
                                             else
                                                 echo '<option value="' . $Ketqua["MaNCC"] . '">' . $Ketqua["TenNCC"] . '</option>';
@@ -101,11 +100,14 @@ if (isset($_GET['MaPhieu'])) {
                                         }
                                     }
                                     ?>
-
                                 </select>
-                                <?php if (!isset($_GET['MaPhieu'])) echo '<button style="margin-left: auto; font-family: Arial; font-size: 1.5rem; font-weight: 700; color: white; background-color: rgb(65, 64, 64); padding: 1rem; border-radius: 0.6rem; cursor: pointer;" onclick="handleSubmit()">
-                                    Lưu
-                                </button>'; ?>
+
+                                <?php
+                                if (!isset($_GET['trangthai']) || ($_GET['trangthai'] == 'ChoDuyet')) {
+                                    echo '<button style="margin-left: auto; font-family: Arial; font-size: 1.5rem; font-weight: 700; color: white; background-color: rgb(65, 64, 64); padding: 1rem; border-radius: 0.6rem; cursor: pointer;" onclick="handleSubmit()">Lưu</button>';
+                                }
+
+                                ?>
 
                             </div>
                             <div class="boxTable">
@@ -126,16 +128,24 @@ if (isset($_GET['MaPhieu'])) {
                                             if (isset($_GET['MaPhieu'])) {
                                                 $data = getChiTietPhieuNhapByMaPhieuNhap($_GET["MaPhieu"]);
                                                 $data1 = $data->data;
-                                                if (!empty($data1)) {
+                                                if (!empty($data1) && $_GET['trangthai'] == 'ChoDuyet') {
                                                     foreach ($data1 as $tmp) {
                                                         echo '<tr style="text-align: center;">
                                                                 <td style="padding: 0.5rem; name=MaSanPham[]">' . $tmp['MaSanPham'] . '</td>
                                                                 <td style="padding: 0.5rem;">' . $tmp['TenSanPham'] . '</td>
-                                                                <td style="padding: 0.5rem;"><input type="text" name="donGia[]" value="' . number_format($tmp['DonGiaNhap'], 0, '.', ',') . '" disabled="true" style=" height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;" ></td>
-                                                                <td style="padding: 0.5rem;"><input type="text" name="soLuong[]" value="' . $tmp['SoLuong'] . '" disabled="true" style=" height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;"></td>
+                                                                <td style="padding: 0.5rem;"><input type="text" name="donGia[]" value="' . number_format($tmp['DonGiaNhap'], 0, '.', ',') . '"style=" height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;" ></td>
+                                                                <td style="padding: 0.5rem;"><input type="text" name="soLuong[]" value="' . $tmp['SoLuong'] . '" style=" height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;"></td>
                                                             </tr>';
                                                     }
-                                                }
+                                                } else
+                                                    foreach ($data1 as $tmp) {
+                                                        echo '<tr style="text-align: center;">
+                                                            <td style="padding: 0.5rem; name=MaSanPham[]">' . $tmp['MaSanPham'] . '</td>
+                                                            <td style="padding: 0.5rem;">' . $tmp['TenSanPham'] . '</td>
+                                                            <td style="padding: 0.5rem;"><input type="text" name="donGia[]" value="' . number_format($tmp['DonGiaNhap'], 0, '.', ',') . '" disabled="true" style=" height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;" ></td>
+                                                            <td style="padding: 0.5rem;"><input type="text" name="soLuong[]" value="' . $tmp['SoLuong'] . '" disabled="true" style=" height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;"></td>
+                                                        </tr>';
+                                                    }
                                             }
 
                                             ?>
@@ -146,7 +156,7 @@ if (isset($_GET['MaPhieu'])) {
                                 <div style="width: 25%; background-color: rgb(236, 233, 233); padding: 1rem;">
                                     <label>
                                         <p style="font-size: 1.3rem; font-weight: 700;">Mã Phiếu</p>
-                                        <input style="height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;" value="<?php if (isset($_GET['MaPhieu'])) echo $_GET['MaPhieu']; ?>" disabled="true" />
+                                        <input id="maPNK" style="height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;" value="<?php if (isset($_GET['MaPhieu'])) echo $_GET['MaPhieu']; ?>" disabled="true" />
                                     </label>
                                     <label>
                                         <p style="font-size: 1.3rem; font-weight: 700; margin-top: 1rem;">Tên Người Quản Lý</p>
@@ -156,31 +166,31 @@ if (isset($_GET['MaPhieu'])) {
                                     </label>
                                     <label>
                                         <p style="font-size: 1.3rem; font-weight: 700; margin-top: 1rem;">Tổng Giá Trị</p>
-                                        <input id="totalvalue" style=" height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;" value="<?php if (isset($_GET['MaPhieu'])) echo number_format($_GET['TongTien'], 0, '.', ',') . ' ₫'; ?>" disabled="true" />
+                                        <input id="totalvalue" style="height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;" value="<?php echo (isset($_GET['MaPhieu'])) ? number_format($_GET['TongTien'], 0, '.', ',') . ' ₫' : ''; ?>" <?php echo (isset($_GET['MaPhieu'])) ? 'disabled="true"' : ''; ?> />
                                     </label>
                                     <?php
                                     if (isset($_GET['MaPhieu']))
-                                    if ($_GET['trangthai'] == 'DaDuyet') {
-                                        echo ' <select id="status">
+                                        if ($_GET['trangthai'] == 'DaDuyet') {
+                                            echo ' <select id="status" disabled="true">
                                                 <option value="choduyet">Chờ duyệt</option>
                                                 <option value="daduyet" selected>Đã duyệt</option>
                                                 <option value="huy">Hủy</option>
                                               </select>';
-                                    } elseif ($_GET['trangthai'] == 'ChoDuyet') {
-                                        echo ' <select id="status">
+                                        } elseif ($_GET['trangthai'] == 'ChoDuyet') {
+                                            echo ' <select id="status">
                                                 <option value="choduyet" selected>Chờ duyệt</option>
                                                 <option value="daduyet">Đã duyệt</option>
                                                 <option value="huy">Hủy</option>
                                               </select>';
-                                    } else {
-                                        echo ' <select id="status">
-                                                <option value="choduyet">Chờ duyệt</option>
-                                                <option value="daduyet">Đã duyệt</option>
-                                                <option value="huy" selected>Hủy</option>
+                                        } else {
+                                            echo ' <select id="status" disabled="true">
+                                                <option value="ChoDuyet">Chờ duyệt</option>
+                                                <option value="DaDuyet">Đã duyệt</option>
+                                                <option value="Huy" selected>Hủy</option>
                                               </select>';
-                                    }
-                                    
-                                         ?>
+                                        }
+
+                                    ?>
 
                                 </div>
                             </div>
@@ -233,7 +243,10 @@ if (isset($_GET['MaPhieu'])) {
         var maNhaCungCap = document.getElementById('manhacungcap').value;
         var userData = localStorage.getItem("key");
         userData = JSON.parse(userData);
-
+        try {
+            var trangthai = document.getElementById("status").value;
+            var maPNK = document.getElementById("maPNK").value;
+        } catch (error) {}
         var maQuanLy = userData.MaTaiKhoan;
         var totalValue = document.getElementById('totalvalue').value;
         var productData = [];
@@ -265,13 +278,14 @@ if (isset($_GET['MaPhieu'])) {
             url: 'xulyPhieuNhapKho.php',
             data: {
                 'MaNhaCungCap': maNhaCungCap,
+                'trangthai': trangthai,
                 'MaQuanLy': maQuanLy,
+                'MaPhieuNhapKho': maPNK,
                 'TotalValue': totalValue,
                 'ProductData': JSON.stringify(productData)
             },
             success: function(response) {
-                if (response.includes("Phiếu nhập kho đã được tạo thành công."))
-                    window.location.href = 'QLPhieuNhapKho.php';
+                window.location.href = 'QLPhieuNhapKho.php';
 
             },
             error: function(xhr, status, error) {
@@ -287,18 +301,20 @@ if (isset($_GET['MaPhieu'])) {
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        // Lấy dữ liệu từ localStorage
         var quanLyData = JSON.parse(localStorage.getItem("key"));
-
         var inputElement = document.getElementById("maquanly");
         inputElement.innerHTML = '';
         if (quanLyData && !inputElement.value) {
             inputElement.value = quanLyData.HoTen;
         }
+        try {
+            loaddatasp();
 
-        loaddatasp();
+        } catch (error) {
+            
+        }
         calculateTotalPrice();
-        setInterval(calculateTotalPrice, 3000);
+        setInterval(calculateTotalPrice, 2000);
 
         function calculateTotalPrice() {
             var totalPrice = 0;
@@ -309,7 +325,7 @@ if (isset($_GET['MaPhieu'])) {
                 if (quantityCell && priceCell) {
                     var quantity = parseInt(quantityCell.value);
                     var price = parseFloat(priceCell.value);
-                    if (!isNaN(quantity) && !isNaN(price)) {
+                    if (!isNaN(quantity) && !isNaN(price)) { // Kiểm tra nếu quantity và price là số hợp lệ
                         totalPrice += quantity * price;
                     }
                 }
@@ -318,15 +334,14 @@ if (isset($_GET['MaPhieu'])) {
                 style: 'currency',
                 currency: 'VND'
             });
-            var totalPriceElement = document.getElementById('totalvalue');
             console.log(formattedTongGiaTri);
+            var totalPriceElement = document.getElementById('totalvalue');
             if (totalPriceElement) {
                 totalPriceElement.value = formattedTongGiaTri;
             }
         }
     });
 
-    // Change event listener for checkbox
     $(document).on('change', '.product_checkbox', function() {
         $('#tableBody').empty();
         $('.product_checkbox').each(function() {
