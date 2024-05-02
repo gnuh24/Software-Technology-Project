@@ -15,7 +15,8 @@
     $connection = null;
 
     //Chuẩn bị câu truy vấn gốc
-    $query = "SELECT * FROM `PhieuNhapKho` JOIN `nhacungcap` ON PhieuNhapKho.MaNCC = nhacungcap.MaNCC JOIN `taikhoan` ON PhieuNhapKho.MaQuanLy = taikhoan.MaTaiKhoan  JOIN `NguoiDung` ON `TaiKhoan`.`MaTaiKhoan` = `NguoiDung`.`MaNguoiDung`" ;
+    $query = "SELECT MaPhieu,NgayNhapKho,pnk.MaNCC,TongGiaTri,MaQuanLy,tk.TrangThai,TenNCC,nguoidung.SoDienThoai,nguoidung.Email,TenDangNhap,matkhau,NgayTao,HoTen,ngaysinh,gioitinh,diachi,pnk.trangthai as phieu_trangthai FROM PhieuNhapKho AS pnk JOIN nhacungcap ON pnk.MaNCC = nhacungcap.MaNCC JOIN taikhoan AS tk ON pnk.MaQuanLy = tk.MaTaiKhoan JOIN NguoiDung ON tk.MaTaiKhoan = NguoiDung.MaNguoiDung;
+    ";
 
     //Mảng chứa điều kiện
 
