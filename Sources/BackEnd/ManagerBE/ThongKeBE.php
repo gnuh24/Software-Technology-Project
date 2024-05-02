@@ -139,6 +139,7 @@
                     FROM PhieuNhapKho pnk
                     JOIN CTPNK ct ON pnk.MaPhieu = ct.MaPhieu
                     WHERE DATE(pnk.ngayNhapKho) BETWEEN COALESCE(:minDate, '2010-01-01') AND COALESCE(:maxDate, CURRENT_DATE())
+                    AND pnk.`TrangThai` = 'DaDuyet'
                     GROUP BY DATE(pnk.ngayNhapKho)
                     ORDER BY DATE(pnk.ngayNhapKho);";
 

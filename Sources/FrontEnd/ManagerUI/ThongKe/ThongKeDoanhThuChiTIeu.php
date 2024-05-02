@@ -204,20 +204,23 @@
 
                 
             var boxTable = document.querySelector('.boxTable1');
-            
+            function formatCurrency(amount) {
+                // Sử dụng hàm toLocaleString để chuyển đổi số thành định dạng tiền tệ với đơn vị tiền tệ mặc định của trình duyệt
+                return amount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+            }
             // Tạo các phần tử HTML và thêm nội dung vào
             var htmlContent = `
                 <div style="display: flex; gap: 1.5rem;">
                     <div style="display: flex; align-items: center; gap: 1rem; background-color: #e91e63; width: 60rem; padding: 1rem;">
                         <div>
                             <p style="color: white; font-weight: 700;">Tổng chi tiêu</p>
-                            <p style="color: white; font-weight: 700; font-size: 2.5rem;">${totalChiTieu}</p>
+                            <p style="color: white; font-weight: 700; font-size: 2.5rem;">${formatCurrency(totalChiTieu)}</p>
                         </div>
                     </div>
                     <div style="display: flex; align-items: center; gap: 1rem; background-color: #8bc34a; width: 60rem; padding: 1rem;">
                         <div>
                             <p style="color: white; font-weight: 700;">Tổng doanh thu</p>
-                            <p style="color: white; font-weight: 700; font-size: 2.5rem;">${totalDoanhThu}</p>
+                            <p style="color: white; font-weight: 700; font-size: 2.5rem;">${formatCurrency(totalDoanhThu)}</p>
                         </div>
                     </div>
                 </div>

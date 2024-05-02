@@ -248,9 +248,9 @@ VALUES                      (1,         'Các nhà cung cấp khác ',          
 
 INSERT INTO `PhieuNhapKho`  (`MaPhieu`,     `NgayNhapKho`,          `TongGiaTri`, `MaNCC`, `MaQuanLy`, `TrangThai`)
 VALUES                      (1,             '2023-01-20 00:00:00',  10000000,       2,      2		, "DaDuyet"),
-                            (2,             '2023-02-20 00:00:00',  10000000,       3,      3, "DaDuyet"),
-                            (3,             '2023-02-22 00:00:00',  10000000,       3,      2, "DaDuyet"),
-                            (4,             '2024-01-25 00:00:00',  2500000,        4,      3, "DaDuyet");
+                            (2,             '2023-02-20 00:00:00',  10000000,       3,      3, 		"DaDuyet"),
+                            (3,             '2023-02-22 00:00:00',  10000000,       3,      2, 		"DaDuyet"),
+                            (4,             '2024-01-25 00:00:00',  2500000,        4,      3, 			"DaDuyet");
 
 
 

@@ -171,6 +171,7 @@
             fillOrderInfo();
             
         });
+        
         function convertPriceToNumber(priceString) {
             // Loại bỏ tất cả các ký tự '.'
             var priceWithoutDot = priceString.replace(/\./g, '');
@@ -242,10 +243,13 @@
                 // Gọi hàm tạo đơn hàng
                 createDonHang(maTaiKhoan, tongGiaTri, maPhuongThuc, maDichVu, diaChiGiaoHang, danhSachChiTietDonHang);
                 
-                var userData = JSON.parse(localStorage.getItem('key'));
+                // var userData = JSON.parse(localStorage.getItem('key'));
 
-                var id = userData.MaTaiKhoan;
-                window.location.href = `MyOrder.php?maTaiKhoan=${id}`;
+                // var id = userData.MaTaiKhoan;
+                // window.location.href = `MyOrder.php?maTaiKhoan=${id}`;
+                alert("Đặt hàng thành công !!");
+
+                window.location.href = `SignedProduct.php`;
 
             } else {
                 // Hiển thị thông báo lỗi nếu thiếu thông tin
@@ -336,18 +340,18 @@
                     diaChiGiaoHang: diaChiGiaoHang
                 },
                 success: function(response) {
-                    console.log(response);
+                    console.log("Tạo đơn:", response);
                     let maDonHang = response.data;
 
                     // Gọi hàm tạo ChiTietDonHang cho mỗi phần tử trong danhSachChiTietDonHang
                     danhSachChiTietDonHang.forEach(function(chiTiet) {
+                        console.log(`Tạo chi tiết ${chiTiet.maSanPham}`)
                         createCTDH(maDonHang, chiTiet.maSanPham, chiTiet.donGia, chiTiet.soLuong, chiTiet.thanhTien);
                     });
 
                     //Tạo trạng thái mặc định
-                    createTrangThaiDonHang(maDonHang)
+                    // createTrangThaiDonHang(maDonHang)
 
-                    alert("Đặt hàng thành công !!");
 
                 },
                 error: function(xhr, status, error) {
@@ -379,23 +383,23 @@
         });
     }
 
-    function createTrangThaiDonHang(maDonHang) {
-        $.ajax({
-            url: "../../../BackEnd/ManagerBE/TrangThaiDonHangBE.php",
-            method: "POST",
-            dataType: "json",
-            data: {
-                MaDonHang: maDonHang,
-                TrangThai: "ChoDuyet"
-            },
-            success: function(response) {
-                console.log(response);
-            },
-            error: function(xhr, status, error) {
-                console.error("Error:", error);
-            }
-        });
-    }
+    // function createTrangThaiDonHang(maDonHang) {
+    //     $.ajax({
+    //         url: "../../../BackEnd/ManagerBE/TrangThaiDonHangBE.php",
+    //         method: "POST",
+    //         dataType: "json",
+    //         data: {
+    //             MaDonHang: maDonHang,
+    //             TrangThai: "ChoDuyet"
+    //         },
+    //         success: function(response) {
+    //             console.log(response);
+    //         },
+    //         error: function(xhr, status, error) {
+    //             console.error("Error:", error);
+    //         }
+    //     });
+    // }
 
 
     </script>
