@@ -198,7 +198,7 @@
 <script>
   var danhSachSanPham = <?php
                         require_once "../../../BackEnd/ManagerBE/SanPhamBE.php";
-                        $danhSachSanPham = getAllSanPham(1, "", null, null, null, null, null, null, 1, null)->data;
+                        $danhSachSanPham = getAllSanPham2(1)->data;
                         echo json_encode($danhSachSanPham); ?>;
 
   var udPage = 0;
@@ -365,7 +365,7 @@
     
     danhSachSanPham = <?php
                         require_once "../../../BackEnd/ManagerBE/SanPhamBE.php";
-                        $danhSachSanPham = getAllSanPham(1, "", null, null, null, null, null, null, 1, null)->data;
+                        $danhSachSanPham = getAllSanPham2(1)->data;
                         echo json_encode($danhSachSanPham); ?>;
 
     udPage = page;
@@ -565,8 +565,8 @@
       if (TrangThai == 'DaDuyet') {
         danhSachSanPham = <?php
                         require_once "../../../BackEnd/ManagerBE/SanPhamBE.php";
-                        $danhSachSanPham = getAllSanPham(1, "", null, null, null, null, null, null, 1, null)->data;
-                        echo json_encode($danhSachSanPham); ?>;
+                        $danhSachSanPham = getAllSanPham2(1)->data;
+                        echo json_encode($danhSachSanPham); ?>; 
         getChiTietDonHangByMaDonHangDaDuyet(MaDonHang, TrangThai, danhSachSanPham);
       } else {
         setTrangThaiDonHang(MaDonHang, TrangThai);

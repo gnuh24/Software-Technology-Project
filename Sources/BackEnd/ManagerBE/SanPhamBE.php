@@ -506,4 +506,33 @@
             $connection = null;
         }
     }
+
+    function getAllSanPham2($trangThai){
+        $connection = null;
+        $query = "SELECT * FROM `SanPham` WHERE TrangThai = $trangThai";
+        $connection = MysqlConfig::getConnection();
+        try {
+            $statement = $connection->prepare($query);
+
+            if ($statement !== false) {
+                $statement->execute();
+                $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+                return (object) [
+                    "status" => 200,
+                    "message" => "Thành công",
+                    "data" => $result
+                ];
+            } else {
+                throw new PDOException();
+            }
+        } catch (PDOException $e) {
+            return (object) [
+                "status" => 400,
+                "message" => $e->getMessage(),
+            ];
+        } finally {
+            $connection = null;
+        }
+    }
 ?>
