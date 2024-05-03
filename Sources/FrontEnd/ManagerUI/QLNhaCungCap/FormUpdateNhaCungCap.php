@@ -135,34 +135,50 @@
             event.preventDefault();
             return;
         }
+
+
         //Kiểm tra tên nhà cung cấp
         if (isTenNhaCungCapExists(TenNCC.value.trim())) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Lỗi!',
-                text: 'Tên nhà cung cấp đã tồn tại',
-            });
-            TenNCC.focus();
-            event.preventDefault();
-            return;
+            if (!isTenNhaCungCapBelongToMaNCC(MaNCC.value ,TenNCC.value.trim())){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi!',
+                    text: 'Tên nhà cung cấp đã tồn tại',
+                });
+                TenNCC.focus();
+                event.preventDefault();
+                return;
+            }
         }
+        console.log("Mã: ", MaNCC.value);
+        console.log("Tên NCC: ", TenNCC.value);
+        console.log("SoDienThoai ", SoDienThoai.value);
+        console.log("Email: ", Email.value);
+
 
         //Bắt đầu cập nhật thông tin nhà cung cấp sau khi đã qua các bước xác nhận
         let isUpdateNhaCungCapComplete = updateNhaCungCap(
             MaNCC.value,
             TenNCC.value,
-            SoDienThoai.value,
-            Email.value)
+            Email.value,
+            SoDienThoai.value)
 
         //Sau khi tạo xong chuyển về trang QLNhaCungCap
-        Swal.fire({
-            icon: 'success',
-            title: 'Thành công!',
-            text: 'Cập nhật nhà cung cấp thành công !!',
-        }).then(() => {
-            window.location.href = 'QLNhaCungCap.php';
-        });
-
+        if (isUpdateNhaCungCapComplete) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Thành công!',
+                text: 'Cập nhật nhà cung cấp thành công !!',
+            }).then(() => {
+                window.location.href = 'QLNhaCungCap.php';
+            });
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi',
+                text: 'Cập nhật nhà cung cấp thất bại !!',
+            })
+        }
     });
 
     function isTenNhaCungCapExists(value) {
@@ -173,7 +189,34 @@
             dataType: "json",
             async: false, // Đảm bảo AJAX request được thực hiện đồng bộ
             data: {
-                TenNCC: value
+                action: "isExists",
+                TenNCC: value,
+            },
+            success: function(data) {
+                if (data.status === 200) {
+                    exists = data.isExists == 1;
+                } else {
+                    console.error('Error:', data.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error: ' + xhr.status + ' - ' + error);
+            }
+        });
+        return exists;
+    }
+
+    function isTenNhaCungCapBelongToMaNCC(maNCC, value) {
+        let exists = false;
+        $.ajax({
+            url: '../../../BackEnd/ManagerBE/NhaCungCapBE.php',
+            type: 'GET',
+            dataType: "json",
+            async: false, // Đảm bảo AJAX request được thực hiện đồng bộ
+            data: {
+                action: "isBelongTo",
+                TenNCC: value,
+                MaNCC: maNCC
             },
             success: function(data) {
                 if (data.status === 200) {
@@ -190,23 +233,28 @@
     }
 
     function updateNhaCungCap(MaNCC, TenNCC, Email, SoDienThoai) {
+        let isComplete = false;
         $.ajax({
             url: '../../../BackEnd/ManagerBE/NhaCungCapBE.php',
             type: 'POST',
             dataType: "json",
+            async: false,
             data: {
+                action: 'update',
                 MaNCC: MaNCC,
                 TenNCC: TenNCC,
                 Email: Email,
                 SoDienThoai: SoDienThoai
             },
             success: function(data) {
-                return data.status === 200;
+                console.log(data);
+                isComplete = data.status === 200;
             },
             error: function(xhr, status, error) {
                 console.error('Error: ' + xhr.status + ' - ' + error);
             }
         });
+        return isComplete;
     }
 </script>
 

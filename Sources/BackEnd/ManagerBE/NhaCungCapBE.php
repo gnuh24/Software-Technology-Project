@@ -1,60 +1,56 @@
 <?php
 require_once __DIR__ . "/../../Configure/MysqlConfig.php";
 
- //Dùng để call List nhà cung cấp
- if(isset($_GET['page'])) {
+if (isset($_POST["action"])){
+    if ($_POST["action"] == "update"){
+        // Update thông tin nhà cung cấp
+        $MaNCC = $_POST['MaNCC'];
+        $TenNCC = $_POST['TenNCC'];
+        $Email = $_POST['Email'];
+        $SoDienThoai = $_POST['SoDienThoai'];
+        $result = updateNhaCungCap($MaNCC, $TenNCC, $Email, $SoDienThoai);
+        echo json_encode($result);
+    
+    }else if ($_POST["action"] == "create"){
+        // Thêm nhà cung cấp mới
+        $TenNCC = $_POST['TenNCC'];
+        $Email = $_POST['Email'];
+        $SoDienThoai = $_POST['SoDienThoai'];
+        $result = createNhaCungCap($TenNCC, $Email, $SoDienThoai);
+        echo json_encode($result);
+    }else if ($_POST["action"] == "delete"){
+        $MaNCC = $_POST['MaNCC'];
+        // Xoá nhà cung cấp
+        $MaNCC = $_POST['MaNCC'];
+        $result = deleteNhaCungCap($MaNCC);
+        echo json_encode($result);
+    }
+}
+
+
+
+
+if(isset($_GET['page'])) {
+    // Gọi hàm lấy danh sách nhà cung cấp
     $page = $_GET['page'];
     $search = isset($_GET['search']) ? $_GET['search'] : "";
-
-    // Gọi hàm PHP bạn muốn thực thi và trả về kết quả dưới dạng JSON
     $result = getAllNhaCungCap($page, $search);
-
     echo json_encode($result);
 }
 
-//Dùng để update thông tin nhà cung cấp
-if(isset($_POST['MaNCC']) && isset($_POST['TenNCC']) && isset($_POST['Email']) && isset($_POST['SoDienThoai'])) {
-    $MaNCC = $_POST['MaNCC'];
-    $TenNCC = $_POST['TenNCC'];
-    $Email = $_POST['Email'];
-    $SoDienThoai = $_POST['SoDienThoai'];
-        $result = updateNhaCungCap($MaNCC, $TenNCC, $Email, $SoDienThoai);
-    
-
-    echo json_encode($result);
-}
-
-//Dùng để thêm nhà cung cấp
-if(isset($_POST['TenNCC']) && isset($_POST['Email']) && isset($_POST['SoDienThoai'])) {
-    $TenNCC = $_POST['TenNCC'];
-    $Email = $_POST['Email'];
-    $SoDienThoai = $_POST['SoDienThoai'];
-
-    // Gọi hàm createNhaCungCap và trả về kết quả dưới dạng JSON
-    $result = createNhaCungCap($TenNCC, $Email, $SoDienThoai);
-
-    echo json_encode($result);
-}
-
-//Dùng để xoá nhà cung cấp
-if(isset($_GET['MaNCC'])) {
-    $MaNCC = $_GET['MaNCC'];
-
-    // Gọi hàm deleteNhaCungCap và trả về kết quả dưới dạng JSON
-    $result = deleteNhaCungCap($MaNCC);
-
-    echo json_encode($result);
-}
-
-//Dùng để kiểm tra xem TenNCC có tồn tại hay không ?
-if(isset($_GET['TenNCC']) ) {
+if (isset($_GET["action"])){
     $TenNCC = $_GET['TenNCC'];
-
-    $result = isTenNhaCungCapExists($TenNCC);
-
-    echo json_encode($result);
-
+    if ($_GET["action"] == "isExists"){
+        // Kiểm tra xem TenNCC có tồn tại không
+        $result = isTenNhaCungCapExists($TenNCC);
+        echo json_encode($result);
+    }else if ($_GET["action"] == "isBelongTo"){
+        $MaNCC = $_GET["MaNCC"];
+        $result = isTenNhaCungCapBelongToMaNhaCungCap($MaNCC, $TenNCC);
+        echo json_encode($result);
+    }
 }
+
 
 function getAllNhaCungCapNotPage()
 {
@@ -68,13 +64,6 @@ function getAllNhaCungCapNotPage()
   
     // Khởi tạo kết nối
     $connection = MysqlConfig::getConnection();   
-     
-
-        // Query dùng để tính tổng số trang của các data trả về
-        $query_total_row = "SELECT COUNT(*) FROM `NhaCungCap`";
-        $statement_total_row = $connection->prepare($query_total_row);
-        $statement_total_row->execute();
-
 
 
     try {
@@ -209,6 +198,7 @@ function getNhaCungCapByID($MaNCC)
         $connection = null;
     }
 }
+
 function getNhaCungCapBySDT($SoDienThoai)
 {
     // Khởi tạo kết nối
@@ -381,7 +371,7 @@ function isTenNhaCungCapBelongToMaNhaCungCap($MaNCC, $TenNCC)
     }
 }
 
-function createNhaCungCap($TenNCC, $SoDienThoai, $Email)
+function createNhaCungCap($TenNCC,  $Email, $SoDienThoai)
 {
     // Khởi tạo kết nối
     $connection = MysqlConfig::getConnection();
@@ -416,7 +406,7 @@ function createNhaCungCap($TenNCC, $SoDienThoai, $Email)
     }
 }
 
-function updateNhaCungCap($MaNCC, $TenNCC, $SoDienThoai, $Email)
+function updateNhaCungCap($MaNCC, $TenNCC,  $Email, $SoDienThoai)
 {
     // Khởi tạo kết nối
     $connection = MysqlConfig::getConnection();
@@ -433,7 +423,7 @@ function updateNhaCungCap($MaNCC, $TenNCC, $SoDienThoai, $Email)
         if ($statement !== false) {
             $statement->bindValue(':MaNCC', $MaNCC, PDO::PARAM_INT);
             $statement->bindValue(':TenNCC', $TenNCC, PDO::PARAM_STR);
-            $statement->bindValue(':SoDienThoai', $SoDienThoai, PDO::PARAM_STR);
+            $statement->bindValue(':soDienThoai', $SoDienThoai, PDO::PARAM_STR);
             $statement->bindValue(':Email', $Email, PDO::PARAM_STR);
 
 
