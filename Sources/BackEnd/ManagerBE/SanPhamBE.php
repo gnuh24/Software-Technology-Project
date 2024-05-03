@@ -533,9 +533,9 @@
         echo json_encode($response);
     }
 
-    function getAllSanPham2($trangThai){
+    function getAllSanPham2(){
         $connection = null;
-        $query = "SELECT * FROM `SanPham` WHERE TrangThai = $trangThai";
+        $query = "SELECT * FROM `SanPham`";
         $connection = MysqlConfig::getConnection();
         try {
             $statement = $connection->prepare($query);

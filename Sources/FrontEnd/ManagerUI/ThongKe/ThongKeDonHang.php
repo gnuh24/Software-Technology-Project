@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../AdminDemo.css" />
     <link rel="stylesheet" href="ThongKeDonHang.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
 
     <title>Thống kê đơn hàng</title>
   </head>
@@ -58,8 +60,8 @@
                                                 <input id="from" type="date" style="height: 3rem; padding: 0.3rem;">
                                                 <span class="text">Ngày Kết Thúc</span>
                                                 <input id="to" type="date" style="height: 3rem; padding: 0.3rem;">
-                                                <button id="thongKeButton" style="height: 3rem; padding: 0.3rem; color: white; font-weight: 700; background-color: black;">Thống kê</button>
-                                                <button id="resetButton" style="height: 3rem; padding: 0.3rem; color: white; font-weight: 700; background-color: black;">Reset thống kê</button>
+                                                <div id="thongKeButton" style="display: flex; justify-content: center; align-items: center; width: 50px; height: 3rem; padding: 0.3rem; color: white; font-weight: 700; background-color: white;"><i style="color: black; font-size: 20px;" class="fa-solid fa-magnifying-glass"></i></div>
+                                                <div id="resetButton" style="display: flex; justify-content: center; align-items: center; width: 50px; height: 3rem; padding: 0.3rem; color: white; font-weight: 700; background-color: white;"><i style="color: black; font-size: 20px;" class="fa-solid fa-rotate-right"></i></div>
 
                                                 <p style="font-size: 1.3rem; margin-left: auto; color: rgb(100, 100, 100); font-weight: 700;">
                                                     Mặc định được thống kê từ ngày 01/01/2010
