@@ -59,6 +59,15 @@ if (isset($_GET['MaNhaCungCap']) && isset($_GET['MaQuanLy']) && isset($_GET['Tot
         } else {
             echo "Lỗi: Không thể cập nhật phiếu nhập kho.";
         }
+    } else if ($trangthai == 'huy'){
+        $ketqua1 = updatePhieuNhapKho($maphieu, $totalValue, $maNhaCungCap, $trangthai);
+        echo $ketqua1->status;
+        if ($ketqua1->status == 300 || $ketqua1->status == 200){
+            echo "Phiếu nhập kho đã được cập nhật thành công.";
+        }else {
+            echo "Lỗi: Không thể cập nhật phiếu nhập kho.";
+        }
+
     }
 } else {
     // Nếu không có dữ liệu GET hoặc dữ liệu không đủ, bạn có thể trả về thông báo lỗi.
