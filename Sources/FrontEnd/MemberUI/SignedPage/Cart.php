@@ -15,11 +15,8 @@
 
     <div>
 
-
-
         <section>
             <div class="center-text" style="margin-top: 20px;">
-
                 <div class="title_section">
                     <div class="bar"></div>
                     <h2 class="center-text-share">Giỏ Hàng Của Bạn</h2>
@@ -28,11 +25,8 @@
         </section>
 
         <section class="show_cart">
-
             <div class="page_cart containerPage">
                 <div class="wrapListCart">
-
-                   
                     <div class="listCart">
 
                     <?php
@@ -44,43 +38,50 @@
 
                     // Kiểm tra xem biến `maTaiKhoan` đã được truyền vào không
                     if (isset($_GET["maTaiKhoan"])) {
-                        $data = getAllGioHangByMaTaiKhoan($_GET["maTaiKhoan"]);
 
-                        foreach ($data->data as $cartProduct) {
-                            $formattedPrice = formatMoney($cartProduct['DonGia']);
-                            $formattedTotalPrice = formatMoney($cartProduct['ThanhTien']);
-                            $soLuongToiDa = $cartProduct['SoLuongConLai'];
-
-                            echo "
-                            <div class='cartItem' id='{$cartProduct['MaSanPham']}'>
-                                <a href='#' class='img'><img class='img' src='{$cartProduct['AnhMinhHoa']}' /></a>
-                                <div class='inforCart'>
-                                    <div class='nameAndPrice'>
-                                        <a href='#' class='nameCart'>{$cartProduct['TenSanPham']}</a>
-                                        <p class='priceCart'>$formattedPrice</p>
+                        $maTaiKhoan = $_GET["maTaiKhoan"];
+                        $data = getAllGioHangByMaTaiKhoan($maTaiKhoan);
+                            
+                        if (empty($data->data)) {
+                            echo "<h1 style='margin-top: 170px; text-align: center; color: rgb(156, 23, 23);'>Giỏ hàng của bạn đang rỗng</h1>";
+                        } else {
+                            foreach ($data->data as $cartProduct) {
+                                $formattedPrice = formatMoney($cartProduct['DonGia']);
+                                $formattedTotalPrice = formatMoney($cartProduct['ThanhTien']);
+                                $soLuongToiDa = $cartProduct['SoLuongConLai'];
+    
+                                echo "
+                                <div class='cartItem' id='{$cartProduct['MaSanPham']}'>
+                                    <a href='#' class='img'><img class='img' src='{$cartProduct['AnhMinhHoa']}' /></a>
+                                    <div class='inforCart'>
+                                        <div class='nameAndPrice'>
+                                            <a href='#' class='nameCart'>{$cartProduct['TenSanPham']}</a>
+                                            <p class='priceCart'>$formattedPrice</p>
+                                        </div>
+                                        <div class='quantity'>
+                                            <button class='btnQuantity decrease'>-</button>
+                                            <div class='txtQuantity'>{$cartProduct['SoLuong']}</div>
+                                            <button class='btnQuantity increase'>+</button>
+                                        </div>
                                     </div>
-                                    <div class='quantity'>
-                                        <button class='btnQuantity decrease'>-</button>
-                                        <div class='txtQuantity'>{$cartProduct['SoLuong']}</div>
-                                        <button class='btnQuantity increase'>+</button>
+                                    <div class='wrapTotalPriceOfCart'>
+                                        <div class='totalPriceOfCart'>
+                                            <p class='lablelPrice'>Thành tiền</p>
+                                            <p class='valueTotalPrice'>$formattedTotalPrice</p>
+                                        </div>
+                                        <button class='btnRemove' >
+                                            <i class='fa-solid fa-xmark'></i>
+                                        </button>
                                     </div>
-                                </div>
-                                <div class='wrapTotalPriceOfCart'>
-                                    <div class='totalPriceOfCart'>
-                                        <p class='lablelPrice'>Thành tiền</p>
-                                        <p class='valueTotalPrice'>$formattedTotalPrice</p>
-                                    </div>
-                                    <button class='btnRemove' >
-                                        <i class='fa-solid fa-xmark'></i>
-                                    </button>
-                                </div>
-                            </div>";
+                                </div>";
+                            }
                         }
+
+                        
                     } else {
                         echo "<h1> Lỗi </h1>";
                     }
                     ?>
-
 
                     </div>
                 </div>
@@ -97,7 +98,7 @@
                                                     }
                                                     echo number_format($total, 0, ',', '.') ?>&nbsp;đ</p>
                         </div>
-                        <button class="btnCheckout" onclick="thanhToan(<?php echo $_GET["maTaiKhoan"]; ?>)">Tiến hành đặt hàng</button>
+                        <button class="btnCheckout" onclick='toCreateOrder( <?php echo $maTaiKhoan; ?> )'>Tiến hành đặt hàng</button>
                         <a href=" SignedProduct.php">
                             <button class="btnCheckout_buy" style="border: 2px #7b181a solid;">Tiếp tục mua hàng</button>
                         </a>
@@ -114,7 +115,40 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
+    function toCreateOrder(maTaiKhoan) {
+            var numberOfItemsInCart = $('.cartItem').length; // Đếm số lượng phần tử có class .cartItem
 
+            console.log(numberOfItemsInCart);
+
+            if (numberOfItemsInCart === 0) {
+                Swal.fire({
+                    title: 'Lỗi!',
+                    text: 'Giỏ hàng của bạn đang trống. Vui lòng thêm sản phẩm vào giỏ hàng trước khi đặt hàng.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            } else {
+                Swal.fire({
+                    title: 'Xác nhận đặt hàng',
+                    text: "Bạn có chắc chắn muốn đặt hàng không?",
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Đồng ý',
+                    cancelButtonText: 'Hủy bỏ'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        thanhToan(maTaiKhoan);
+                    }
+                });
+            }
+        }
+
+
+    function thanhToan(maTaiKhoan) {
+        window.location.href = `CreateOrder.php?maTaiKhoan=${maTaiKhoan}`;
+    }
 
     $(document).ready(function () {
         $('.btnQuantity').on('click', function () {
@@ -133,17 +167,28 @@
         
             if (action == "increase") {
                 if (soLuong + 1 > soLuongToiDa) {
-                    alert("Bạn không thể mua hàng với số lượng lớn hơn số lượng tồn kho !!");
+                    Swal.fire({
+                        title: 'Lỗi!',
+                        text: 'Bạn không thể mua hàng với số lượng lớn hơn số lượng tồn kho !!',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
                 } else {
                     soLuong += 1;
                 }
             } else {
                 if (soLuong - 1 <= 0) {
-                    alert("Bạn không thể để số lượng sản phẩm là 0 !!");
+                    Swal.fire({
+                        title: 'Lỗi!',
+                        text: 'Bạn không thể để số lượng sản phẩm là 0 !!',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
                 } else {
                     soLuong -= 1;
                 }
             }
+
 
             var thanhTien = soLuong * donGia;
 
@@ -193,8 +238,6 @@
                     action: 'deleteCart'
                 },
                 success: function (response) {
-                    console.log(response);
-                    console.log(response.data);
 
                     try {
                         // Loại bỏ JSON.parse() ở đây
@@ -216,45 +259,24 @@
 
         // Hàm cập nhật tổng tiền dựa trên các giá trị thành tiền của từng sản phẩm trong giỏ hàng
         function updateTotalPrice() {
-            var totalPrice = 0;
-            $('.valueTotalPrice').each(function () {
-                var price = parseFloat($(this).text().replace(/\D/g, ''));
-                totalPrice += price;
-            });
-            $('.priceTotal').text(formatMoney(totalPrice));
-        }
+                var totalPrice = 0;
+                $('.valueTotalPrice').each(function () {
+                    var price = parseFloat($(this).text().replace(/\D/g, ''));
+                    totalPrice += price;
+                });
+                $('.priceTotal').text(formatMoney(totalPrice));
+            }
 
-        // Hàm định dạng số tiền thành chuỗi có dấu chấm ngăn cách hàng nghìn
-        function formatMoney(amount) {
-            return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "đ";
-        }
+            // Hàm định dạng số tiền thành chuỗi có dấu chấm ngăn cách hàng nghìn
+            function formatMoney(amount) {
+                return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "đ";
+            }
+    
+           
+    
     });
 
-
-
-
-
-        function getProductInfo() {
-            var productInfo = [];
-            var cartItems = document.querySelectorAll('.cartItem');
-
-            cartItems.forEach(function (item) {
-                var productId = item.id;
-                var quantity = item.querySelector('.txtQuantity').textContent;
-                productInfo.push({
-                    productId: productId,
-                    quantity: quantity
-                });
-            });
-
-            return productInfo;
-        }
-
-
-        function thanhToan(maTaiKhoan){
-            window.location.href = `CreateOrder.php?maTaiKhoan=${maTaiKhoan}`;
-        }
-     
+        
     </script>
 </body>
 

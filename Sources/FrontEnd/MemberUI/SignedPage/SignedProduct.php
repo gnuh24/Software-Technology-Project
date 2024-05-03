@@ -1,20 +1,19 @@
+<!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-        <link rel="stylesheet" href="SignedProduct.css" />
-        <link rel="stylesheet" href="SignedHomePage.css" />
 
-        <title>Các sản phẩm</title>
-    </head>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" href="SignedProduct.css" />
+    <link rel="stylesheet" href="SignedHomePage.css" />
+    <title>Các sản phẩm</title>
+</head>
 
-    <body>
+<body>
     <?php require_once "../Header/SignedHeaderProduct.php" ?>
 
-
-        
-      <!-- Thanh lọc menu -->
+    <!-- Thanh lọc menu -->
     <div id="filter-menu">
         <label for="alcohol-filter">Nồng độ cồn:</label>
         <select id="alcohol-filter">
@@ -49,23 +48,19 @@
         <button id="reset-button"><i class="fa-solid fa-rotate-right"></i></button>
     </div>
 
-        <section id="product" style="padding: 0 5%;">
-            <div class="products">
-                <!-- Hiển thị vài sản phẩm nổi bật -->
-            </div>
-
-        </section>
-
-        <div class="pagination" id="pagination">
-                                               
+    <section id="product" style="padding: 0 5%;">
+        <div class="products">
+            <!-- Hiển thị vài sản phẩm nổi bật -->
         </div>
+    </section>
 
-        <!-- Footer -->
-        <?php require_once "../Footer/Footer.php" ?>
+    <div class="pagination" id="pagination"></div>
 
-    </body>
+    <!-- Footer -->
+    <?php require_once "../Footer/Footer.php" ?>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
         // Lắng nghe sự kiện click vào id "reset-button"
@@ -77,7 +72,7 @@
             document.getElementById("volume-filter").value = "";
             document.getElementById("category-filter").value = "";
             currentPage = 1;
-            
+
             // Gọi lại hàm getAllSanPham với các giá trị mặc định
             getAllSanPham(currentPage, "", 0, 100000, 0, 1000000000, 0, 100, 0);
         });
@@ -129,7 +124,7 @@
             // Gọi lại hàm lọc sản phẩm khi giá trị thay đổi
             filterProducts(currentPage);
         });
-       
+
 
         // Hàm lọc sản phẩm
         function filterProducts(page) {
@@ -210,7 +205,7 @@
 
             // Lấy giá trị từ thanh lọc loại sản phẩm
             var categoryFilter = document.getElementById("category-filter").value;
-            if (categoryFilter == ""){
+            if (categoryFilter == "") {
                 categoryFilter = 0;
             }
 
@@ -219,13 +214,13 @@
         }
 
         // Lắng nghe sự kiện click vào nút search
-    document.getElementById("filter-button").addEventListener("click", function (event) {
+        document.getElementById("filter-button").addEventListener("click", function(event) {
             currentPage = 1;
             event.preventDefault();
 
-                // Lấy giá trị từ thanh tìm kiếm
+            // Lấy giá trị từ thanh tìm kiếm
             var searchText = document.getElementById("searchSanPham").value;
-            
+
             // Lấy giá trị từ thanh lọc nồng độ cồn
             var alcoholFilter = document.getElementById("alcohol-filter").value;
             var minAlcoholLevel, maxAlcoholLevel;
@@ -301,12 +296,12 @@
 
             // Lấy giá trị từ thanh lọc loại sản phẩm
             var categoryFilter = document.getElementById("category-filter").value;
-            if (categoryFilter == ""){
+            if (categoryFilter == "") {
                 categoryFilter = 0;
             }
 
-            getAllSanPham(currentPage, searchText, minVolume, maxVolume, minPrice,  maxPrice, minAlcoholLevel, maxAlcoholLevel, categoryFilter);
-    });
+            getAllSanPham(currentPage, searchText, minVolume, maxVolume, minPrice, maxPrice, minAlcoholLevel, maxAlcoholLevel, categoryFilter);
+        });
 
         // Gọi hàm getAllLoaiSanPham khi trang được tải
         $(document).ready(function() {
@@ -316,34 +311,35 @@
 
 
         var currentPage = 1;
+
         function getAllSanPham(page, search, minTheTich, maxTheTich, minGia, maxGia, minNongDoCon, maxNongDoCon, maLoaiSanPham) {
-                // Gọi API để lấy dữ liệu sản phẩm
-                $.ajax({
-                    url: "../../../BackEnd/ManagerBE/SanPhamBE.php",
-                    method: "GET",
-                    dataType: "json",
-                    data: {
-                        isProductPage: true,
-                        page: page,
-                        search: search,
-                        minTheTich: minTheTich,
-                        maxTheTich: maxTheTich,
-                        minGia: minGia,
-                        maxGia: maxGia,
-                        minNongDoCon: minNongDoCon,
-                        maxNongDoCon: maxNongDoCon,
-                        maLoaiSanPham: maLoaiSanPham
-                    },
-                    success: function(response) {
-                        var productContainer = $('#product .products');
-                        if (response.data && response.data.length > 0) {
-                            // Tạo biến lưu trữ nội dung HTML mới
-                            var htmlContent = '';
-                            // Duyệt qua từng sản phẩm và tạo nội dung HTML tương ứng
-                            $.each(response.data, function(index, product) {
-                                
-                                var imageSrc = product.AnhMinhHoa;
-                                htmlContent += `
+            // Gọi API để lấy dữ liệu sản phẩm
+            $.ajax({
+                url: "../../../BackEnd/ManagerBE/SanPhamBE.php",
+                method: "GET",
+                dataType: "json",
+                data: {
+                    isProductPage: true,
+                    page: page,
+                    search: search,
+                    minTheTich: minTheTich,
+                    maxTheTich: maxTheTich,
+                    minGia: minGia,
+                    maxGia: maxGia,
+                    minNongDoCon: minNongDoCon,
+                    maxNongDoCon: maxNongDoCon,
+                    maLoaiSanPham: maLoaiSanPham
+                },
+                success: function(response) {
+                    var productContainer = $('#product .products');
+                    if (response.data && response.data.length > 0) {
+                        // Tạo biến lưu trữ nội dung HTML mới
+                        var htmlContent = '';
+                        // Duyệt qua từng sản phẩm và tạo nội dung HTML tương ứng
+                        $.each(response.data, function(index, product) {
+
+                            var imageSrc = product.AnhMinhHoa;
+                            htmlContent += `
                                     <div class="row">
                                         <a href="SignedProductDetail.php?maSanPham=${product.MaSanPham}&soLuong=${product.SoLuongConLai}">
                                             <img src="${imageSrc}" alt="" style="height: 300px;">
@@ -360,37 +356,36 @@
                                     </div>
                                 `;
 
-                            });
-                            // Trong hàm getAllSanPham, sau khi thay đổi nội dung HTML của sản phẩm, gọi lại hàm createPagination
-                            productContainer.html(htmlContent);
+                        });
+                        // Trong hàm getAllSanPham, sau khi thay đổi nội dung HTML của sản phẩm, gọi lại hàm createPagination
+                        productContainer.html(htmlContent);
 
 
-                            // Đưa giao diện về đầu trang
-                            window.scrollTo({
-                                top: 0,
-                                behavior: 'smooth' // Tuỳ chọn, nếu muốn di chuyển mượt hơn
-                            });
+                        // Đưa giao diện về đầu trang
+                        window.scrollTo({
+                            top: 0,
+                            behavior: 'smooth' // Tuỳ chọn, nếu muốn di chuyển mượt hơn
+                        });
 
-                        } else {
-                            // Hiển thị thông báo khi không có sản phẩm
-                            productContainer.html('<p style="font-size: 24px; text-align: center; ">Không có sản phẩm nào.</p>');
-                        }
-
-                        createPagination(page, response.totalPages);
-
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("Error:", error);
+                    } else {
+                        // Hiển thị thông báo khi không có sản phẩm
+                        productContainer.html('<p style="font-size: 24px; text-align: center; ">Không có sản phẩm nào.</p>');
                     }
-                });
-            }
+
+                    createPagination(page, response.totalPages);
+
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error:", error);
+                }
+            });
+        }
 
 
 
-        
         // Hàm để gọi API và lấy danh sách loại sản phẩm
-        
-        
+
+
 
         // Hàm tạo nút phân trang
         function createPagination(currentPage, totalPages) {
@@ -433,32 +428,26 @@
                     isDemoHome: true
                 },
                 success: function(response) {
-                    
-                    if (response.data && response.data.length > 0) {
-                        // Xóa tất cả các option hiện có trong dropdown
-                        $('#category-filter').empty();
-                        // Thêm option "Tất cả"
-                        $('#category-filter').append('<option value="">Tất cả</option>');
-                        // Duyệt qua danh sách loại sản phẩm và thêm từng option vào dropdown
-                        $.each(response.data, function(index, category) {
-                            $('#category-filter').append(`<option value="${category.MaLoaiSanPham}">${category.TenLoaiSanPham}</option>`);
-                        });
-                    } else {
-                        console.log("Không có loại sản phẩm nào được trả về từ API.");
-                    }
+                    var categoryFilter = $('#category-filter');
+                    var htmlContent = '';
+
+                    // Duyệt qua danh sách loại sản phẩm và tạo option cho select
+                    $.each(response.data, function(index, category) {
+                        htmlContent += `<option value="${category.MaLoaiSanPham}">${category.TenLoaiSanPham}</option>`;
+                    });
+
+                    // Thêm tùy chọn "Tất cả"
+                    htmlContent = '<option value="">Tất cả</option>' + htmlContent;
+
+                    // Thiết lập nội dung HTML cho select
+                    categoryFilter.html(htmlContent);
                 },
                 error: function(xhr, status, error) {
                     console.error("Error:", error);
                 }
             });
         }
-
-        // function detail(maSanPham){
-        //     const form = document.getElementById(`productForm_${maSanPham}`);
-        //     form.submit();
-        // }
-
-
-            
     </script>
+</body>
+
 </html>

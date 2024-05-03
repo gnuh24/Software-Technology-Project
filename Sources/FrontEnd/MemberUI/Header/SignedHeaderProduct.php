@@ -70,7 +70,7 @@
             <div class="header-option" onclick="toCart()"><i class="fa-solid fa-cart-shopping"></i></div>
             <div class="header-option" onclick="toMyOrder()"><i class="fa-solid fa-truck-fast"></i></div>
             <div class="header-option"><a href="Profile.php"><i class="fa-solid fa-user"></i></a></div>
-            <div class="header-option" onclick="logout()"><a href="../Login/LoginUI.php"><i class="fa-solid fa-right-from-bracket"></i></a></div>
+            <div class="header-option" onclick="logout()"><a href="../GuestPage/GuestHomePage.php"><i class="fa-solid fa-right-from-bracket"></i></a></div>
         </form>
     </div>
 </header>

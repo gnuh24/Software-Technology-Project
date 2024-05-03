@@ -254,7 +254,7 @@ VALUES                      (1,             '2023-01-20 00:00:00',  10000000,   
 
 
 
-INSERT INTO `CTPNK` (`SoLuong`,`DonGiaNhap`   ,`ThanhTien`, `MaPhieu`,       `MaSanPham`)
+INSERT INTO `CTPNK` (`SoLuong`,	`DonGiaNhap`   ,	`ThanhTien`, 	`MaPhieu`,    `MaSanPham`)
 VALUES              (10,       100000,  			1000000,         1,          1),
                     (10,       100000,  			1000000,         1,          2),
                     (10,       100000,  			1000000,         1,          3),

@@ -69,6 +69,8 @@
 
     </div>
 </header>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
 
     
@@ -83,8 +85,18 @@
         event.preventDefault();
         const form = document.getElementById("search");
         const searchValue  = document.getElementById("searchSanPham").value;
-        form.action = `SignedProduct.php?searchFromAnotherPage=${searchValue}`;
-        form.submit();
+        if (searchValue != ""){
+            form.action = `SignedProduct.php?searchFromAnotherPage=${searchValue}`;
+            form.submit();
+        }else{
+            Swal.fire({
+                    title: 'Lỗi!',
+                    text: 'Bạn cần phải nhập gì đó vào thanh tìm kiếm trước khi ấn nút tìm kiếm.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+            });
+        }
+        
     });
 
     //Sự kiện giỏ hàng

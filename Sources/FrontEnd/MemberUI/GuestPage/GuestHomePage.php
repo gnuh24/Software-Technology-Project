@@ -164,14 +164,6 @@
                 window.location.href = '../Login/LoginUI.php';
         });
 
-        // Lắng nghe sự kiện click vào id "Home-login"
-        document
-            .getElementById("filter-button")
-            .addEventListener("click", function () {
-                const form =  document.getElementById() // Lấy giúp tôi cái form
-                const searchValue =  document.getElementById() // Lấy giúp tôi giá trị của search
-        });
-
 
         // Lắng nghe sự kiện click vào Xem thêm
         document

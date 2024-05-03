@@ -193,19 +193,6 @@
         }
     }
 
-    // Lắng nghe sự kiện click vào nút "kính lúp"
-    document.getElementById("filter-button").addEventListener("click", function (event) {
-            event.preventDefault();
-
-            const form = document.getElementById("search");
-            const searchValue  = document.getElementById("searchSanPham").value;
-            console.log(searchValue);
-            form.action = `GuestProduct.php?searchFromAnotherPage=${searchValue}`;
-            console.log(form.action);
-            form.submit();
-
-        });
-
     document.getElementById("Home-img").addEventListener("click", function () {
             // Chuyển hướng về trang chủ khi click vào hình ảnh
             window.location.href = "GuestHomePage.php";

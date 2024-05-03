@@ -8,3 +8,23 @@
         <div id="Home-login">Login</div>
     </div>
 </header>
+<script>
+    // Sự kiện tìm kiếm search 
+    document.getElementById("filter-button").addEventListener("click", function (event) {
+        event.preventDefault();
+        const form = document.getElementById("search");
+        const searchValue  = document.getElementById("searchSanPham").value;
+        if (searchValue != ""){
+            form.action = `GuestProduct.php?searchFromAnotherPage=${searchValue}`;
+            form.submit();
+        }else{
+            Swal.fire({
+                    title: 'Lỗi!',
+                    text: 'Bạn cần phải nhập gì đó vào thanh tìm kiếm trước khi ấn nút tìm kiếm.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+            });
+        }
+        
+    });
+</script>

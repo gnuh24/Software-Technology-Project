@@ -143,31 +143,43 @@ function convertNumberToVND($number) {
        function cancel(maDonHang, trangThai, listSanPham){
 
             // Hiển thị hộp thoại xác thực
-            var confirmation = confirm("Bạn có chắc muốn hủy đơn hàng này?");
-            
-            // Kiểm tra xác thực người dùng
-            if (confirmation) {
-                // Nếu xác thực thành công
-                if (trangThai !== "ChoDuyet"){
-                    // Duyệt danh sách sản phẩm và gọi hàm tangSoLuongSanPham để hoàn trả số lượng
-                    listSanPham.forEach(function(sanPham) {
-                        var maSanPham = sanPham.MaSanPham;
-                        var soLuong = sanPham.SoLuong;
+            Swal.fire({
+                title: 'Xác nhận hủy đơn hàng?',
+                text: "Bạn có chắc muốn hủy đơn hàng này?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Hủy đơn hàng'
+            }).then((result) => {
+                // Nếu người dùng xác nhận hủy đơn hàng
+                if (result.isConfirmed) {
+                    // Nếu trạng thái đơn hàng không phải là "Chờ duyệt"
+                    if (trangThai !== "ChoDuyet"){
+                        // Duyệt danh sách sản phẩm và gọi hàm tangSoLuongSanPham để hoàn trả số lượng
+                        listSanPham.forEach(function(sanPham) {
+                            var maSanPham = sanPham.MaSanPham;
+                            var soLuong = sanPham.SoLuong;
 
-                        tangSoLuongSanPham(maSanPham, soLuong);
+                            tangSoLuongSanPham(maSanPham, soLuong);
+                        });
+                    }
+                    
+                    // Gọi hàm createTrangThaiDonHang để cập nhật trạng thái đơn hàng
+                    createTrangThaiDonHang(maDonHang);
+                    
+                    // Hiển thị thông báo và reload trang
+                    Swal.fire(
+                        'Hủy đơn hàng thành công!',
+                        '',
+                        'success'
+                    ).then((result) => {
+                        if (result.isConfirmed) {
+                            location.reload(); // Hoặc window.location.reload()
+                        }
                     });
                 }
-                
-                // Gọi hàm createTrangThaiDonHang để cập nhật trạng thái đơn hàng
-                createTrangThaiDonHang(maDonHang);
-                
-                // Hiển thị thông báo và reload trang
-                alert("Đã hủy đơn hàng thành công");
-                location.reload(); // Hoặc window.location.reload()
-            } else {
-                // Nếu người dùng không xác thực, không thực hiện hủy đơn hàng
-                console.log("Hủy thao tác hủy đơn hàng");
-            }
+            });
         }
 
 
@@ -184,8 +196,6 @@ function convertNumberToVND($number) {
                 },
                 error: function(xhr, status, error) {
                     console.error("Error:", error);
-     
-
                 }
             });
         }
