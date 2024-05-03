@@ -112,29 +112,42 @@
                     </div>
 </body>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
 <script>
     document.getElementById("submit-form").addEventListener('submit', function check(event) {
         event.preventDefault(); // Ngăn chặn hành động mặc định của form
 
-
         let TenNCC = document.getElementById("TenNCC");
         let Email = document.getElementById("Email");
         let SoDienThoai = document.getElementById("SoDienThoai");
-        
+
         if (!TenNCC.value.trim()) {
-            alert("Tên nhà cung cấp không được để trống");
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi!',
+                text: 'Tên nhà cung cấp không được để trống',
+            });
             TenNCC.focus();
             event.preventDefault();
             return;
         }
         if (!Email.value.trim()) {
-            alert("Email không được để trống");
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi!',
+                text: 'Email không được để trống',
+            });
             Email.focus();
             event.preventDefault();
             return;
         }
         if (!SoDienThoai.value.trim()) {
-            alert("Số điện thoại không được để trống");
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi!',
+                text: 'Số điện thoại không được để trống',
+            });
             SoDienThoai.focus();
             event.preventDefault();
             return;
@@ -142,16 +155,23 @@
 
         // Kiểm tra định dạng Email
         if (!isValidEmail(Email.value.trim())) {
-            alert("Email không hợp lệ");
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi!',
+                text: 'Email không hợp lệ',
+            });
             Email.focus();
             event.preventDefault();
             return;
         }
-      
 
         //Kiểm tra tên nhà cung cấp
         if (isTenNhaCungCapExists(TenNCC.value.trim())) {
-            alert("Tên nhà cung cấp đã tồn tại");
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi!',
+                text: 'Tên nhà cung cấp đã tồn tại',
+            });
             TenNCC.focus();
             event.preventDefault();
             return;
@@ -159,7 +179,11 @@
 
         //Kiểm tra xem email đã tồn tại hay chưa
         if (isEmailExists(Email.value.trim())) {
-            alert("Email đã tồn tại");
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi!',
+                text: 'Email đã tồn tại',
+            });
             Email.focus();
             event.preventDefault();
             return;
@@ -171,13 +195,18 @@
             Email.value,
             SoDienThoai.value
         );
-        
-        //Sau khi tạo xong chuyển về trang QLNhaCungCap
-        alert("Thêm nhà cung cấp mới thành công !!");
-        window.location.href = 'QLNhaCungCap.php';
 
-        
+        //Sau khi tạo xong chuyển về trang QLNhaCungCap
+        Swal.fire({
+            icon: 'success',
+            title: 'Thành công!',
+            text: 'Thêm nhà cung cấp mới thành công !!',
+        }).then(() => {
+            window.location.href = 'QLNhaCungCap.php';
+        });
+
     });
+
 
     function isValidEmail(Email) {
     // Thực hiện kiểm tra định dạng Email và trả về true hoặc false

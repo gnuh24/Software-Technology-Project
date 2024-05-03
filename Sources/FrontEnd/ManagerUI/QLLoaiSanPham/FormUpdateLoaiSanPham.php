@@ -85,6 +85,7 @@
 </body>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script>
     document.getElementById("updateLoaiSanPham_save").addEventListener('click', function check(event) {
         event.preventDefault(); // Ngăn chặn hành động mặc định của form
@@ -92,15 +93,22 @@
         let MaLoaiSanPham = document.getElementById("MaLoaiSanPham");
         let TenLoaiSanPham = document.getElementById("TenLoaiSanPham");
 
-
         if (!TenLoaiSanPham.value.trim()) {
-            alert("Tên loại sản phẩm không được để trống");
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi!',
+                text: 'Tên loại sản phẩm không được để trống',
+            });
             TenNCC.focus();
             event.preventDefault();
             return;
         }
         if (isTenLoaiSanPhamExists(TenLoaiSanPham.value.trim())) {
-            alert("Tên loại sản phẩm đã tồn tại");
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi!',
+                text: 'Tên loại sản phẩm đã tồn tại',
+            });
             TenLoaiSanPham.focus();
             event.preventDefault();
             return;
@@ -112,8 +120,13 @@
             TenLoaiSanPham.value)
 
         //Sau khi tạo xong chuyển về trang QLLoaiSanPham
-        alert("Cập nhật loại sản phẩm thành công !!");
-        window.location.href = 'QLLoaiSanPham.php';
+        Swal.fire({
+            icon: 'success',
+            title: 'Thành công!',
+            text: 'Cập nhật loại sản phẩm thành công !!',
+        }).then(function() {
+            window.location.href = 'QLLoaiSanPham.php';
+        });
 
     });
 
@@ -159,5 +172,6 @@
         });
     }
 </script>
+
 
 </html>

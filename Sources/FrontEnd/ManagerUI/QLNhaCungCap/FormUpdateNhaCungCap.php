@@ -104,6 +104,8 @@
 </body>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
 <script>
     document.getElementById("updateSupplier_save").addEventListener('click', function check(event) {
         event.preventDefault(); // Ngăn chặn hành động mặc định của form
@@ -113,22 +115,33 @@
         let SoDienThoai = document.getElementById("SoDienThoai");
         let Email = document.getElementById("Email");
 
-
         if (!TenNCC.value.trim()) {
-            alert("Tên nhà cung cấp không được để trống");
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi!',
+                text: 'Tên nhà cung cấp không được để trống',
+            });
             TenNCC.focus();
             event.preventDefault();
             return;
         }
         if (!SoDienThoai.value.trim()) {
-            alert("Số điện thoại không được để trống");
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi!',
+                text: 'Số điện thoại không được để trống',
+            });
             SoDienThoai.focus();
             event.preventDefault();
             return;
         }
         //Kiểm tra tên nhà cung cấp
         if (isTenNhaCungCapExists(TenNCC.value.trim())) {
-            alert("Tên nhà cung cấp đã tồn tại");
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi!',
+                text: 'Tên nhà cung cấp đã tồn tại',
+            });
             TenNCC.focus();
             event.preventDefault();
             return;
@@ -142,8 +155,13 @@
             Email.value)
 
         //Sau khi tạo xong chuyển về trang QLNhaCungCap
-        alert("Cập nhật nhà cung cấp thành công !!");
-        window.location.href = 'QLNhaCungCap.php';
+        Swal.fire({
+            icon: 'success',
+            title: 'Thành công!',
+            text: 'Cập nhật nhà cung cấp thành công !!',
+        }).then(() => {
+            window.location.href = 'QLNhaCungCap.php';
+        });
 
     });
 
