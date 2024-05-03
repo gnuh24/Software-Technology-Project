@@ -467,7 +467,7 @@
             flagAllProductsAvailable = false;
             Swal.fire({
               icon: 'error',
-              text: `Hàng tồn kho của sản phẩm ${sanPham.MaSanPham} không dủ.`
+              text: `Hàng tồn kho của sản phẩm ${sanPham.TenSanPham} không dủ.`
             });
           }
         });
