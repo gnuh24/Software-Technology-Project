@@ -128,7 +128,7 @@ function createPhieuNhapKho($NgayNhapKho, $TongGiaTri, $MaNCC, $MaQuanLy)
 
             // Bind giá trị vào tham số :tenTaiKhoan trong câu truy vấn
             $statement->bindValue(':NgayNhapKho', $NgayNhapKho,        PDO::PARAM_STR);
-            $statement->bindValue(':TongGiaTri', $TongGiaTri,            PDO::PARAM_STR);
+            $statement->bindValue(':TongGiaTri', $TongGiaTri,            PDO::PARAM_INT);
             $statement->bindValue(':MaNCC', $MaNCC,              PDO::PARAM_INT);
             $statement->bindValue(':MaQuanLy', $MaQuanLy,              PDO::PARAM_INT);
 

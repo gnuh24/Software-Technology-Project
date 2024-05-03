@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../AdminDemo.css" />
     <link rel="stylesheet" href="QLPhieuNhapKho.css" />
-    <title>Document</title>
+    <title>Quản lý đơn hàng</title>
   </head>
 
   <body>

@@ -236,6 +236,7 @@ if (isset($_GET['MaPhieu'])) {
 </body>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
     // Function to handle form submission
@@ -246,12 +247,17 @@ if (isset($_GET['MaPhieu'])) {
         try {
             var trangthai = document.getElementById("status").value;
             var maPNK = document.getElementById("maPNK").value;
+
         } catch (error) {}
         var maQuanLy = userData.MaTaiKhoan;
         var totalValue = document.getElementById('totalvalue').value;
         var productData = [];
         if (maNhaCungCap === '') {
-            alert('Vui lòng chọn nhà cung cấp.');
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi',
+                text: 'Vui lòng chọn nhà cung cấp',
+            });
             return; // Dừng hàm nếu nhà cung cấp chưa được chọn
         }
         $('#tableBody tr').each(function() {
@@ -270,7 +276,11 @@ if (isset($_GET['MaPhieu'])) {
             productData.push(productItem);
         });
         if (productData.length === 0) {
-            alert('Vui lòng thêm ít nhất một sản phẩm.');
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi',
+                text: 'Vui lòng thêm ít nhất một sản phẩm.',
+            });
             return false; // Dừng việc gửi form nếu productData trống
         }
         $.ajax({
@@ -285,7 +295,17 @@ if (isset($_GET['MaPhieu'])) {
                 'ProductData': JSON.stringify(productData)
             },
             success: function(response) {
-                window.location.href = 'QLPhieuNhapKho.php';
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Thành công',
+                    text: 'Tạo phiếu nhập kho thành công',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = 'QLPhieuNhapKho.php';
+                    }
+                });
+
 
             },
             error: function(xhr, status, error) {
@@ -363,7 +383,12 @@ if (isset($_GET['MaPhieu'])) {
     function validateDonGia(input) {
         var donGia = parseFloat(input.value);
         if (donGia < 1) {
-            alert("Đơn giá không được nhỏ hơn 1");
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi',
+                text: 'Đơn giá không được nhỏ hơn 1',
+            });
+
             input.value = "1";
         }
     }
@@ -371,7 +396,12 @@ if (isset($_GET['MaPhieu'])) {
     function validateSoLuong(input) {
         var soLuong = parseInt(input.value);
         if (soLuong < 1) {
-            alert("Số lượng phải lớn hơn hoặc bằng 1");
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi',
+                text: "Số lượng phải lớn hơn hoặc bằng 1",
+            });
             input.value = "1";
         }
     }
