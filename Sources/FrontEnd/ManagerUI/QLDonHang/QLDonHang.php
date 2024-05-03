@@ -362,11 +362,11 @@
   function fetchDataAndUpdateTable(page, minNgayTao, maxNgayTao, trangThai) {
     //Clear dữ liệu cũ
     clearTable();
-    
+
     danhSachSanPham = <?php
-                        require_once "../../../BackEnd/ManagerBE/SanPhamBE.php";
-                        $danhSachSanPham = getAllSanPham2(1)->data;
-                        echo json_encode($danhSachSanPham); ?>;
+                      require_once "../../../BackEnd/ManagerBE/SanPhamBE.php";
+                      $danhSachSanPham = getAllSanPham2(1)->data;
+                      echo json_encode($danhSachSanPham); ?>;
 
     udPage = page;
     udminNgayTao = minNgayTao;
@@ -457,9 +457,16 @@
         var chiTietDonHang = response.data;
         var flagAllProductsAvailable = true;
         chiTietDonHang.forEach(function(element) {
-          var sanPham = getSanPhamByMaSanPham(danhSachSanPham,element.MaSanPham);
-          if(sanPham.SoLuongConLai < element.SoLuong){
-            flagAllProductsAvailable=false;
+          if (!flagAllProductsAvailable) {
+            return;
+          }
+          var sanPham = getSanPhamByMaSanPham(danhSachSanPham, element.MaSanPham);
+          if (sanPham.SoLuongConLai < element.SoLuong) {
+            flagAllProductsAvailable = false;
+            Swal.fire({
+              icon: 'success',
+              text: `Hàng tồn kho của sản phẩm ${sanPham.MaSanPham} không dủ.`
+            });
           }
         });
         if (flagAllProductsAvailable) {
@@ -537,7 +544,7 @@
       success: function(response) {
         Swal.fire({
           icon: 'success',
-          text: 'Cập nhật trạng thái thành công.'
+          text: `Cập nhật trạng thái ${MaDonHang} thành công.`
         });
       },
       error: function(xhr, status, error) {
@@ -564,9 +571,9 @@
       TrangThai = nextState(TrangThai);
       if (TrangThai == 'DaDuyet') {
         danhSachSanPham = <?php
-                        require_once "../../../BackEnd/ManagerBE/SanPhamBE.php";
-                        $danhSachSanPham = getAllSanPham2(1)->data;
-                        echo json_encode($danhSachSanPham); ?>; 
+                          require_once "../../../BackEnd/ManagerBE/SanPhamBE.php";
+                          $danhSachSanPham = getAllSanPham2(1)->data;
+                          echo json_encode($danhSachSanPham); ?>;
         getChiTietDonHangByMaDonHangDaDuyet(MaDonHang, TrangThai, danhSachSanPham);
       } else {
         setTrangThaiDonHang(MaDonHang, TrangThai);
