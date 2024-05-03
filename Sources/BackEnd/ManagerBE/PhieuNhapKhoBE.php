@@ -1,7 +1,5 @@
 <?php
-
 require_once __DIR__ . "/../../Configure/MysqlConfig.php";
-
 
 if (isset($_GET['page'])) {
     $page = $_GET['page'];
@@ -18,32 +16,32 @@ function getAllphieunhapkho($page, $datenhapkho = null)
               JOIN nhacungcap ON pnk.MaNCC = nhacungcap.MaNCC 
               JOIN taikhoan AS tk ON pnk.MaQuanLy = tk.MaTaiKhoan 
               JOIN NguoiDung ON tk.MaTaiKhoan = NguoiDung.MaNguoiDung";
+    
+    // Xây dựng điều kiện WHERE dựa trên ngày nhập kho nếu có
     $where_conditions = [];
-    $entityPerPage = 10;
-    $totalPages = null;
     if ($datenhapkho !== null && $datenhapkho !== "") {
-        $where_conditions[] = "`NgayNhapKho` = :NgayNhapKho";
+        $where_conditions[] = "NgayNhapKho = :NgayNhapKho";
     }
+    
+    // Thêm các điều kiện WHERE vào truy vấn nếu có
     if (!empty($where_conditions)) {
         $query .= " WHERE " . implode(" AND ", $where_conditions);
     }
-    if ($totalPages === null) {
-        $query_total_row = "SELECT COUNT(*) FROM (" . $query . ") AS subquery";
-        if (strpos($query_total_row, ":NgayNhapKho") !== false) {
-            $statement_total_row = $connection->prepare($query_total_row);
-            if ($datenhapkho !== null && $datenhapkho !== "") {
-                $statement_total_row->execute([':NgayNhapKho' => $datenhapkho]);
-            } else {
-                $statement_total_row->execute();
-            }
-        } else {
-            $statement_total_row = $connection->prepare($query_total_row);
-        }
-        $totalRows = $statement_total_row->fetchColumn();
-        $totalPages = ceil($totalRows / $entityPerPage);
+
+    // Truy vấn để tính tổng số lượng bản ghi
+    $query_total_row = "SELECT COUNT(*) AS totalRows FROM (" . $query . ") AS subquery";
+    $statement_total_row = $connection->prepare($query_total_row);
+    if ($datenhapkho !== null && $datenhapkho !== "") {
+        $statement_total_row->execute([':NgayNhapKho' => $datenhapkho]);
+    } else {
+        $statement_total_row->execute();
     }
-    $start_from = ($page - 1) * $entityPerPage;
-    $query .= " LIMIT $entityPerPage OFFSET $start_from";
+    $totalRows = $statement_total_row->fetchColumn();
+    $totalPages = ceil($totalRows / 8); 
+
+    // Thêm LIMIT và OFFSET vào truy vấn
+    $start_from = ($page - 1) * 8;
+    $query .= " ORDER BY MaPhieu ASC LIMIT 8 OFFSET $start_from";
 
     try {
         $statement = $connection->prepare($query);
@@ -69,7 +67,6 @@ function getAllphieunhapkho($page, $datenhapkho = null)
         $connection = null;
     }
 }
-
 function getPhieuNhapByMaPhieuNhap($maPhieuNhap)
 {
     //Chuẩn bị trước biến $connection
