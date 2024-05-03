@@ -7,6 +7,7 @@
         $result = getAllLoaiSanPhamNoPaging();
     
         echo json_encode($result);
+
     }
 
     //Dùng để call List loại sản phẩm
@@ -76,23 +77,12 @@ function getAllLoaiSanPhamNoPaging(){
     // Chuẩn bị trước biến $connection
     $connection = null;
 
-    // Mảng chứa điều kiện
-    $where_conditions = [];
-
     // Chuẩn bị câu truy vấn gốc
     $query = "SELECT * FROM `LoaiSanPham`";
 
     // Khởi tạo kết nối
     $connection = MysqlConfig::getConnection();
 
-    // Lọc theo search
-    if (!empty($search)) {
-        $where_conditions[] = "`TenLoaiSanPham` LIKE '%" . $search . "%'";
-    }   
-    // Kết nối các điều kiện lại với nhau (Nếu không có thì skip)
-    if (!empty($where_conditions)) {
-        $query .= " WHERE " . implode(" AND ", $where_conditions);
-    }
     
     try {
         $statement = $connection->prepare($query);
@@ -104,8 +94,7 @@ function getAllLoaiSanPhamNoPaging(){
             return (object) [
                 "status" => 200,
                 "message" => "Thành công",
-                "data" => $result,
-                "totalPages" => $totalPages
+                "data" => $result
             ];
         } else {
             throw new PDOException();

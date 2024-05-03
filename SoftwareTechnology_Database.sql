@@ -398,4 +398,8 @@ VALUES              (1 ,        16,     1280000     ,10      ,       12800000),
                     (10 ,        4,     650000      ,5      ,       3250000), 
                     (10 ,        5,     850000      ,5      ,       4250000);
 
-
+SELECT * FROM `DonHang` dh JOIN `TrangThaiDonHang` tt ON dh.`MaDonHang` = tt.`MaDonHang`
+WHERE  tt.`NgayCapNhat` = (
+	SELECT MAX(stt.`NgayCapNhat`) FROM `TrangThaiDonHang` stt
+    WHERE dh.`MaDonHang` = stt.`MaDonHang`
+);
