@@ -18,7 +18,6 @@ if(isset($_POST['MaNCC']) && isset($_POST['TenNCC']) && isset($_POST['Email']) &
     $TenNCC = $_POST['TenNCC'];
     $Email = $_POST['Email'];
     $SoDienThoai = $_POST['SoDienThoai'];
-
         $result = updateNhaCungCap($MaNCC, $TenNCC, $Email, $SoDienThoai);
     
 

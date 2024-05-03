@@ -127,12 +127,12 @@
             return;
         }
         //Kiểm tra tên nhà cung cấp
-        // if (isTenNhaCungCapExists(TenNCC.value.trim())) {
-        //     alert("Tên nhà cung cấp đã tồn tại");
-        //     TenNCC.focus();
-        //     event.preventDefault();
-        //     return;
-        // }
+        if (isTenNhaCungCapExists(TenNCC.value.trim())) {
+            alert("Tên nhà cung cấp đã tồn tại");
+            TenNCC.focus();
+            event.preventDefault();
+            return;
+        }
 
         //Bắt đầu cập nhật thông tin nhà cung cấp sau khi đã qua các bước xác nhận
         let isUpdateNhaCungCapComplete = updateNhaCungCap(

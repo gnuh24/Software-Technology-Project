@@ -1,89 +1,75 @@
 <?php
-    require_once __DIR__ . "/../../Configure/MysqlConfig.php";
-        //Dùng để call List Tài khoản
-    if(isset($_GET['page'])) {
-        $page = $_GET['page'];
-        $datenhapkho = isset($_GET['datenhapkho']) ? $_GET['datenhapkho'] : "";
-        $result = getAllphieunhapkho($page, $datenhapkho);
-        echo json_encode($result);
-    }
 
-   
-    function getAllphieunhapkho($page, $datenhapkho = null)
+require_once __DIR__ . "/../../Configure/MysqlConfig.php";
+
+
+if (isset($_GET['page'])) {
+    $page = $_GET['page'];
+    $datenhapkho = isset($_GET['datenhapkho']) ? $_GET['datenhapkho'] : null;
+    $result = getAllphieunhapkho($page, $datenhapkho);
+    echo json_encode($result);
+}
+
+function getAllphieunhapkho($page, $datenhapkho = null)
 {
-    //Chuẩn bị trước biến $connection
-    $connection = null;
-
-    //Chuẩn bị câu truy vấn gốc
-    $query = "SELECT MaPhieu,NgayNhapKho,pnk.MaNCC,TongGiaTri,MaQuanLy,tk.TrangThai,TenNCC,nguoidung.SoDienThoai,nguoidung.Email,TenDangNhap,matkhau,NgayTao,HoTen,ngaysinh,gioitinh,diachi,pnk.trangthai as phieu_trangthai FROM PhieuNhapKho AS pnk JOIN nhacungcap ON pnk.MaNCC = nhacungcap.MaNCC JOIN taikhoan AS tk ON pnk.MaQuanLy = tk.MaTaiKhoan JOIN NguoiDung ON tk.MaTaiKhoan = NguoiDung.MaNguoiDung;
-    ";
-
-    //Mảng chứa điều kiện
-
-    //Số phần tử mỗi trang
+    $connection = MysqlConfig::getConnection();
+    $query = "SELECT MaPhieu, NgayNhapKho, pnk.MaNCC, TongGiaTri, pnk.MaQuanLy, TenNCC, nguoidung.HoTen, pnk.TrangThai AS PhieuTrangThai 
+              FROM PhieuNhapKho AS pnk 
+              JOIN nhacungcap ON pnk.MaNCC = nhacungcap.MaNCC 
+              JOIN taikhoan AS tk ON pnk.MaQuanLy = tk.MaTaiKhoan 
+              JOIN NguoiDung ON tk.MaTaiKhoan = NguoiDung.MaNguoiDung";
+    $where_conditions = [];
     $entityPerPage = 10;
-
-    //Tổng số trang
     $totalPages = null;
-
-    // Thêm điều kiện về ngày nhập kho
-    //Lọc theo khoảng thời gian
-    if (isset($datenhapkho) && $datenhapkho != "") {
-        $where_conditions[] = "`NgayNhapKho` like '%$datenhapkho%'";
+    if ($datenhapkho !== null && $datenhapkho !== "") {
+        $where_conditions[] = "`NgayNhapKho` = :NgayNhapKho";
     }
-    // Kết nối các điều kiện lại với nhau (Nếu không có thì skip)
     if (!empty($where_conditions)) {
         $query .= " WHERE " . implode(" AND ", $where_conditions);
-    }  
-    // Khởi tạo kết nối
-    $connection = MysqlConfig::getConnection();
-
-    // Tính toán tổng số trang
-    if ($totalPages === null) {
-        //fetchColumn ( <Cột thứ n> ) : Lấy row đầu tiên của cột thứ n - 1
-        $query_total_row = substr_replace($query, "COUNT(*)", 7, 1);
-        // Chạy lệnh Query để lấy ra tổng trang
-        $statement_total_row = $connection->prepare($query_total_row);
-        $statement_total_row->execute();
-
-        //Làm tròn lên -> Tính ra tổng số trang
-        $totalPages = ceil($statement_total_row->fetchColumn() / $entityPerPage);
     }
-
-    $current_page = isset($page) ? $page : 1;
-    $start_from = ($current_page - 1) * $entityPerPage;
-
+    if ($totalPages === null) {
+        $query_total_row = "SELECT COUNT(*) FROM (" . $query . ") AS subquery";
+        if (strpos($query_total_row, ":NgayNhapKho") !== false) {
+            $statement_total_row = $connection->prepare($query_total_row);
+            if ($datenhapkho !== null && $datenhapkho !== "") {
+                $statement_total_row->execute([':NgayNhapKho' => $datenhapkho]);
+            } else {
+                $statement_total_row->execute();
+            }
+        } else {
+            $statement_total_row = $connection->prepare($query_total_row);
+        }
+        $totalRows = $statement_total_row->fetchColumn();
+        $totalPages = ceil($totalRows / $entityPerPage);
+    }
+    $start_from = ($page - 1) * $entityPerPage;
     $query .= " LIMIT $entityPerPage OFFSET $start_from";
-    // Khởi tạo kết nối đến cơ sở dữ liệu
 
     try {
-
         $statement = $connection->prepare($query);
-
-        if ($statement !== false) {
-
-            $statement->execute();
-
-            $result = $statement->fetchAll(PDO::FETCH_ASSOC);
-
-            return (object) [
-                "status" => 200,
-                "message" => "Thành công",
-                "data" => $result,
-                "totalPages" => $totalPages
-            ];
+        if ($datenhapkho !== null && $datenhapkho !== "") {
+            $statement->execute([':NgayNhapKho' => $datenhapkho]);
         } else {
-            throw new PDOException();
+            $statement->execute();
         }
+        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+        return (object) [
+            "status" => 200,
+            "message" => "Thành công",
+            "data" => $result,
+            "totalPages" => $totalPages
+        ];
     } catch (PDOException $e) {
         return (object) [
             "status" => 400,
-            "message" => "Lỗi không thể lấy danh sách tài khoản",
+            "message" => "Lỗi không thể lấy danh sách nhập kho: " . $e->getMessage(),
         ];
     } finally {
         $connection = null;
     }
 }
+
 function getPhieuNhapByMaPhieuNhap($maPhieuNhap)
 {
     //Chuẩn bị trước biến $connection
@@ -127,8 +113,9 @@ function getPhieuNhapByMaPhieuNhap($maPhieuNhap)
     }
 }
 
-function createPhieuNhapKho($NgayNhapKho, $TongGiaTri, $MaNCC,$MaQuanLy) {
-    
+function createPhieuNhapKho($NgayNhapKho, $TongGiaTri, $MaNCC, $MaQuanLy)
+{
+
     // Khởi tạo kết nối
     $connection = MysqlConfig::getConnection();
 
@@ -139,18 +126,18 @@ function createPhieuNhapKho($NgayNhapKho, $TongGiaTri, $MaNCC,$MaQuanLy) {
     try {
 
         $statement = $connection->prepare($query);
-    
+
         if ($statement  !== false) {
-    
+
             // Bind giá trị vào tham số :tenTaiKhoan trong câu truy vấn
             $statement->bindValue(':NgayNhapKho', $NgayNhapKho,        PDO::PARAM_STR);
-            $statement->bindValue(':TongGiaTri'    ,$TongGiaTri,            PDO::PARAM_STR);
-            $statement->bindValue(':MaNCC'      , $MaNCC,              PDO::PARAM_INT);
-            $statement->bindValue(':MaQuanLy'      , $MaQuanLy,              PDO::PARAM_INT);
+            $statement->bindValue(':TongGiaTri', $TongGiaTri,            PDO::PARAM_STR);
+            $statement->bindValue(':MaNCC', $MaNCC,              PDO::PARAM_INT);
+            $statement->bindValue(':MaQuanLy', $MaQuanLy,              PDO::PARAM_INT);
 
             // Thực hiện truy vấn
             $statement = $statement->execute();
-    
+
             //Mã phiếu nhập vừa khởi tạo
             $id = $connection->lastInsertId();
 
@@ -176,16 +163,15 @@ function createPhieuNhapKho($NgayNhapKho, $TongGiaTri, $MaNCC,$MaQuanLy) {
         $connection = null;
     }
 }
-function updatePhieuNhapKho($MaPhieuNhapKho, $TongGiaTri, $MaNCC) {
-    // Khởi tạo kết nối
+function updatePhieuNhapKho($MaPhieuNhapKho, $TongGiaTri, $MaNCC, $TrangThai)
+{
     $connection = MysqlConfig::getConnection();
-
-    // Câu truy vấn SQL để cập nhật thông tin phiếu nhập kho
+    $currentStatus = getCurrentPhieuNhapKhoStatus($MaPhieuNhapKho);
     $query = "UPDATE `PhieuNhapKho` 
-              SET `NgayNhapKho` = :NgayNhapKho, 
-                  `TongGiaTri` = :TongGiaTri, 
+              SET `TongGiaTri` = :TongGiaTri, 
                   `MaNCC` = :MaNCC, 
-              WHERE `MaPhieuNhapKho` = :MaPhieuNhapKho";
+                  `TrangThai` = :TrangThai
+              WHERE `MaPhieu` = :MaPhieuNhapKho";
 
     try {
         $statement = $connection->prepare($query);
@@ -195,16 +181,20 @@ function updatePhieuNhapKho($MaPhieuNhapKho, $TongGiaTri, $MaNCC) {
             $statement->bindValue(':MaPhieuNhapKho', $MaPhieuNhapKho, PDO::PARAM_INT);
             $statement->bindValue(':TongGiaTri', $TongGiaTri, PDO::PARAM_STR);
             $statement->bindValue(':MaNCC', $MaNCC, PDO::PARAM_INT);
-
-            // Thực thi truy vấn
+            // Bind giá trị vào tham số của câu truy vấn
+            $statement->bindValue(':TrangThai', $TrangThai, PDO::PARAM_STR); // Sử dụng PDO::PARAM_STR cho kiểu ENUM
             $statement->execute();
-
-            // Kiểm tra số hàng đã được cập nhật
             $rowCount = $statement->rowCount();
 
-            if ($rowCount > 0) {
+            if ($rowCount >= 0) {
+                if (strtolower($TrangThai) === strtolower($currentStatus)) {
+                    $status = 200;
+                } else {
+                    $status = 300;
+                }
+                
                 return (object) [
-                    "status" => 200,
+                    "status" => $status,
                     "message" => "Cập nhật thành công"
                 ];
             } else {
@@ -221,5 +211,33 @@ function updatePhieuNhapKho($MaPhieuNhapKho, $TongGiaTri, $MaNCC) {
         ];
     } finally {
         $connection = null;
+    }
+}
+
+function getCurrentPhieuNhapKhoStatus($MaPhieuNhapKho)
+{
+    // Câu truy vấn SQL để lấy trạng thái hiện tại của phiếu nhập kho
+    $query = "SELECT `TrangThai` FROM `PhieuNhapKho` WHERE `MaPhieu` = :MaPhieuNhapKho";
+    $connection = MysqlConfig::getConnection();
+
+    try {
+        $statement = $connection->prepare($query);
+
+        if ($statement !== false) {
+            // Bind giá trị vào tham số của câu truy vấn
+            $statement->bindValue(':MaPhieuNhapKho', $MaPhieuNhapKho, PDO::PARAM_INT);
+
+            // Thực thi truy vấn
+            $statement->execute();
+
+            // Lấy kết quả truy vấn
+            $result = $statement->fetch(PDO::FETCH_ASSOC);
+
+            // Trả về trạng thái hiện tại
+            return $result['TrangThai'];
+        }
+    } catch (PDOException $e) {
+        // Xử lý ngoại lệ nếu có
+        return false;
     }
 }

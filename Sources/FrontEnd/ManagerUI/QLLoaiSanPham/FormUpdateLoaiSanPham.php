@@ -99,6 +99,12 @@
             event.preventDefault();
             return;
         }
+        if (isTenLoaiSanPhamExists(TenLoaiSanPham.value.trim())) {
+            alert("Tên loại sản phẩm đã tồn tại");
+            TenLoaiSanPham.focus();
+            event.preventDefault();
+            return;
+        }
 
         //Bắt đầu cập nhật thông tin loại sản phẩm sau khi đã qua các bước xác nhận
         let isUpdateLoaiSanPhamComplete = updateLoaiSanPham(
@@ -111,6 +117,29 @@
 
     });
 
+    function isTenLoaiSanPhamExists(value) {
+        let exists = false;
+        $.ajax({
+            url: '../../../BackEnd/ManagerBE/LoaiSanPhamBE.php',
+            type: 'GET',
+            dataType: "json",
+            async: false, // Đảm bảo AJAX request được thực hiện đồng bộ
+            data: {
+                TenLoaiSanPham: value
+            },
+            success: function(data) {
+                if (data.status === 200) {
+                    exists = data.isExists == 1;
+                } else {
+                    console.error('Error:', data.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error: ' + xhr.status + ' - ' + error);
+            }
+        });
+        return exists;
+    }
 
     function updateLoaiSanPham(MaLoaiSanPham, TenLoaiSanPham) {
         $.ajax({

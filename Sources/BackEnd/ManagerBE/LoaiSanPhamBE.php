@@ -104,7 +104,8 @@ function getAllLoaiSanPhamNoPaging(){
             return (object) [
                 "status" => 200,
                 "message" => "Thành công",
-                "data" => $result
+                "data" => $result,
+                "totalPages" => $totalPages
             ];
         } else {
             throw new PDOException();
