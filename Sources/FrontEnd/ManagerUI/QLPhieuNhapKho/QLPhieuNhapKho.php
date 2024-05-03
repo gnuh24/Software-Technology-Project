@@ -186,7 +186,8 @@
             // Thiết lập lại nội dung của tbody bằng chuỗi tableContent
             tableBody.innerHTML = tableContent;
             // Tạo phân trang
-            createPagination(page, response.totalPages);
+            console.log( response.totalPages);
+              createPagination(page, response.totalPages);
         },
         error: function(xhr, status, error) {
             console.error('Lỗi khi gọi API: ', error);
@@ -202,36 +203,6 @@
       // Gọi hàm getAllphieunhapkho và truyền các giá trị tương ứng
       getAllphieunhapkho(page, datenhapkho);
     }
-
-    // Hàm tạo nút phân trang
-    function createPagination(currentPage, totalPages) {
-      var paginationContainer = document.querySelector('.pagination');
-      var date = document.querySelector('.datesearch').value;
-      // Xóa nút phân trang cũ (nếu có)
-      paginationContainer.innerHTML = '';
-      if(totalPages != 1){
-      // Tạo nút cho từng trang và thêm vào chuỗi HTML
-      var paginationHTML = '';
-      for (var i = 1; i <= totalPages; i++) {
-        paginationHTML += '<button class="pageButton">' + i + '</button>';
-      }
-
-      // Thiết lập nút phân trang vào paginationContainer
-      paginationContainer.innerHTML = paginationHTML;
-
-      // Thêm sự kiện click cho từng nút phân trang
-      paginationContainer.querySelectorAll('.pageButton').forEach(function(button, index) {
-        button.addEventListener('click', function() {
-          // Gọi hàm fetchDataAndUpdateTable khi người dùng click vào nút phân trang
-          fetchDataAndUpdateTable(index + 1, date); // Thêm 1 vào index để chuyển đổi về trang 1-indexed
-        });
-      });
-
-      // Đánh dấu trang hiện tại
-      paginationContainer.querySelector('.pageButton:nth-child(' + currentPage + ')').classList.add('active');
-    } // Sửa lại để chỉ chọn trang hiện tại
-    }
-
     function update(MaPhieu) {
       // Lấy ra form bằng id của nó
       var form = document.querySelector(`#updateForm_${MaPhieu}`);
@@ -239,32 +210,64 @@
       // Gửi form đi
       form.submit();
     }
+function createPagination(currentPage, totalPages) {
+  var paginationContainer = document.querySelector('.pagination');
+  var date = document.querySelector('.datesearch').value;
+  
+  // Xóa nút phân trang cũ (nếu có)
+  paginationContainer.innerHTML = '';
+  
+  // Tạo nút cho từng trang và thêm vào chuỗi HTML
+  if (totalPages > 1) {
+    // Tạo nút cho từng trang và thêm vào chuỗi HTML
+    var paginationHTML = '';
+    for (var i = 1; i <= totalPages; i++) {
+      paginationHTML += '<button class="pageButton" data-page="' + i + '">' + i + '</button>';
+    }
 
+    // Thiết lập nút phân trang vào paginationContainer
+    paginationContainer.innerHTML = paginationHTML;
 
-    // Sự kiện DOMContentLoaded
-    document.addEventListener('DOMContentLoaded', function() {
-      // Lấy thẻ input
-      var inputElement = document.querySelector('.datesearch');
-
-      // Thêm sự kiện 'change' vào input
-      inputElement.addEventListener('change', function(event) {
-        // Lấy giá trị mới của input khi nó thay đổi
-        var newValue = event.target.value;
-
-        // Kiểm tra xem input có giá trị hay không
-        if (newValue) {
-          // Gọi hàm fetchDataAndUpdateTable với trang hiện tại và giá trị mới của input
-          fetchDataAndUpdateTable(currentPage, newValue);
-        } else {
-          // Nếu input không có giá trị, gán giá trị rỗng cho date
-          var date = '';
-          // Gọi lại hàm fetchDataAndUpdateTable với trang hiện tại và giá trị date rỗng
-          fetchDataAndUpdateTable(currentPage, date);
-        }
+    // Thêm sự kiện click cho từng nút phân trang
+    paginationContainer.querySelectorAll('.pageButton').forEach(function(button) {
+      button.addEventListener('click', function() {
+        // Lấy số trang từ thuộc tính data-page của nút được nhấn
+        var pageNumber = parseInt(this.getAttribute('data-page'));
+        // Gọi hàm fetchDataAndUpdateTable với số trang mới
+        fetchDataAndUpdateTable(pageNumber, date);
       });
-
-      // Khởi tạo trang hiện tại
-      var currentPage = 1;
-      fetchDataAndUpdateTable(currentPage,null);
     });
+
+    // Đánh dấu trang hiện tại
+    paginationContainer.querySelector('.pageButton[data-page="' + currentPage + '"]').classList.add('active');
+  }
+}
+
+// Sự kiện DOMContentLoaded
+document.addEventListener('DOMContentLoaded', function() {
+  // Lấy thẻ input
+  var inputElement = document.querySelector('.datesearch');
+
+  // Thêm sự kiện 'change' vào input
+  inputElement.addEventListener('change', function(event) {
+    // Lấy giá trị mới của input khi nó thay đổi
+    var newValue = event.target.value;
+
+    // Kiểm tra xem input có giá trị hay không
+    if (newValue) {
+      // Gọi hàm fetchDataAndUpdateTable với trang đầu tiên và giá trị mới của input
+      fetchDataAndUpdateTable(1, newValue);
+    } else {
+      // Nếu input không có giá trị, gán giá trị rỗng cho date
+      var date = '';
+      // Gọi lại hàm fetchDataAndUpdateTable với trang đầu tiên và giá trị date rỗng
+      fetchDataAndUpdateTable(1, date);
+    }
+  });
+
+  // Khởi tạo trang hiện tại
+  var currentPage = 1;
+  fetchDataAndUpdateTable(currentPage, null);
+});
+
   </script>
