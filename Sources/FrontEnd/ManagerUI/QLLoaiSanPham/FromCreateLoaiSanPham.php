@@ -97,6 +97,8 @@
     </div>
 </body>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
 <script>
     document.getElementById("submit-form").addEventListener('submit', function check(event) {
         event.preventDefault(); // Ngăn chặn hành động mặc định của form
@@ -105,7 +107,12 @@
         let TenLoaiSanPham = document.getElementById("TenLoaiSanPham");
         
         if (!TenLoaiSanPham.value.trim()) {
-            alert("Tên loại sản phẩm không được để trống");
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi!',
+                text: 'Tên loại sản phẩm không được để trống',
+            });
             TenLoaiSanPham.focus();
             event.preventDefault();
             return;
@@ -115,7 +122,11 @@
 
         //Kiểm tra tên loại sản phẩm
         if (isTenLoaiSanPhamExists(TenLoaiSanPham.value.trim())) {
-            alert("Tên loại sản phẩm đã tồn tại");
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi!',
+                text: 'Tên loại sản phẩm đã tồn tại',
+            });
             TenLoaiSanPham.focus();
             event.preventDefault();
             return;
@@ -129,7 +140,11 @@
         );
         
         //Sau khi tạo xong chuyển về trang QLLoaiSanPham
-        alert("Thêm loại sản phẩm mới thành công !!");
+        Swal.fire({
+            icon: 'success',
+            title: 'Thành công!',
+            text: 'Thêm loại sản phẩm mới thành công !!',
+        });
         window.location.href = 'QLLoaiSanPham.php';
 
         

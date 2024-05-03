@@ -428,6 +428,7 @@
                     isDemoHome: true
                 },
                 success: function(response) {
+                    console.log(response);
                     var categoryFilter = $('#category-filter');
                     var htmlContent = '';
 

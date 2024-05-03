@@ -506,6 +506,32 @@
             $connection = null;
         }
     }
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        // Get form data
+        $productName = $_POST['productName'];
+        $productPrice = $_POST['productPrice'];
+        $alcoholContent = $_POST['alcoholContent'];
+        $productVolume = $_POST['productVolume'];
+        $productOrigin = $_POST['productOrigin'];
+        $productQuantity = $_POST['productQuantity'];
+    
+        // Call createSanPham function to add product to database
+        $result = createSanPham($productName, $productOrigin, '', $productVolume, $alcoholContent, $productPrice, '', 1); // Replace '' and 1 with appropriate values for 'ThuongHieu' and 'MaLoaiSanPham'
+    
+        // Prepare response data
+        $response = array();
+        if ($result->status === 200) {
+            $response['status'] = 200;
+            $response['message'] = 'Thành công';
+        } else {
+            $response['status'] = 400;
+            $response['message'] = $result->message;
+        }
+    
+        // Send response as JSON
+        header('Content-type: application/json');
+        echo json_encode($response);
+    }
 
     function getAllSanPham2($trangThai){
         $connection = null;

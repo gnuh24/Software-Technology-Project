@@ -118,6 +118,8 @@
 
 </html>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- Thêm thư viện SweetAlert2 -->
+
 <script>
   // Lắng nghe sự kiện click trên nút logout
   document.addEventListener('DOMContentLoaded', function() {
@@ -147,6 +149,7 @@
         search: search
       },
       success: function(response) {
+        console.log(response);
         var data = response.data;
         var tableBody = document.getElementById("tableBody"); // Lấy thẻ tbody của bảng
         var tableContent = ""; // Chuỗi chứa nội dung mới của tbody
@@ -164,7 +167,7 @@
           if (record.MaLoaiSanPham != 1) {
             trContent += `
     <button style="cursor:pointer" class="edit" onclick="updateLoaiSanPham(${record.MaLoaiSanPham}, '${record.TenLoaiSanPham}')">Sửa</button>
-    <button style="cursor:pointer" class="delete" onclick="deleteLoaiSanPham(${record.MaLoaiSanPham})">Xoá</button>`;
+    <button style="cursor:pointer" class="delete" onclick="deleteLoaiSanPham(${record.MaLoaiSanPham}, '${record.TenLoaiSanPham}')">Xoá</button>`;
           }
 
           trContent += `</td>
@@ -259,34 +262,43 @@
     }
   });
 
-  function deleteLoaiSanPham(MaLoaiSanPham) {
-    var confirmation = confirm(`Bạn có muốn xóa nhà cung cấp ${MaLoaiSanPham} không?`);
+  function deleteLoaiSanPham(MaLoaiSanPham, TenLoaiSanPham) {
+    // Sử dụng SweetAlert2 thay vì hộp thoại confirm
+    Swal.fire({
+      title: `Bạn có muốn xóa ${TenLoaiSanPham} không?`,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Đồng ý',
+      cancelButtonText: 'Hủy'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Gọi Ajax để xóa loại sản phẩm
+        $.ajax({
+          url: '../../../BackEnd/ManagerBE/LoaiSanPhamBE.php',
+          type: 'GET',
+          dataType: "json",
+          data: {
+            MaLoaiSanPham: MaLoaiSanPham
+          },
+          success: function(response) {
+            console.log('Status:', response.status); // In mã trạng thái
+            console.log('Message:', response.message); // In thông báo
+            console.log('MaLoaiSanPham:', MaLoaiSanPham);
 
-    if (confirmation) {
-      $.ajax({
-        url: '../../../BackEnd/ManagerBE/LoaiSanPhamBE.php',
-        type: 'GET',
-        dataType: "json",
-        data: {
-          MaLoaiSanPham: MaLoaiSanPham
-        },
-        success: function(response) {
-          console.log('Status:', response.status); // In mã trạng thái
-          console.log('Message:', response.message); // In thông báo
-          console.log('MaLoaiSanPham:', MaLoaiSanPham);
-
-          if (response.status === 200) {
-            alert("Xóa nhà cung cấp thành công !!");
-            fetchDataAndUpdateTable(currentPage, '');
-          } else {
-            console.error('Lỗi khi xóa nhà cung cấp: ', response.message);
+            if (response.status === 200) {
+              // Hiển thị thông báo thành công bằng SweetAlert2
+              Swal.fire('Thành công!', 'Xóa loại sản phẩm thành công !!', 'success');
+              fetchDataAndUpdateTable(currentPage, ''); // Cập nhật bảng sau khi xóa
+            } else {
+              console.error('Lỗi khi xóa loại sản phẩm: ', response.message);
+            }
+          },
+          error: function(xhr, status, error) {
+            console.error('Lỗi khi gọi API: ', xhr, status, error);
           }
-        },
-        error: function(xhr, status, error) {
-          console.error('Lỗi khi gọi API: ', xhr, status, error);
-        }
-      });
-    }
+        });
+      }
+    });
   }
 
   function updateLoaiSanPham(MaLoaiSanPham, TenLoaiSanPham) {

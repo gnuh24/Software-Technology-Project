@@ -197,7 +197,6 @@
             if (hoTen && soDienThoai && diaChi && maPhuongThuc && maDichVu && tongGiaTri && danhSachChiTietDonHang.length > 0) {
                 const diaChiGiaoHang = diaChi;
                 createDonHang(maTaiKhoan, tongGiaTri, maPhuongThuc, maDichVu, diaChiGiaoHang, danhSachChiTietDonHang);
-                
                 Swal.fire({
                     title: 'Đặt hàng',
                     text: 'Bạn có chắc muốn đặt hàng?',
@@ -209,7 +208,16 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         // Redirect to SignedProduct.php after placing the order
-                        window.location.href = `SignedProduct.php`;
+                        Swal.fire({
+                            title: 'Đặt hàng thành công!',
+                            text: 'Cảm ơn bạn đã đặt hàng. Chúng tôi sẽ xử lý đơn hàng của bạn sớm nhất có thể.',
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        }).then((result1) => {
+                            if (result1.isConfirmed) {
+                                window.location.href = 'SignedProduct.php'; // Chuyển hướng đến trang sản phẩm
+                            }
+                        });
                     }
                 });
             } else {
