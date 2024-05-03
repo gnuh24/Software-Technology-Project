@@ -98,7 +98,7 @@
                                                     }
                                                     echo number_format($total, 0, ',', '.') ?>&nbsp;đ</p>
                         </div>
-                        <button class="btnCheckout" onclick='toCreateOrder( <?php echo $maTaiKhoan; ?> )'>Tiến hành đặt hàng</button>
+                        <button class="btnCheckout hidden" onclick='toCreateOrder( <?php echo $maTaiKhoan; ?> )'>Tiến hành đặt hàng</button>
                         <a href=" SignedProduct.php">
                             <button class="btnCheckout_buy" style="border: 2px #7b181a solid;">Tiếp tục mua hàng</button>
                         </a>
@@ -115,11 +115,10 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
-    function toCreateOrder(maTaiKhoan) {
-            var numberOfItemsInCart = $('.cartItem').length; // Đếm số lượng phần tử có class .cartItem
 
-            console.log(numberOfItemsInCart);
+        var numberOfItemsInCart = $('.cartItem').length; // Đếm số lượng phần tử có class .cartItem
 
+        function toCreateOrder(maTaiKhoan) {            
             if (numberOfItemsInCart === 0) {
                 Swal.fire({
                     title: 'Lỗi!',
@@ -151,6 +150,15 @@
     }
 
     $(document).ready(function () {
+
+        // Kiểm tra số lượng sản phẩm và ẩn/hiển thị nút thanh toán
+        if (numberOfItemsInCart === 0) {
+            $('.btnCheckout').addClass('hidden');
+        } else {
+            $('.btnCheckout').removeClass('hidden');
+        }
+
+
         $('.btnQuantity').on('click', function () {
             var btn = $(this);
             var quantityField = btn.siblings('.txtQuantity');
