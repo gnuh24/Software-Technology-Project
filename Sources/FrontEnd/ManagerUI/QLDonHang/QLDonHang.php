@@ -200,6 +200,7 @@
                         require_once "../../../BackEnd/ManagerBE/SanPhamBE.php";
                         $danhSachSanPham = getAllSanPham2(1)->data;
                         echo json_encode($danhSachSanPham); ?>;
+  console.log("bên ngoài",danhSachSanPham);
 
   var udPage = 0;
   var udminNgayTao = 0;
@@ -460,11 +461,12 @@
           if (!flagAllProductsAvailable) {
             return;
           }
+          console.log("bên trong",danhSachSanPham);
           var sanPham = getSanPhamByMaSanPham(danhSachSanPham, element.MaSanPham);
           if (sanPham.SoLuongConLai < element.SoLuong) {
             flagAllProductsAvailable = false;
             Swal.fire({
-              icon: 'success',
+              icon: 'error',
               text: `Hàng tồn kho của sản phẩm ${sanPham.MaSanPham} không dủ.`
             });
           }
