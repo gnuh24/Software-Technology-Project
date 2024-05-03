@@ -21,17 +21,6 @@
         echo json_encode($result);
     }
 
-    //Dùng để call List loại sản phẩm
- if(isset($_GET['page'])) {
-    $page = $_GET['page'];
-    $search = isset($_GET['search']) ? $_GET['search'] : "";
-
-    // Gọi hàm PHP bạn muốn thực thi và trả về kết quả dưới dạng JSON
-    $result = getAllLoaiSanPham($page, $search);
-
-    echo json_encode($result);
-}
-
 //Dùng để update thông tin nhà cung cấp
 if(isset($_POST['MaLoaiSanPham']) && isset($_POST['TenLoaiSanPham'])) {
     $MaLoaiSanPham = $_POST['MaLoaiSanPham'];
@@ -166,7 +155,8 @@ function getAllLoaiSanPham($page,$search){
             return (object) [
                 "status" => 200,
                 "message" => "Thành công",
-                "data" => $result
+                "data" => $result,
+                "totalPages" => $totalPages
             ];
         } else {
             throw new PDOException();

@@ -120,6 +120,8 @@
 
 </html>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
 <script>
   // Lắng nghe sự kiện click trên nút logout
   document.addEventListener('DOMContentLoaded', function() {
@@ -168,8 +170,8 @@
           if (record.MaNCC != 1) {
             trContent += `
     <button style="cursor:pointer" class="edit" onclick="updateNhaCungCap(${record.MaNCC}, '${record.TenNCC}', '${record.Email}', '${record.SoDienThoai}')">Sửa</button>
-    |
-    <button style="cursor:pointer" class="delete" onclick="deleteNhaCungCap(${record.MaNCC})">Xoá</button>`;
+    
+    <button style="cursor:pointer" class="delete" onclick="deleteNhaCungCap(${record.MaNCC}, '${record.TenNCC}')">Xoá</button>`;
           }
 
           trContent += `</td>
@@ -263,10 +265,21 @@
     }
   });
 
-  function deleteNhaCungCap(MaNCC) {
-    var confirmation = confirm(`Bạn có muốn xóa nhà cung cấp ${MaNCC} không?`);
-
-    if (confirmation) {
+  function deleteNhaCungCap(MaNCC, tenNCC) {
+  // Sử dụng Swal thay vì hộp thoại confirm
+  Swal.fire({
+    title: `Bạn có muốn xóa  ${tenNCC} không?`,
+    text: "Hành động này sẽ không thể hoàn tác!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Xóa',
+    cancelButtonText: 'Hủy'
+  }).then((result) => {
+    // Nếu người dùng nhấn nút Xóa
+    if (result.isConfirmed) {
+      // Thực hiện gọi Ajax để xóa nhà cung cấp
       $.ajax({
         url: '../../../BackEnd/ManagerBE/NhaCungCapBE.php',
         type: 'GET',
@@ -280,18 +293,36 @@
           console.log('MaNCC:', MaNCC);
 
           if (response.status === 200) {
-            alert("Xóa nhà cung cấp thành công !!");
-            fetchDataAndUpdateTable(currentPage, '');
+            Swal.fire({
+              icon: 'success',
+              title: 'Thành công!',
+              text: 'Xóa nhà cung cấp thành công !!',
+            }).then(function() {
+              fetchDataAndUpdateTable(currentPage, '');
+            });
           } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Lỗi!',
+              text: 'Đã xảy ra lỗi khi xóa nhà cung cấp',
+            });
             console.error('Lỗi khi xóa nhà cung cấp: ', response.message);
           }
         },
         error: function(xhr, status, error) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Lỗi!',
+            text: 'Đã xảy ra lỗi khi gọi API',
+          });
           console.error('Lỗi khi gọi API: ', xhr, status, error);
         }
       });
     }
-  }
+  });
+}
+
+
 
   function updateNhaCungCap(MaNCC, TenNCC, Email, SoDienThoai) {
     // Lấy ra form bằng id của nó
