@@ -189,6 +189,10 @@
             return;
         }
 
+        console.log("EMail: ", Email.value);
+        console.log("SoDienThoai: ", SoDienThoai.value);
+
+
         //Tạo thông tin nhà cung cấp
         let isCreateNhaCungCapComplete = createNhaCungCap(
             TenNCC.value,
@@ -270,6 +274,7 @@
             type: 'POST',
             dataType: "json",
             data: {
+                action: "create",
                 TenNCC: TenNCC,
                 Email: Email,
                 SoDienThoai: SoDienThoai

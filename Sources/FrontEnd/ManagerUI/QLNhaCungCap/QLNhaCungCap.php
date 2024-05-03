@@ -282,9 +282,10 @@
       // Thực hiện gọi Ajax để xóa nhà cung cấp
       $.ajax({
         url: '../../../BackEnd/ManagerBE/NhaCungCapBE.php',
-        type: 'GET',
+        type: 'POST',
         dataType: "json",
         data: {
+          action: "delete",
           MaNCC: MaNCC
         },
         success: function(response) {
