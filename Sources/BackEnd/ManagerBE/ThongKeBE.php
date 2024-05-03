@@ -23,6 +23,10 @@
             $result = thongKeChiTieu($from, $to);
 
             echo json_encode($result);
+        }else if (isset($_GET['thongKeSanPhamBanChay'])){
+            $result = thongKeSanPhamBanChay($from, $to);
+
+            echo json_encode($result);
         }
 
 
@@ -142,6 +146,56 @@
                     AND pnk.`TrangThai` = 'DaDuyet'
                     GROUP BY DATE(pnk.ngayNhapKho)
                     ORDER BY DATE(pnk.ngayNhapKho);";
+
+        try {
+            // Khởi tạo kết nối
+            $connection = MysqlConfig::getConnection();
+            $statement = $connection->prepare($query);
+
+            // Bind các giá trị tham số
+            $statement->bindValue(':minDate', $from, PDO::PARAM_STR);
+            $statement->bindValue(':maxDate', $to, PDO::PARAM_STR);
+
+            // Thực thi truy vấn
+            $statement->execute();
+            $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+            // Trả về kết quả
+            return (object) [
+                "status" => 200,
+                "message" => "Thống kê thành công !!",
+                "data" => $result
+            ];
+        } catch (PDOException $e) {
+            // Xử lý nếu có lỗi
+            return (object) [
+                "status" => 400,
+                "message" => "Lỗi không thể thống kê đơn hàng",
+                "data" => []
+            ];
+        } finally {
+            // Đóng kết nối
+            $connection = null;
+        }
+    }
+
+    function thongKeSanPhamBanChay($from, $to){
+        // Chuẩn bị kết nối
+        $connection = null;
+
+        // Chuẩn bị câu truy vấn
+        $query = "SELECT sp.`MaSanPham` as `MaSanPham`, sp.`TenSanPham` as `TenSanPham`, SUM(ct.`SoLuong`) as `TongSoLuong`, SUM(ct.`ThanhTien`) as `TongDoanhThu` 
+                    FROM `DonHang` dh 
+                    JOIN `TrangThaiDonHang` tt ON dh.`MaDonHang` = tt.`MaDonHang`
+                    JOIN `CTDH` ct ON dh.`MaDonHang` = ct.`MaDonHang`
+                    JOIN `SanPham` sp ON sp.`MaSanPham` = ct.`MaSanPham` 
+                    WHERE  tt.`NgayCapNhat` = (
+                        SELECT MAX(stt.`NgayCapNhat`) FROM `TrangThaiDonHang` stt
+                        WHERE dh.`MaDonHang` = stt.`MaDonHang`
+                    )AND tt.`TrangThai` = 'GiaoThanhCong'
+                    AND dh.`NgayDat` BETWEEN COALESCE(:minDate ,'2010-01-01') AND COALESCE(:maxDate ,CURRENT_DATE)
+                    GROUP BY sp.`MaSanPham`, sp.`TenSanPham`
+                    ORDER BY `TongDoanhThu` desc, `TongSoLuong` desc;";
 
         try {
             // Khởi tạo kết nối

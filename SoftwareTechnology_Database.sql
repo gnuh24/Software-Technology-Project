@@ -398,8 +398,15 @@ VALUES              (1 ,        16,     1280000     ,10      ,       12800000),
                     (10 ,        4,     650000      ,5      ,       3250000), 
                     (10 ,        5,     850000      ,5      ,       4250000);
 
-SELECT * FROM `DonHang` dh JOIN `TrangThaiDonHang` tt ON dh.`MaDonHang` = tt.`MaDonHang`
+SELECT sp.`MaSanPham` as `MaSanPham`, sp.`TenSanPham` as `TenSanPham`, SUM(ct.`SoLuong`) as `TongSoLuong`, SUM(ct.`ThanhTien`) as `TongDoanhThu` 
+FROM `DonHang` dh 
+JOIN `TrangThaiDonHang` tt ON dh.`MaDonHang` = tt.`MaDonHang`
+JOIN `CTDH` ct ON dh.`MaDonHang` = ct.`MaDonHang`
+JOIN `SanPham` sp ON sp.`MaSanPham` = ct.`MaSanPham` 
 WHERE  tt.`NgayCapNhat` = (
 	SELECT MAX(stt.`NgayCapNhat`) FROM `TrangThaiDonHang` stt
     WHERE dh.`MaDonHang` = stt.`MaDonHang`
-);
+)AND tt.`TrangThai` = "GiaoThanhCong"
+AND dh.`NgayDat` BETWEEN COALESCE(:minDate ,"2010-01-01") AND COALESCE(:maxDate ,CURRENT_DATE)
+GROUP BY sp.`MaSanPham`, sp.`TenSanPham`
+ORDER BY `TongDoanhThu` desc, `TongSoLuong` desc;

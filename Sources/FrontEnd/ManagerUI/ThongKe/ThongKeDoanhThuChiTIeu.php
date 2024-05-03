@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../AdminDemo.css" />
     <link rel="stylesheet" href="ThongKeDonHang.css" />
+    <link rel="stylesheet" href="ThongKeTaiChinh.css" />
 
     <title>Thống kê doanh thu, chi tiêu</title>
   </head>
@@ -72,6 +73,21 @@
                                             <div class="boxTable2">
                                                 
                                             </div>
+
+                                            <div class="boxTable3">
+                                                <h1 id="title">THỐNG KÊ SẢN PHẨM BÁN CHẠY</h1>
+                                                <table id="sanPhamBanChayTable">
+                                                    <thead>
+                                                        <th>Mã sản phẩm</th>
+                                                        <th>Tên sản phẩm</th>
+                                                        <th>Tổng số lượng</th>
+                                                        <th style="border-right: 0px">Tổng giá trị</th>
+                                                    </thead>
+                                                    <tbody>
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -104,6 +120,8 @@
                             // Hoặc bất kỳ hành động nào khác bạn muốn thực hiện
                     });
             });
+            thongKeSanPhamBanChay(fromValue, toValue);
+
         });
 
 
@@ -118,6 +136,7 @@
                             // Hoặc bất kỳ hành động nào khác bạn muốn thực hiện
                     });
             });
+            thongKeSanPhamBanChay("2010-01-01", formattedDate);
         })  
 
         var currentDate = new Date();
@@ -136,6 +155,9 @@
                         // Hoặc bất kỳ hành động nào khác bạn muốn thực hiện
                 });
         });
+
+
+        thongKeSanPhamBanChay("2010-01-01", formattedDate);
 
         function fetchTable(thongKeDoanhThu, thongKeChiTieu) {
 
@@ -160,6 +182,7 @@
 
             // Duyệt qua từng phần tử trong mảng thongKeDoanhThu
             thongKeDoanhThu.forEach(function(item) {
+                
 
                labels.push(item.NgayThongKe);
 
@@ -187,8 +210,7 @@
                 labels.sort(function(a, b) {
                         return new Date(a) - new Date(b);
                 });
-
-
+                
                 var uniqueLabels = [...new Set(labels)];
 
                 uniqueLabels.forEach(function(time) {
@@ -204,6 +226,8 @@
 
                 
             var boxTable = document.querySelector('.boxTable1');
+            var boxTable2 = document.querySelector('.boxTable2');
+
             function formatCurrency(amount) {
                 // Sử dụng hàm toLocaleString để chuyển đổi số thành định dạng tiền tệ với đơn vị tiền tệ mặc định của trình duyệt
                 return amount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
@@ -227,7 +251,10 @@
                 <div>
                         <canvas id="myChart1" width="400" height="120" margin-bottom: 40px;></canvas>
                 </div>
-                <div style="display: flex; gap: 1.5rem;">
+            `;
+
+            var htmlContent2 = ` 
+            <div style="display: flex; gap: 1.5rem;">
                 <div style="display: flex; align-items: center; gap: 1rem; background-color: #00bcd4; width: 60rem; padding: 1rem;">
                         <div>
                             <p style="color: white; font-weight: 700;">Tổng số sản phẩm nhập kho</p>
@@ -243,15 +270,20 @@
                 </div>
                 <div>
                         <canvas id="myChart2" width="400" height="120" margin-bottom: 40px;></canvas>
-                </div>
-            `;
+                </div>`
             
             // Thêm nội dung vào boxTable
             boxTable.innerHTML = htmlContent;
+            boxTable2.innerHTML = htmlContent2;
 
             // Lấy tham chiếu đến thẻ canvas
             var ctx1 = document.getElementById('myChart1').getContext('2d');
             var ctx2 = document.getElementById('myChart2').getContext('2d');
+
+
+            uniqueLabels = uniqueLabels.map(function(label) {
+                return formatNgay(label);
+            });
 
     
             // Cấu hình các tùy chọn cho biểu đồ
@@ -291,7 +323,7 @@
               var myChart = new Chart(ctx2,  {
                         type: 'line',
                         data: {
-                            labels: labels,
+                            labels: uniqueLabels,
                             datasets: [
                                 {
                                     label: 'Tổng số sản phẩm nhập kho',
@@ -319,44 +351,106 @@
 
 
         function thongKeDoanhThu(from, to, callback) {
-                $.ajax({
-                        url: '../../../BackEnd/ManagerBE/ThongKeBE.php',
-                        type: 'GET',
-                        dataType: "json",
-                        data: {
+            $.ajax({
+                url: '../../../BackEnd/ManagerBE/ThongKeBE.php',
+                type: 'GET',
+                dataType: "json",
+                data: {
                         from: from,
                         to: to,
                         thongKeDoanhThu: true
-                        },
-                        success: function(response) {
+                },
+                success: function(response) {
                         // Xử lý dữ liệu trả về từ API ở đây
                         callback(response.data); // Gọi callback và truyền dữ liệu cho nó
-                        },
-                        error: function(xhr, status, error) {
+                },
+                error: function(xhr, status, error) {
                         console.error('Lỗi khi gọi API: ', error);
-                        }
-                });
                 }
+            });
+        }
 
-                function thongKeChiTieu(from, to, callback) {
-                $.ajax({
-                        url: '../../../BackEnd/ManagerBE/ThongKeBE.php',
-                        type: 'GET',
-                        dataType: "json",
-                        data: {
-                        from: from,
-                        to: to,
-                        thongKeChiTieu: true
-                        },
-                        success: function(response) {
+        function thongKeChiTieu(from, to, callback) {
+            $.ajax({
+                url: '../../../BackEnd/ManagerBE/ThongKeBE.php',
+                type: 'GET',
+                dataType: "json",
+                data: {
+                            from: from,
+                            to: to,
+                            thongKeChiTieu: true
+                },
+                success: function(response) {
                         // Xử lý dữ liệu trả về từ API ở đây
                         callback(response.data); // Gọi callback và truyền dữ liệu cho nó
-                        },
-                        error: function(xhr, status, error) {
+                },
+                error: function(xhr, status, error) {
                         console.error('Lỗi khi gọi API: ', error);
-                        }
-                });
                 }
+            });
+        }
+
+        function thongKeSanPhamBanChay(from, to){
+            $.ajax({
+                url: '../../../BackEnd/ManagerBE/ThongKeBE.php',
+                type: 'GET',
+                dataType: "json",
+                data: {
+                    from: from,
+                    to: to,
+                    thongKeSanPhamBanChay: true
+                },
+                success: function(response) {
+                    // Xử lý dữ liệu trả về từ API ở đây
+                    console.log(response.data);
+
+                    // Lấy thẻ tbody của bảng
+                    var tbody = document.getElementById("sanPhamBanChayTable").getElementsByTagName('tbody')[0];
+                    tbody.innerHTML = ""; // Xóa dữ liệu cũ trước khi thêm dữ liệu mới
+                    
+                    // Lặp qua dữ liệu từ API để tạo các dòng trong tbody của bảng
+                    for (var i = 0; i < response.data.length; i++) {
+                        var row = tbody.insertRow();
+                        var cell1 = row.insertCell(0);
+                        var cell2 = row.insertCell(1);
+                        var cell3 = row.insertCell(2);
+                        var cell4 = row.insertCell(3);
+                        cell1.innerHTML = response.data[i].MaSanPham;
+                        cell2.innerHTML = response.data[i].TenSanPham;
+                        cell3.innerHTML = response.data[i].TongSoLuong;
+                        cell4.innerHTML = formatCurrency(parseInt(response.data[i].TongDoanhThu));
+
+                        if (i % 2 == 0){
+                            cell1.style.backgroundColor = "whitesmoke";
+                            cell2.style.backgroundColor = "whitesmoke";
+                            cell3.style.backgroundColor = "whitesmoke";
+                            cell4.style.backgroundColor = "whitesmoke";
+                        }
+
+
+                        cell1.style.borderRight = "2px solid black";
+                        cell2.style.borderRight = "2px solid black";
+                        cell3.style.borderRight = "2px solid black";
+                        cell4.style.borderRight = "0px";
+
+                        cell1.style.borderBottom = "2px solid black";
+                        cell2.style.borderBottom = "2px solid black";
+                        cell3.style.borderBottom = "2px solid black";
+                        cell4.style.borderBottom = "2px solid black";
+
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Lỗi khi gọi API: ', error);
+                }
+            });
+        }
+        function formatCurrency(amount) {
+                // Sử dụng hàm toLocaleString để chuyển đổi số thành định dạng tiền tệ với đơn vị tiền tệ mặc định của trình duyệt
+                return amount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+            }
+
+
 
        
 
