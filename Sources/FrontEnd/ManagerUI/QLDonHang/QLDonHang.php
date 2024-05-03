@@ -563,6 +563,10 @@
     } else {
       TrangThai = nextState(TrangThai);
       if (TrangThai == 'DaDuyet') {
+        danhSachSanPham = <?php
+                        require_once "../../../BackEnd/ManagerBE/SanPhamBE.php";
+                        $danhSachSanPham = getAllSanPham(1, "", null, null, null, null, null, null, 1, null)->data;
+                        echo json_encode($danhSachSanPham); ?>;
         getChiTietDonHangByMaDonHangDaDuyet(MaDonHang, TrangThai, danhSachSanPham);
       } else {
         setTrangThaiDonHang(MaDonHang, TrangThai);
