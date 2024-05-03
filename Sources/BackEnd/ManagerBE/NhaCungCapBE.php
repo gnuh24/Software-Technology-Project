@@ -38,48 +38,18 @@ if(isset($_GET['page'])) {
     echo json_encode($result);
 }
 
-if(isset($_GET['TenNCC'])) {
+if (isset($_GET["action"])){
     $TenNCC = $_GET['TenNCC'];
-
-    if (isset($_GET['action'])) {
-        // Kiểm tra xem TenNCC có tồn tại và thuộc MaNCC không
-        $MaNCC = $_GET['MaNCC'];
-        $result1 = isTenNhaCungCapExists($TenNCC);
-
-        if (!$result1->isExists) {
-            $result = (object)[
-                "status" => 200,
-                "message" => "Tên nhà cung cấp không tồn tại",
-                "isExists" => 0
-            ];
-        } else {
-            $result2 = isTenNhaCungCapBelongToMaNhaCungCap($MaNCC, $TenNCC);
-            if (!$result2->isExists) {
-                $result = (object)[
-                    "status" => 200,
-                    "message" => "Tên nhà cung cấp đã tồn tại",
-                    "isExists" => 1
-                ];
-            } else {
-                $result = (object)[
-                    "status" => 200,
-                    "message" => "Tên nhà cung cấp hợp lệ",
-                    "isExists" => 0
-                ];
-            }
-        }
-
-        echo json_encode($result);
-    } else {
+    if ($_GET["action"] == "isExists"){
         // Kiểm tra xem TenNCC có tồn tại không
         $result = isTenNhaCungCapExists($TenNCC);
         echo json_encode($result);
+    }else if ($_GET["action"] == "isBelongTo"){
+        $MaNCC = $_GET["MaNCC"];
+        $result = isTenNhaCungCapBelongToMaNhaCungCap($MaNCC, $TenNCC);
+        echo json_encode($result);
     }
 }
-
-
-
-
 
 
 function getAllNhaCungCapNotPage()
@@ -401,7 +371,7 @@ function isTenNhaCungCapBelongToMaNhaCungCap($MaNCC, $TenNCC)
     }
 }
 
-function createNhaCungCap($TenNCC, $SoDienThoai, $Email)
+function createNhaCungCap($TenNCC,  $Email, $SoDienThoai)
 {
     // Khởi tạo kết nối
     $connection = MysqlConfig::getConnection();
@@ -436,7 +406,7 @@ function createNhaCungCap($TenNCC, $SoDienThoai, $Email)
     }
 }
 
-function updateNhaCungCap($MaNCC, $TenNCC, $SoDienThoai, $Email)
+function updateNhaCungCap($MaNCC, $TenNCC,  $Email, $SoDienThoai)
 {
     // Khởi tạo kết nối
     $connection = MysqlConfig::getConnection();
@@ -453,7 +423,7 @@ function updateNhaCungCap($MaNCC, $TenNCC, $SoDienThoai, $Email)
         if ($statement !== false) {
             $statement->bindValue(':MaNCC', $MaNCC, PDO::PARAM_INT);
             $statement->bindValue(':TenNCC', $TenNCC, PDO::PARAM_STR);
-            $statement->bindValue(':SoDienThoai', $SoDienThoai, PDO::PARAM_STR);
+            $statement->bindValue(':soDienThoai', $SoDienThoai, PDO::PARAM_STR);
             $statement->bindValue(':Email', $Email, PDO::PARAM_STR);
 
 

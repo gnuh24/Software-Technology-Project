@@ -226,6 +226,7 @@
             dataType: "json",
             async: false, // Đảm bảo AJAX request được thực hiện đồng bộ
             data: {
+                action: "isExists",
                 TenNCC: value
             },
             success: function(data) {

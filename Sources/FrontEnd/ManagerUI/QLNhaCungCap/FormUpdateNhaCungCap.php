@@ -138,15 +138,17 @@
 
 
         //Kiểm tra tên nhà cung cấp
-        if (isTenNhaCungCapExists(MaNCC.value, TenNCC.value.trim())) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Lỗi!',
-                text: 'Tên nhà cung cấp đã tồn tại',
-            });
-            TenNCC.focus();
-            event.preventDefault();
-            return;
+        if (isTenNhaCungCapExists(TenNCC.value.trim())) {
+            if (!isTenNhaCungCapBelongToMaNCC(MaNCC.value ,TenNCC.value.trim())){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi!',
+                    text: 'Tên nhà cung cấp đã tồn tại',
+                });
+                TenNCC.focus();
+                event.preventDefault();
+                return;
+            }
         }
         console.log("Mã: ", MaNCC.value);
         console.log("Tên NCC: ", TenNCC.value);
@@ -158,8 +160,8 @@
         let isUpdateNhaCungCapComplete = updateNhaCungCap(
             MaNCC.value,
             TenNCC.value,
-            SoDienThoai.value,
-            Email.value)
+            Email.value,
+            SoDienThoai.value)
 
         //Sau khi tạo xong chuyển về trang QLNhaCungCap
         if (isUpdateNhaCungCapComplete) {
@@ -179,7 +181,7 @@
         }
     });
 
-    function isTenNhaCungCapExists(maNCC, value) {
+    function isTenNhaCungCapExists(value) {
         let exists = false;
         $.ajax({
             url: '../../../BackEnd/ManagerBE/NhaCungCapBE.php',
@@ -187,12 +189,36 @@
             dataType: "json",
             async: false, // Đảm bảo AJAX request được thực hiện đồng bộ
             data: {
-                action: true,
+                action: "isExists",
+                TenNCC: value,
+            },
+            success: function(data) {
+                if (data.status === 200) {
+                    exists = data.isExists == 1;
+                } else {
+                    console.error('Error:', data.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error: ' + xhr.status + ' - ' + error);
+            }
+        });
+        return exists;
+    }
+
+    function isTenNhaCungCapBelongToMaNCC(maNCC, value) {
+        let exists = false;
+        $.ajax({
+            url: '../../../BackEnd/ManagerBE/NhaCungCapBE.php',
+            type: 'GET',
+            dataType: "json",
+            async: false, // Đảm bảo AJAX request được thực hiện đồng bộ
+            data: {
+                action: "isBelongTo",
                 TenNCC: value,
                 MaNCC: maNCC
             },
             success: function(data) {
-                console.log(`Check:`, data);
                 if (data.status === 200) {
                     exists = data.isExists == 1;
                 } else {
@@ -221,6 +247,7 @@
                 SoDienThoai: SoDienThoai
             },
             success: function(data) {
+                console.log(data);
                 isComplete = data.status === 200;
             },
             error: function(xhr, status, error) {
