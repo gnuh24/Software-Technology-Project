@@ -133,8 +133,8 @@ if (isset($_GET['MaPhieu'])) {
                                                         echo '<tr style="text-align: center;">
                                                                 <td style="padding: 0.5rem; name=MaSanPham[]">' . $tmp['MaSanPham'] . '</td>
                                                                 <td style="padding: 0.5rem;">' . $tmp['TenSanPham'] . '</td>
-                                                                <td style="padding: 0.5rem;"><input type="text" name="donGia[]" value="' . number_format($tmp['DonGiaNhap'], 0, '.', ',') . '"style=" height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;" ></td>
-                                                                <td style="padding: 0.5rem;"><input type="text" name="soLuong[]" value="' . $tmp['SoLuong'] . '" style=" height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;"></td>
+                                                                <td style="padding: 0.5rem;"><input type="text" name="donGia[]"  onblur="validateDonGia(this)" value="' . number_format($tmp['DonGiaNhap'], 0, '.', ',') . '"style=" height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;" ></td>
+                                                                <td style="padding: 0.5rem;"><input type="text" name="soLuong[]"  onblur="validateSoLuong(this)" value="' . $tmp['SoLuong'] . '" style=" height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;"></td>
                                                             </tr>';
                                                     }
                                                 } else
@@ -142,8 +142,8 @@ if (isset($_GET['MaPhieu'])) {
                                                         echo '<tr style="text-align: center;">
                                                             <td style="padding: 0.5rem; name=MaSanPham[]">' . $tmp['MaSanPham'] . '</td>
                                                             <td style="padding: 0.5rem;">' . $tmp['TenSanPham'] . '</td>
-                                                            <td style="padding: 0.5rem;"><input type="text" name="donGia[]" value="' . number_format($tmp['DonGiaNhap'], 0, '.', ',') . '" disabled="true" style=" height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;" ></td>
-                                                            <td style="padding: 0.5rem;"><input type="text" name="soLuong[]" value="' . $tmp['SoLuong'] . '" disabled="true" style=" height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;"></td>
+                                                            <td style="padding: 0.5rem;"><input type="text" name="donGia[]" onblur="validateDonGia(this)" value="' . number_format($tmp['DonGiaNhap'], 0, '.', ',') . '" disabled="true" style=" height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;" ></td>
+                                                            <td style="padding: 0.5rem;"><input type="text" name="soLuong[]" onblur="validateSoLuong(this)" value="' . $tmp['SoLuong'] . '" disabled="true" style=" height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;"></td>
                                                         </tr>';
                                                     }
                                             }
