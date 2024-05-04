@@ -16,12 +16,8 @@
         <div>
             <div class="App">
                 <div class="StaffLayout_wrapper__CegPk">
-                    <div class="StaffHeader_wrapper__IQw-U">
-                        <p class="StaffHeader_title__QxjW4">Dekanta</p>
-                        <button class="StaffHeader_signOut__i2pcu">
-                            <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="arrow-right-from-bracket" class="svg-inline--fa fa-arrow-right-from-bracket" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 2rem; height: 2rem; color: white"></svg>
-                        </button>
-                    </div>
+                    <?php require_once "../ManagerHeader.php" ?>
+
                     <div>
                         <div>
                             <div class="Manager_wrapper__vOYy">

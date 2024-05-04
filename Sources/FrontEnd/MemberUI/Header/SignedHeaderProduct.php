@@ -70,7 +70,7 @@
             <div class="header-option" onclick="toCart()"><i class="fa-solid fa-cart-shopping"></i></div>
             <div class="header-option" onclick="toMyOrder()"><i class="fa-solid fa-truck-fast"></i></div>
             <div class="header-option"><a href="Profile.php"><i class="fa-solid fa-user"></i></a></div>
-            <div class="header-option" onclick="logout()"><a href="../GuestPage/GuestHomePage.php"><i class="fa-solid fa-right-from-bracket"></i></a></div>
+            <div class="header-option" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i></div>
         </form>
     </div>
 </header>
@@ -119,8 +119,23 @@
     }
 
 
-    //Sự kiện nút logout
     function logout() {
-        localStorage.removeItem("key");
+        Swal.fire({
+            title: 'Xác nhận đăng xuất',
+            text: 'Bạn có chắc chắn muốn đăng xuất?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Đồng ý',
+            cancelButtonText: 'Hủy'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                localStorage.removeItem("key");
+                window.location.href = "../GuestPage/GuestHomePage.php";
+
+            }
+        });
     }
+
 </script>
