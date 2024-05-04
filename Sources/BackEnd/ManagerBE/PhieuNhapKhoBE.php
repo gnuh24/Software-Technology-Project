@@ -6,9 +6,7 @@ if (isset($_GET['page'])) {
     $datenhapkho = isset($_GET['datenhapkho']) ? $_GET['datenhapkho'] : null;
     $result = getAllphieunhapkho($page, $datenhapkho);
     echo json_encode($result);
-}
-
-function getAllphieunhapkho($page, $datenhapkho = null)
+}function getAllphieunhapkho($page, $datenhapkho = null)
 {
     $connection = MysqlConfig::getConnection();
     $query = "SELECT MaPhieu, NgayNhapKho, pnk.MaNCC, TongGiaTri, pnk.MaQuanLy, TenNCC, nguoidung.HoTen, pnk.TrangThai AS PhieuTrangThai 
@@ -20,7 +18,7 @@ function getAllphieunhapkho($page, $datenhapkho = null)
     // Xây dựng điều kiện WHERE dựa trên ngày nhập kho nếu có
     $where_conditions = [];
     if ($datenhapkho !== null && $datenhapkho !== "") {
-        $where_conditions[] = "NgayNhapKho = :NgayNhapKho";
+        $where_conditions[] = "NgayNhapKho LIKE :NgayNhapKho";
     }
     
     // Thêm các điều kiện WHERE vào truy vấn nếu có
@@ -32,7 +30,7 @@ function getAllphieunhapkho($page, $datenhapkho = null)
     $query_total_row = "SELECT COUNT(*) AS totalRows FROM (" . $query . ") AS subquery";
     $statement_total_row = $connection->prepare($query_total_row);
     if ($datenhapkho !== null && $datenhapkho !== "") {
-        $statement_total_row->execute([':NgayNhapKho' => $datenhapkho]);
+        $statement_total_row->execute([':NgayNhapKho' => '%' . $datenhapkho . '%']);
     } else {
         $statement_total_row->execute();
     }
@@ -46,7 +44,7 @@ function getAllphieunhapkho($page, $datenhapkho = null)
     try {
         $statement = $connection->prepare($query);
         if ($datenhapkho !== null && $datenhapkho !== "") {
-            $statement->execute([':NgayNhapKho' => $datenhapkho]);
+            $statement->execute([':NgayNhapKho' => '%' . $datenhapkho . '%']);
         } else {
             $statement->execute();
         }
@@ -67,6 +65,10 @@ function getAllphieunhapkho($page, $datenhapkho = null)
         $connection = null;
     }
 }
+
+
+
+
 function getPhieuNhapByMaPhieuNhap($maPhieuNhap)
 {
     //Chuẩn bị trước biến $connection
