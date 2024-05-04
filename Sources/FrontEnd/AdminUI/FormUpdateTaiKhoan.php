@@ -113,7 +113,6 @@ if (isset($_GET['maTaiKhoan'])) {
                                                                     <div>
                                                                         <p class="text">Quyền</p>
                                                                         <select name="quyen" id="quyen" class="input">
-                                                                            <option value="Admin" ' . ($quyen === "Admin" ? "selected" : "") . '>Admin</option>
                                                                             <option value="Manager" ' . ($quyen === "Manager" ? "selected" : "") . '>Manager</option>
                                                                             <option value="Member" ' . (($quyen ?? "Member") === "Member" ? "selected" : "") . '>Member</option>
                                                                         </select>
@@ -139,92 +138,110 @@ if (isset($_GET['maTaiKhoan'])) {
 </body>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
     document.getElementById("updateUser_save").addEventListener('click', function check(event) {
-        event.preventDefault(); // Ngăn chặn hành động mặc định của form
+    event.preventDefault(); // Ngăn chặn hành động mặc định của form
 
-        let maTaiKhoan = document.getElementById("maTaiKhoan");
-        let hoTen = document.getElementById("hoTen");
-        let sdt = document.getElementById("sdt");
-        let diaChi = document.getElementById("diaChi");
-        let gioiTinhMale = document.getElementById("gioiTinhMale");
-        let gioiTinhFemale = document.getElementById("gioiTinhFemale");
-        let vaiTro = document.getElementById("vaiTro");
-        let ngaySinh = document.getElementById("ngaySinh");
+    let maTaiKhoan = document.getElementById("maTaiKhoan");
+    let hoTen = document.getElementById("hoTen");
+    let sdt = document.getElementById("sdt");
+    let diaChi = document.getElementById("diaChi");
+    let gioiTinhMale = document.getElementById("gioiTinhMale");
+    let gioiTinhFemale = document.getElementById("gioiTinhFemale");
+    let vaiTro = document.getElementById("vaiTro");
+    let ngaySinh = document.getElementById("ngaySinh");
 
+    if (!hoTen.value.trim()) {
+        showErrorAlert('Lỗi!', 'Họ Tên không được để trống');
+        hoTen.focus();
+        event.preventDefault();
+        return;
+    }
+    if (!sdt.value.trim()) {
+        showErrorAlert('Lỗi!', 'Số điện thoại không được để trống');
+        sdt.focus();
+        event.preventDefault();
+        return;
+    }
+    if (!diaChi.value.trim()) {
+        showErrorAlert('Lỗi!', 'Địa chỉ không được để trống');
+        diaChi.focus();
+        event.preventDefault();
+        return;
+    }
+    if (!gioiTinhMale.checked && !gioiTinhFemale.checked) {
+        showErrorAlert('Lỗi!', 'Vui lòng chọn giới tính');
+        event.preventDefault();
+        return;
+    }
 
-        if (!hoTen.value.trim()) {
-            alert("Họ Tên không được để trống");
-            hoTen.focus();
-            event.preventDefault();
-            return;
-        }
-        if (!sdt.value.trim()) {
-            alert("Số điện thoại không được để trống");
-            sdt.focus();
-            event.preventDefault();
-            return;
-        }
-        if (!diaChi.value.trim()) {
-            alert("Địa chỉ không được để trống");
-            diaChi.focus();
-            event.preventDefault();
-            return;
-        }
-        if (!gioiTinhMale.checked && !gioiTinhFemale.checked) {
-            alert("Vui lòng chọn giới tính");
-            event.preventDefault();
-            return;
-        }
+    
+    // Kiểm tra tuổi
+    let ngaySinhDate = new Date(ngaySinh.value);
+    let tuoi = new Date().getFullYear() - ngaySinhDate.getFullYear();
+    if (tuoi < 18) {
+        showErrorAlert('Lỗi!', 'Bạn phải trên 18 tuổi để có thể sử dụng dịch vụ này.');
+        ngaySinh.focus();
+        event.preventDefault();
+        return;
+    }
 
-        
-        // Kiểm tra tuổi
-        let ngaySinhDate = new Date(ngaySinh.value);
-        let tuoi = new Date().getFullYear() - ngaySinhDate.getFullYear();
-        if (tuoi < 18) {
-            alert("Bạn phải trên 18 tuổi để có thể sử dụng dịch vụ này.");
-            ngaySinh.focus();
-            event.preventDefault();
-            return;
-        }
+    if (!ngaySinh.value.trim()) {
+        showErrorAlert('Lỗi!', 'Ngày sinh không được để trống');
+        ngaySinh.focus();
+        event.preventDefault();
+        return;
+    }
 
-        if (!ngaySinh.value.trim()) {
-            alert("Ngày sinh không được để trống");
-            ngaySinh.focus();
-            event.preventDefault();
-            return;
-        }
+    //Sau khi qua được tất cả ta bắt đầu tạo TaiKhoan
+    let isUpdateTaiKhoanComplete = updateTaiKhoan(maTaiKhoan.value, quyen.value);
 
-        //Sau khi qua được tất cả ta bắt đầu tạo TaiKhoan
-        let isUpdateTaiKhoanComplete = updateTaiKhoan(maTaiKhoan.value, quyen.value);
+    var gioiTinhValue = "Female";
 
-        var gioiTinhValue = "Female";
+    //XỬ lý giới tính
+    if (gioiTinhMale.checked){
+        gioiTinhValue = "Male";
+    }
+    
 
-        //XỬ lý giới tính
-        if (gioiTinhMale.checked){
-            gioiTinhValue = "Male";
-        }
-        
+    //Tạo thông tin người dùng đi kèm
+    let isUpdateNguoiDungComplete = updateNguoiDung(
+                    maTaiKhoan.value,
+                    hoTen.value,
+                    ngaySinh.value, 
+                    gioiTinhValue, 
+                    sdt.value, 
+                    email.value, 
+                    diaChi.value)
 
-        //Tạo thông tin người dùng đi kèm
-        let isUpdateNguoiDungComplete = updateNguoiDung(
-                        maTaiKhoan.value,
-                        hoTen.value,
-                        ngaySinh.value, 
-                        gioiTinhValue, 
-                        sdt.value, 
-                        email.value, 
-                        diaChi.value)
+    //Sau khi tạo xong chuyển về trang QLTaiKHoan
+    showSuccessAlert('Thành công!', 'Cập nhật tài khoản thành công !!', 'QLTaiKhoan.php');
+});
 
-        //Sau khi tạo xong chuyển về trang QLTaiKHoan
-        alert("Cập nhật tài khoản thành công !!");
-        window.location.href = 'QLTaiKhoan.php';
-       
-        
-        
-
-        
+function showErrorAlert(title, message) {
+    Swal.fire({
+        title: title,
+        text: message,
+        icon: 'error',
+        confirmButtonText: 'OK'
     });
+}
+
+function showSuccessAlert(title, message, redirectUrl) {
+    Swal.fire({
+        title: title,
+        text: message,
+        icon: 'success',
+        confirmButtonText: 'OK'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = redirectUrl;
+        }
+    });
+}
+
 
     function updateTaiKhoan(maTaiKhoan, quyen) {
         let flag=false;

@@ -139,8 +139,12 @@
             icon: 'success',
             title: 'Thành công!',
             text: 'Thêm loại sản phẩm mới thành công !!',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = 'QLLoaiSanPham.php';
+            }
         });
-        window.location.href = 'QLLoaiSanPham.php';
+
 
         
     });

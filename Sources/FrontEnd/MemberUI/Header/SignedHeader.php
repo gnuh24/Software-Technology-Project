@@ -96,7 +96,6 @@
                     confirmButtonText: 'OK'
             });
         }
-        
     });
 
     //Sự kiện giỏ hàng

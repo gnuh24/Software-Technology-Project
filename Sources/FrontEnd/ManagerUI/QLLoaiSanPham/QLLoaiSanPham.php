@@ -116,24 +116,27 @@
 
         // Duyệt qua mảng dữ liệu và tạo các hàng mới cho tbody
         data.forEach(function(record) {
-          var trContent = `
-         <form id="updateForm" method="POST" action="FormUpdateLoaiSanPham.php?MaLoaiSanPham=${record.MaLoaiSanPham}&TenLoaiSanPham=${record.TenLoaiSanPham}">
-    <tr>
-      <td style="text-align:center">${record.MaLoaiSanPham}</td>
-      <td style="text-align:center">${record.TenLoaiSanPham}</td>
-      <td style="text-align:center">`;
+            var trContent = `
+            <form id="updateForm" method="POST" action="FormUpdateLoaiSanPham.php?MaLoaiSanPham=${record.MaLoaiSanPham}&TenLoaiSanPham=${record.TenLoaiSanPham}">
+                <tr>
+                    <td style="text-align:center">${record.MaLoaiSanPham}</td>
+                    <td style="text-align:center">${record.TenLoaiSanPham}</td>
+                    <td style="text-align:center">`;
 
-          //Điều kiện để thêm nút xoá vào
-          if (record.MaLoaiSanPham != 1) {
-            trContent += `
-    <button style="cursor:pointer" class="edit" onclick="updateLoaiSanPham(${record.MaLoaiSanPham}, '${record.TenLoaiSanPham}')">Sửa</button>
-    <button style="cursor:pointer" class="delete" onclick="deleteLoaiSanPham(${record.MaLoaiSanPham}, '${record.TenLoaiSanPham}')">Xoá</button>`;
-          }
+            // Kiểm tra nếu là Loại sản phẩm có ID là 1, thì in ra chữ "Mặc định"
+            if (record.MaLoaiSanPham == 1) {
+                trContent += `Mặc định`;
+            } else {
+                // Nếu không phải Loại sản phẩm có ID là 1, thì in ra nút sửa và nút xoá
+                trContent += `
+                    <button style="cursor:pointer" class="edit" onclick="updateLoaiSanPham(${record.MaLoaiSanPham}, '${record.TenLoaiSanPham}')">Sửa</button>
+                    <button style="cursor:pointer" class="delete" onclick="deleteLoaiSanPham(${record.MaLoaiSanPham}, '${record.TenLoaiSanPham}')">Xoá</button>`;
+            }
 
-          trContent += `</td>
-    </tr>`;
+            trContent += `</td>
+                </tr>`;
 
-          tableContent += trContent; // Thêm nội dung của hàng vào chuỗi tableContent
+            tableContent += trContent; // Thêm nội dung của hàng vào chuỗi tableContent
         });
 
         // Thiết lập lại nội dung của tbody bằng chuỗi tableContent

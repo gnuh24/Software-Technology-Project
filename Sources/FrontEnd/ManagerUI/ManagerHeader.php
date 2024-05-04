@@ -23,7 +23,7 @@
         }).then((result) => {
             if (result.isConfirmed) {
                 localStorage.removeItem("key");
-                window.location.href =  "../../MemberUI/GuestPage/GuestHomePage.php";
+                window.location.href =  "../../MemberUI/Login/LoginUI.php";
             }
         });
     });

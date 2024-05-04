@@ -205,15 +205,15 @@
                             var imageSrc = product.AnhMinhHoa;
                             htmlContent += `
                                 <div class="row">
-                                        <a href="GuestProductDetail.php?maSanPham=${product.MaSanPham}" onclick="detail(${product.MaSanPham})">
+                                        <a href="GuestProductDetail.php?maSanPham=${product.MaSanPham}">
                                         <img src="${imageSrc}" alt="" style=" height: 300px;" onclick="detail(${product.MaSanPham})">
                                         <div class="product-card-content">
                                             <div class="price">
                                                 <h4 class="name-product">${product.TenSanPham}</h4>
                                                 <p class="price-tea">${formatCurrency(product.Gia)}</p>
                                             </div>
-                                            <div class="buy-btn-container">
-                                                <a href="../Login/LoginUI.php">mua ngay</a>
+                                            <div class="buy-btn-container" onclick="detail(${product.MaSanPham})">
+                                                <a  href="GuestProductDetail.php?maSanPham=${product.MaSanPham}">mua ngay</a>
                                             </div>
                                         </div>
                                     </a>
@@ -241,21 +241,9 @@
         });
 
         function detail(maSanPham){
-            const form = document.getElementById(`productForm_${maSanPham}`);
-            form.submit();
+             // Chuyển hướng về trang chủ khi click vào hình ảnh
+             window.location.href = `GuestProductDetail.php?maSanPham=${maSanPham}`;
         }
-        
-        document.getElementById("filter-button").addEventListener("click", function (event) {
-            event.preventDefault();
-
-            const form = document.getElementById("search");
-            const searchValue  = document.getElementById("searchSanPham").value;
-            console.log(searchValue);
-            form.action = `GuestProduct.php?searchFromAnotherPage=${searchValue}`;
-            console.log(form.action);
-            form.submit();
-
-        });
 
     </script>
 </html>

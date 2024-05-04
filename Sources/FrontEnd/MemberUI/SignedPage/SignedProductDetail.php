@@ -149,18 +149,20 @@
 
 <script>
 
-      // Hàm kiểm tra số lượng nhập vào
-      function checkQuantity(input) {
+    // Hàm kiểm tra số lượng nhập vào
+    function checkQuantity(input) {
         var currentValue = parseInt(input.value); // Lấy giá trị số lượng hiện tại
         var maxQuantity = parseInt(input.getAttribute("max")); // Lấy giá trị số lượng tối đa
         var quantityMessage = document.querySelector(".quantity-available p.title"); // Phần hiển thị thông báo số lượng còn lại
 
-        if (currentValue < 1) { // Nếu số lượng nhỏ hơn 1
+        // Kiểm tra nếu giá trị là chuỗi rỗng hoặc không phải là số
+        if (isNaN(currentValue) || currentValue === 0) {
             input.value = 1; // Đặt lại giá trị là 1
         } else if (currentValue > maxQuantity) { // Nếu số lượng lớn hơn số lượng tối đa
             input.value = maxQuantity; // Đặt lại giá trị là số lượng tối đa
         }
     }
+
 
     // Lắng nghe sự kiện click vào nút "Thêm vào giỏ hàng"
     var secondaryBtn = document.querySelector(".secondary");

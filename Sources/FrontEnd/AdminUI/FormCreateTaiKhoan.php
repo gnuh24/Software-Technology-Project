@@ -110,10 +110,11 @@
 </body>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
     document.getElementById("submit-form").addEventListener('submit', function check(event) {
         event.preventDefault(); // Ngăn chặn hành động mặc định của form
-
 
         let tenDangNhap = document.getElementById("tenDangNhap");
         let matKhau = document.getElementById("matKhau");
@@ -128,62 +129,62 @@
         let ngaySinh = document.getElementById("ngaySinh");
 
         if (!tenDangNhap.value.trim()) {
-            alert("Tên đăng nhập không được để trống");
+            showErrorAlert('Lỗi!', 'Tên đăng nhập không được để trống');
             tenDangNhap.focus();
             event.preventDefault();
             return;
         }
         if (!matKhau.value.trim()) {
-            alert("Mật khẩu không được để trống");
+            showErrorAlert('Lỗi!', 'Mật khẩu không được để trống');
             matKhau.focus();
             event.preventDefault();
             return;
         }
 
         if (!xacNhanMatKhau.value.trim()) {
-            alert("Mật khẩu xác nhận không được để trống");
+            showErrorAlert('Lỗi!', 'Mật khẩu xác nhận không được để trống');
             xacNhanMatKhau.focus();
             event.preventDefault();
             return;
         }
         if (matKhau.value !== xacNhanMatKhau.value) {
-            alert("Mật khẩu xác nhận và mật khẩu phải giống nhau");
+            showErrorAlert('Lỗi!', 'Mật khẩu xác nhận và mật khẩu phải giống nhau');
             xacNhanMatKhau.focus();
             event.preventDefault();
             return;
         }
         if (!hoTen.value.trim()) {
-            alert("Họ Tên không được để trống");
+            showErrorAlert('Lỗi!', 'Họ Tên không được để trống');
             hoTen.focus();
             event.preventDefault();
             return;
         }
         if (!email.value.trim()) {
-            alert("Email không được để trống");
+            showErrorAlert('Lỗi!', 'Email không được để trống');
             email.focus();
             event.preventDefault();
             return;
         }
         if (!sdt.value.trim()) {
-            alert("Số điện thoại không được để trống");
+            showErrorAlert('Lỗi!', 'Số điện thoại không được để trống');
             sdt.focus();
             event.preventDefault();
             return;
         }
         if (!diaChi.value.trim()) {
-            alert("Địa chỉ không được để trống");
+            showErrorAlert('Lỗi!', 'Địa chỉ không được để trống');
             diaChi.focus();
             event.preventDefault();
             return;
         }
         if (!gioiTinhMale.checked && !gioiTinhFemale.checked) {
-            alert("Vui lòng chọn giới tính");
+            showErrorAlert('Lỗi!', 'Vui lòng chọn giới tính');
             event.preventDefault();
             return;
         }
 
         if (!ngaySinh.value.trim()) {
-            alert("Ngày sinh không được để trống");
+            showErrorAlert('Lỗi!', 'Ngày sinh không được để trống');
             ngaySinh.focus();
             event.preventDefault();
             return;
@@ -193,7 +194,7 @@
         let ngaySinhDate = new Date(ngaySinh.value);
         let tuoi = new Date().getFullYear() - ngaySinhDate.getFullYear();
         if (tuoi < 18) {
-            alert("Bạn phải đủ 18 tuổi để đăng ký tài khoản");
+            showErrorAlert('Lỗi!', 'Bạn phải đủ 18 tuổi để đăng ký tài khoản');
             ngaySinh.focus();
             event.preventDefault();
             return;
@@ -201,16 +202,15 @@
 
         // Kiểm tra định dạng Email
         if (!isValidEmail(email.value.trim())) {
-            alert("Email không hợp lệ");
+            showErrorAlert('Lỗi!', 'Email không hợp lệ');
             email.focus();
             event.preventDefault();
             return;
         }
-      
 
         //Kiểm tra tên đăng nhập
         if (checkTenDangNhap(tenDangNhap.value.trim())) {
-            alert("Tên đăng nhập đã tồn tại");
+            showErrorAlert('Lỗi!', 'Tên đăng nhập đã tồn tại');
             tenDangNhap.focus();
             event.preventDefault();
             return;
@@ -218,7 +218,7 @@
 
         //Kiểm tra xem email đã tồn tại hay chưa
         if (checkEmailTonTai(email.value.trim())) {
-            alert("Email đã tồn tại");
+            showErrorAlert('Lỗi!', 'Email đã tồn tại');
             email.focus();
             event.preventDefault();
             return;
@@ -247,17 +247,35 @@
 
         
         //Sau khi tạo xong chuyển về trang QLTaiKHoan
-        alert("Tạo tài khoản mới thành công !!");
-        window.location.href = 'QLTaiKhoan.php';
-
-        
+        showSuccessAlert('Thành công!', 'Tạo tài khoản mới thành công !!', 'QLTaiKhoan.php');
     });
 
+    function showErrorAlert(title, message) {
+        Swal.fire({
+            title: title,
+            text: message,
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
+    }
+
+    function showSuccessAlert(title, message, redirectUrl) {
+        Swal.fire({
+            title: title,
+            text: message,
+            icon: 'success',
+            confirmButtonText: 'OK'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = redirectUrl;
+            }
+        });
+    }
+
     function isValidEmail(email) {
-    // Thực hiện kiểm tra định dạng Email và trả về true hoặc false
-    // Bạn có thể sử dụng biểu thức chính quy hoặc các phương thức khác để kiểm tra định dạng Email
         return /[^\s@]+@[^\s@]+\.[^\s@]+/.test(email);
     }
+
 
     function checkTenDangNhap(value) {
         let exists = false;

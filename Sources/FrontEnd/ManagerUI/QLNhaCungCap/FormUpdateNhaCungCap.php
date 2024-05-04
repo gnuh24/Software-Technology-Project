@@ -121,6 +121,16 @@
             event.preventDefault();
             return;
         }
+        if (!Email.value.trim()) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi!',
+                text: 'Email không được để trống',
+            });
+            SoDienThoai.focus();
+            event.preventDefault();
+            return;
+        }
         if (!SoDienThoai.value.trim()) {
             Swal.fire({
                 icon: 'error',

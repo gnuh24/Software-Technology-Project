@@ -103,57 +103,62 @@
   }
 
   // Hàm getAllNhaCungCap
-  function getAllNhaCungCap(page, search) {
+// Hàm getAllNhaCungCap
+function getAllNhaCungCap(page, search) {
     $.ajax({
-      url: '../../../BackEnd/ManagerBE/NhaCungCapBE.php',
-      type: 'GET',
-      dataType: "json",
-      data: {
-        page: page,
-        search: search
-      },
-      success: function(response) {
-        var data = response.data;
-        var tableBody = document.getElementById("tableBody"); // Lấy thẻ tbody của bảng
-        var tableContent = ""; // Chuỗi chứa nội dung mới của tbody
+        url: '../../../BackEnd/ManagerBE/NhaCungCapBE.php',
+        type: 'GET',
+        dataType: "json",
+        data: {
+            page: page,
+            search: search
+        },
+        success: function (response) {
+            var data = response.data;
+            var tableBody = document.getElementById("tableBody"); // Lấy thẻ tbody của bảng
+            var tableContent = ""; // Chuỗi chứa nội dung mới của tbody
 
-        // Duyệt qua mảng dữ liệu và tạo các hàng mới cho tbody
-        data.forEach(function(record) {
-          var trContent = `
-         <form id="updateForm" method="POST" action="FormUpdateNhaCungCap.php?MaNCC=${record.MaNCC}&TenNCC=${record.TenNCC}&Email=${record.Email}&SoDienThoai=${record.SoDienThoai}">
-    <tr>
-      <td style="text-align:center">${record.MaNCC}</td>
-      <td style="text-align:center">${record.TenNCC}</td>
-      <td style="text-align:center">${record.Email}</td>
-      <td style="text-align:center">${record.SoDienThoai}</td>
-      <td style="text-align:center">`;
+            // Duyệt qua mảng dữ liệu và tạo các hàng mới cho tbody
+            data.forEach(function (record) {
+                var trContent = `
+                <form id="updateForm" method="POST" action="FormUpdateNhaCungCap.php?MaNCC=${record.MaNCC}&TenNCC=${record.TenNCC}&Email=${record.Email}&SoDienThoai=${record.SoDienThoai}">
+                    <tr>
+                        <td style="text-align:center">${record.MaNCC}</td>
+                        <td style="text-align:center">${record.TenNCC}</td>
+                        <td style="text-align:center">${record.Email}</td>
+                        <td style="text-align:center">${record.SoDienThoai}</td>
+                        <td style="text-align:center">`;
 
-          //Điều kiện để thêm nút xoá vào
-          if (record.MaNCC != 1) {
-            trContent += `
-    <button style="cursor:pointer" class="edit" onclick="updateNhaCungCap(${record.MaNCC}, '${record.TenNCC}', '${record.Email}', '${record.SoDienThoai}')">Sửa</button>
-    
-    <button style="cursor:pointer" class="delete" onclick="deleteNhaCungCap(${record.MaNCC}, '${record.TenNCC}')">Xoá</button>`;
-          }
+                // Kiểm tra nếu record.MaNCC == 1 thì hiển thị nút "Mặc định" thay vì "Sửa" và "Xoá"
+                if (record.MaNCC == 1) {
+                    trContent += `
+                    <p>Mặc định</p>`;
+                } else {
+                    trContent += `
+                    <button style="cursor:pointer" class="edit" onclick="updateNhaCungCap(${record.MaNCC}, '${record.TenNCC}', '${record.Email}', '${record.SoDienThoai}')">Sửa</button>
+                    <button style="cursor:pointer" class="delete" onclick="deleteNhaCungCap(${record.MaNCC}, '${record.TenNCC}')">Xoá</button>`;
+                }
 
-          trContent += `</td>
-    </tr>`;
+                trContent += `</td>
+                    </tr>`;
 
-          tableContent += trContent; // Thêm nội dung của hàng vào chuỗi tableContent
-        });
+                tableContent += trContent; // Thêm nội dung của hàng vào chuỗi tableContent
+            });
 
-        // Thiết lập lại nội dung của tbody bằng chuỗi tableContent
-        tableBody.innerHTML = tableContent;
+            // Thiết lập lại nội dung của tbody bằng chuỗi tableContent
+            tableBody.innerHTML = tableContent;
 
-        //Tạo phân trang
-        createPagination(page, response.totalPages);
-      },
+            //Tạo phân trang
+            createPagination(page, response.totalPages);
+        },
 
-      error: function(xhr, status, error) {
-        console.error('Lỗi khi gọi API: ', error);
-      }
+        error: function (xhr, status, error) {
+            console.error('Lỗi khi gọi API: ', error);
+        }
     });
-  }
+}
+
+
 
   // Hàm để gọi getAllNhaCungCap và cập nhật dữ liệu và phân trang
   function fetchDataAndUpdateTable(page, search) {

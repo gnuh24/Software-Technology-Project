@@ -130,19 +130,19 @@
                                           <td class="Table_data_quyen_1"><button type="button" onclick="" class="edit">' . $order_statuses[$maDonHang] . '</button></td>                                                            
                                         ';
                                     if ($order_statuses[$maDonHang] == 'Chờ Duyệt')
-                                      echo '<td class="Table_data_quyen_1"><a href="./ChiTietDonHang.php" class="edit"> chi tiết</a> <button class="delete"> hủy</button> </td></tr>';
+                                      echo '<td class="' . $trClass . '"><button type="button" onclick="confirmCancelOrder(' . $record['MaDonHang'] . ', \'' . $record['TrangThai'] . '\')">Hủy</button></td></tr>';
                                     else
                                       echo '<td class="Table_data_quyen_1"><a href="./ChiTietDonHang.php" class="edit"> chi tiết</a> </td></tr>';
                                   } else {
                                     echo '<tr>
-                                          <td class="Table_data_quyen_2">' . $record['MaDonHang'] . '</td>
-                                          <td class="Table_data_quyen_2">' . $ngayDat . '</td>
-                                          <td class="Table_data_quyen_2">' . $record['TongGiaTri'] . '</td>
-                                          <td class="Table_data_quyen_2">' . $record['Email'] . '</td>
-                                          <td class="Table_data_quyen_2"><button type="button" onclick="" class="edit">' . $order_statuses[$maDonHang] . '</button></td>        
-                                        ';
+                                      <td class="Table_data_quyen_2">' . $record['MaDonHang'] . '</td>
+                                      <td class="Table_data_quyen_2">' . $ngayDat . '</td>
+                                      <td class="Table_data_quyen_2">' . $record['TongGiaTri'] . '</td>
+                                      <td class="Table_data_quyen_2">' . $record['Email'] . '</td>
+                                      <td class="' . $trClass . '"><button type="button" onclick="confirmCancelOrder(' . $record['MaDonHang'] . ', \'' . $record['TrangThai'] . '\')">Hủy</button></td>';
+                                
                                     if ($order_statuses[$maDonHang] == 'Chờ Duyệt')
-                                      echo '<td class="Table_data_quyen_2"><a href="./ChiTietDonHang.php" class="edit"> chi tiết</a> <button class="delete"> hủy</button> </td></tr>';
+                                      echo '<td class="' . $trClass . '"><button type="button" onclick="confirmCancelOrder(' . $record['MaDonHang'] . ', \'' . $record['TrangThai'] . '\')">Hủy</button></td></tr>';
                                     else
                                       echo '<td class="Table_data_quyen_2"><a href="./ChiTietDonHang.php" class="edit"> chi tiết</a> </td></tr>';
                                   }
@@ -154,7 +154,7 @@
                       </table>
                       <div id="pagination" class="pagination">
 
-                      </div>
+                        </div>
                     </div>
                   </div>
                 </div>
@@ -167,13 +167,13 @@
   </div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- Thêm thư viện SweetAlert2 -->
 
 <script>
   var danhSachSanPham = <?php
                         require_once "../../../BackEnd/ManagerBE/SanPhamBE.php";
                         $danhSachSanPham = getAllSanPham2(1)->data;
                         echo json_encode($danhSachSanPham); ?>;
-  console.log("bên ngoài",danhSachSanPham);
 
   var udPage = 0;
   var udminNgayTao = 0;
@@ -206,6 +206,23 @@
     const formattedDate = `${pad(hours)}:${pad(minutes)}:${pad(seconds)} ${pad(day)}/${pad(month)}/${year}`;
     return formattedDate;
   }
+
+  function confirmCancelOrder(MaDonHang, TrangThaiHienTai) {
+    Swal.fire({
+        title: 'Xác nhận hủy đơn hàng',
+        text: 'Bạn có chắc chắn muốn hủy đơn hàng này?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Hủy đơn hàng',
+        cancelButtonText: 'Hủy bỏ',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            changeOrderStatus(MaDonHang, 'Huy', TrangThaiHienTai);
+        }
+    });
+}
+
 
   function getTenTrangThai(order_statuses) {
     if (order_statuses == 'ChoDuyet') {
@@ -317,7 +334,10 @@
           } else if (record.TrangThai == 'GiaoThanhCong') {
             trContent += `<td class="${trClass}" style="color: green;">${order_statuses}</td></tr>`;
           } else {
-            trContent += `<td class="${trClass}"><button type="button" onclick="changeOrderStatus(${record.MaDonHang}, '${record.TrangThai}', '${record.TrangThai}')" class="edit">${getTenTrangThai2(nextState(record.TrangThai))}</button><button class="delete" onclick="changeOrderStatus(${record.MaDonHang}, 'Huy', '${record.TrangThai}')"> hủy</button> </td></tr> `;
+            trContent += `<td class="${trClass}">
+                <button type="button" onclick="changeOrderStatus(${record.MaDonHang}, '${record.TrangThai}', '${record.TrangThai}')" class="edit">${getTenTrangThai2(nextState(record.TrangThai))}</button>
+                <button class="delete" onclick="confirmCancelOrder(${record.MaDonHang}, '${record.TrangThai}')">Hủy</button>
+              </td></tr>`;
           }
           tableContent += trContent;
         });
@@ -332,6 +352,7 @@
       }
     });
   }
+
 
   function fetchDataAndUpdateTable(page, minNgayTao, maxNgayTao, trangThai) {
     //Clear dữ liệu cũ
@@ -541,22 +562,23 @@
 
   function changeOrderStatus(MaDonHang, TrangThai, TrangThaiHienTai) {
     if (TrangThai == "Huy") {
-      getChiTietDonHangByMaDonHangHuy(MaDonHang, TrangThai, TrangThaiHienTai);
+        getChiTietDonHangByMaDonHangHuy(MaDonHang, TrangThai, TrangThaiHienTai);
     } else {
-      TrangThai = nextState(TrangThai);
-      if (TrangThai == 'DaDuyet') {
-        danhSachSanPham = <?php
-                          require_once "../../../BackEnd/ManagerBE/SanPhamBE.php";
-                          $danhSachSanPham = getAllSanPham2(1)->data;
-                          echo json_encode($danhSachSanPham); ?>;
-        getChiTietDonHangByMaDonHangDaDuyet(MaDonHang, TrangThai, danhSachSanPham);
-      } else {
-        setTrangThaiDonHang(MaDonHang, TrangThai);
-      }
+        TrangThai = nextState(TrangThai);
+        if (TrangThai == 'DaDuyet') {
+            danhSachSanPham = <?php
+                                require_once "../../../BackEnd/ManagerBE/SanPhamBE.php";
+                                $danhSachSanPham = getAllSanPham2()->data;
+                                echo json_encode($danhSachSanPham); ?>;
+            getChiTietDonHangByMaDonHangDaDuyet(MaDonHang, TrangThai, danhSachSanPham);
+        } else {
+            setTrangThaiDonHang(MaDonHang, TrangThai);
+        }
     }
 
     fetchDataAndUpdateTable(udPage, udminNgayTao, udmaxNgayTao, udtrangThai);
-  }
+}
+
 
   // Example usage:
   // }

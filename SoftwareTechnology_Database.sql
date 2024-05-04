@@ -399,7 +399,7 @@ VALUES              (1 ,        16,     1280000     ,10      ,       12800000),
                     (10 ,        5,     850000      ,5      ,       4250000);
 
 -- SELECT sp.`MaSanPham` as `MaSanPham`, sp.`TenSanPham` as `TenSanPham`, SUM(ct.`SoLuong`) as `TongSoLuong`, SUM(ct.`ThanhTien`) as `TongDoanhThu` 
-SELECT *
+					SELECT *
                     FROM `DonHang` dh 
                     JOIN `TrangThaiDonHang` tt ON dh.`MaDonHang` = tt.`MaDonHang`
                     JOIN `CTDH` ct ON dh.`MaDonHang` = ct.`MaDonHang`
@@ -408,6 +408,16 @@ SELECT *
                         SELECT MAX(stt.`NgayCapNhat`) FROM `TrangThaiDonHang` stt
                         WHERE dh.`MaDonHang` = stt.`MaDonHang`
                     )AND tt.`TrangThai` = 'GiaoThanhCong'
-                    AND dh.`NgayDat` BETWEEN COALESCE(null ,'2010-01-01') AND COALESCE(null ,CURRENT_DATE)
-                    GROUP BY sp.`MaSanPham`, sp.`TenSanPham`
+                    AND DATE(dh.`NgayDat`) BETWEEN COALESCE(null ,'2010-01-01') AND COALESCE(null ,CURRENT_DATE);
+                    -- GROUP BY sp.`MaSanPham`, sp.`TenSanPham`;
                     -- ORDER BY `TongDoanhThu` desc, `TongSoLuong` desc;
+                    
+                    SELECT * FROM `DonHang` dh 
+                    JOIN `CTDH` ct ON dh.`MaDonHang` = ct.`MaDonHang`
+                    JOIN `TrangTHaiDonHang` tt ON tt.`MaDonHang` = dh.`MaDOnHang`
+                    WHERE  tt.`NgayCapNhat` = (
+                        SELECT MAX(stt.`NgayCapNhat`) FROM `TrangThaiDonHang` stt
+                        WHERE dh.`MaDonHang` = stt.`MaDonHang`
+                    );
+                    
+                    SELECT * FROM `CTDH`;

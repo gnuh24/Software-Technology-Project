@@ -363,8 +363,8 @@
                                                         <h4 class="name-product">${product.TenSanPham}</h4>
                                                         <p class="price-tea">${formatCurrency(product.Gia)}</p>
                                                     </div>
-                                                    <div class="buy-btn-container" onclick="toLogin()">
-                                                        <a href="../Login/LoginUI.php">mua ngay</a>
+                                                    <div class="buy-btn-container" onclick="detail(${product.MaSanPham})">
+                                                        <a href="GuestProductDetail.php?maSanPham=${product.MaSanPham}">mua ngay</a>
                                                     </div>
                                                 </div>
                                             </a>
@@ -472,8 +472,7 @@
         }
 
         function detail(maSanPham){
-            const form = document.getElementById(`productForm_${maSanPham}`);
-            form.submit();
+            window.location.href = `GuestProductDetail.php?maSanPham=${maSanPham}`;
         }
 
         document.getElementById("Home-img").addEventListener("click", function () {

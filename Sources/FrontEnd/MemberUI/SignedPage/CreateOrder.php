@@ -175,6 +175,15 @@
                 return;
             }
 
+            if (diaChi == "") {
+                Swal.fire({
+                    title: 'Vui lòng không để trống địa chỉ giao hàng.',
+                    icon: 'info',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
+
             const tongGiaTri = '<?php echo $totalPrice_Shipping; ?>';
             const danhSachChiTietDonHang = [];
             const cartItems = document.querySelectorAll('.cartItem');

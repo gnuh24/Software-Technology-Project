@@ -121,19 +121,19 @@ if (isset($_GET['MaNguoiDung'])) {
             var sodienthoai = document.forms["profileForm"]["sodienthoai"].value;
             var ngaysinh = document.forms["profileForm"]["ngaysinh"].value;
             var diachi = document.forms["profileForm"]["diachi"].value;
-            if (/\d/.test(hoten)) {
+            if (hoten.trim() == "") {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
-                    text: 'Họ tên không được chứa số!'
+                    text: 'Họ tên không được để trống'
                 });
                 return false;
             }
-            if (!/^0\d{9}$/.test(sodienthoai)) {
+            if (sodienthoai.trim() == "") {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
-                    text: 'Số điện thoại không hợp lệ. Số điện thoại phải có 10 chữ số và bắt đầu từ 0!'
+                    text: 'Số điện thoại không được để trống'
                 });
                 return false;
             }
@@ -157,6 +157,15 @@ if (isset($_GET['MaNguoiDung'])) {
                     icon: 'error',
                     title: 'Oops...',
                     text: 'Địa chỉ không được để trống!'
+                });
+                return false;
+            }
+
+            if (ngaysinh.trim() === "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Ngày sinh không được để trống!'
                 });
                 return false;
             }

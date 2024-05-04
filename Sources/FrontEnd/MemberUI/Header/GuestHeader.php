@@ -8,9 +8,11 @@
         <div id="Home-login">Login</div>
     </div>
 </header>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
 <script>
     // Sự kiện tìm kiếm search 
-    document.getElementById("filter-button").addEventListener("click", function (event) {
+    document.getElementById("filter-button").addEventListener("click", (event) => {
         event.preventDefault();
         const form = document.getElementById("search");
         const searchValue  = document.getElementById("searchSanPham").value;

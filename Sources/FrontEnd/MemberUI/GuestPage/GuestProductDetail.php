@@ -58,12 +58,9 @@
                     $quantityMessage = $soLuongConLai > 0 ? "Còn $soLuongConLai sản phẩm" : "<span style='color: red;'>Sản phẩm đã hết hàng</span>";
 
                     echo '<div class="product_images__wrapper">
-
-
                     <div class="image">
-                        <img style="border: 2px solid black;  height: 400px;" src="' . $sanPham["AnhMinhHoa"] . '" alt="" class="product_img">
+                        <img style="border: 2px solid black; height: 400px;" src="' . $sanPham["AnhMinhHoa"] . '" alt="" class="product_img">
                     </div>
-
                 </div>
                 <div class="info__wrapper" style="margin-left: 30px">
                     <div class="title__wrapper">
@@ -93,43 +90,46 @@
                         <div class="size__wrapper">
                             <p class="title">Nồng độ cồn</p>
                             <div class="size__list">
-
                                 <div class="size__item ">
                                     <p>' . $sanPham["NongDoCon"] . '%</p>
                                 </div>
-
                             </div>
                         </div>
                         <div class="size__wrapper">
                             <p class="title">Dung tích</p>
                             <div class="size__list">
-
                                 <div class="size__item ">
                                     <p>' . $sanPham["TheTich"] . 'ml</p>
                                 </div>
-
                             </div>
                         </div>
-                        <div class="quantity__wrapper" style="display: flex; align-items: center;">
-                            <p class="title">Số lượng</p>
-                            <div class="quantity">
-                                <div style="display: flex; align-items: center; justify-content: center;" class="minusBtn"> <i class="fa-solid fa-minus"></i></div>
-                                
-                                <input type="number" value="1" min="0" max="' . $soLuongConLai . '" oninput="checkQuantity(this)">
-                                
-                                <div style="display: flex; align-items: center; justify-content: center;" class="plusBtn"><i class="fa-solid fa-plus"></i></div>
-                            </div>
-                        </div>
+                        <div class="quantity__wrapper" style="display: flex; align-items: center;">';
+        
+        // Kiểm tra nếu số lượng còn lại bằng 0, không in ra nút thêm vào giỏ hàng
+        if ($soLuongConLai > 0) {
+            echo '<p class="title">Số lượng</p>
+                  <div class="quantity">
+                      <div style="display: flex; align-items: center; justify-content: center;" class="minusBtn"> <i class="fa-solid fa-minus"></i></div>
+                      <input type="number" value="1" min="0" max="' . $soLuongConLai . '" oninput="checkQuantity(this)">
+                      <div style="display: flex; align-items: center; justify-content: center;" class="plusBtn"><i class="fa-solid fa-plus"></i></div>
+                  </div>';
+        }
+        
+        echo '</div>
                     </div>
-                    <div class="button__wrapper">
-                        <button class="secondary">
-                            <span>Thêm vào giỏ hàng</span>
-                        </button>
-                        <button class="primary" style="visibility: hidden;">
-                            <span>Mua ngay</span>
-                        </button>
-                    </div>
-                </div>';
+                    <div class="button__wrapper">';
+        // Nếu số lượng còn lại lớn hơn 0, in ra nút thêm vào giỏ hàng
+        if ($soLuongConLai > 0) {
+            echo '<button class="secondary">
+                      <span>Thêm vào giỏ hàng</span>
+                  </button>';
+        }
+        echo '<button class="primary" style="visibility: hidden;">
+                  <span>Mua ngay</span>
+              </button>
+              </div>
+          </div>';
+        
 
                 } else {
                     // Nếu không có mã sản phẩm được truyền vào, hiển thị thông báo lỗi
@@ -182,16 +182,22 @@
         }
     });
 
-    // Kiểm tra sự kiện của khi người dùng "cố tình" nhập vào số lượng lớn hơn.
+    // Kiểm tra sự kiện của khi người dùng "cố tình" nhập vào số lượng lớn hơn hoặc để trống.
     function checkQuantity(input) {
         var maxQuantity = parseInt(input.getAttribute("max")); // Lấy giá trị cận trên
         var enteredQuantity = parseInt(input.value); // Lấy giá trị số lượng nhập vào
-        if (enteredQuantity < 0) { // Nếu số lượng nhập vào nhỏ hơn 0
+
+        // Kiểm tra nếu giá trị nhập vào không phải là một số hoặc là một chuỗi rỗng
+        if (isNaN(enteredQuantity) || input.value.trim() === "") {
+            // Đặt giá trị là 1
+            input.value = 1;
+        } else if (enteredQuantity < 0) { // Nếu số lượng nhập vào nhỏ hơn 0
             input.value = 0; // Đặt giá trị là 0
         } else if (enteredQuantity > maxQuantity) { // Nếu số lượng nhập vào lớn hơn số lượng tối đa
             input.value = maxQuantity; // Đặt giá trị là số lượng tối đa
         }
     }
+
 
     document.getElementById("Home-img").addEventListener("click", function () {
             // Chuyển hướng về trang chủ khi click vào hình ảnh
