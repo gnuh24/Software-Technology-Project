@@ -25,7 +25,7 @@
                                     <div style="padding-left: 16%; width: 100%; padding-right: 2rem">
                                         <div class="wrapper">
                                             <div style="display: flex; padding-top: 1rem; padding-bottom: 1rem;">
-                                                <h2>Thống Kê</h2>
+                                                <h2>Thống kê tài chính</h2>
                                             </div>
                                             <div class="boxFeature">
                                                 <span class="text">Ngày Bắt Đầu</span>

@@ -30,7 +30,7 @@
     margin-top: 1rem;
     overflow-y: auto;
     background-color: rgb(236, 233, 233);
-    height: 48rem;
+    height: 50rem;
     padding: 1rem;
     border-radius: 0.3rem;
   }
@@ -38,3 +38,51 @@
     font-size: 1.3rem;
     font-weight: 700;
   }
+
+  .dashboard-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    width: 30rem;
+    padding: 1rem;
+
+}
+
+.dashboard-item  p{
+  text-align: center;
+
+}
+
+.canceled {
+    background-color: #e91e63;
+}
+
+.waiting-approval {
+    background-color: #00bcd4;
+}
+
+.approved {
+    background-color: #8100ff;
+}
+
+.delivering {
+    background-color: #ff9800;
+}
+
+.delivered {
+    background-color: #8bc34a;
+}
+
+.total {
+    background-color: rgb(52, 51, 51);
+}
+
+.dashboard-item p {
+    color: white;
+    font-weight: 700;
+}
+
+.dashboard-item p:last-child {
+    font-size: 2.5rem;
+}

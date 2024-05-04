@@ -193,7 +193,7 @@
                         SELECT MAX(stt.`NgayCapNhat`) FROM `TrangThaiDonHang` stt
                         WHERE dh.`MaDonHang` = stt.`MaDonHang`
                     )AND tt.`TrangThai` = 'GiaoThanhCong'
-                    AND dh.`NgayDat` BETWEEN COALESCE(:minDate ,'2010-01-01') AND COALESCE(:maxDate ,CURRENT_DATE)
+                    AND DATE(dh.`NgayDat`) BETWEEN COALESCE(:minDate ,'2010-01-01') AND COALESCE(:maxDate ,CURRENT_DATE)
                     GROUP BY sp.`MaSanPham`, sp.`TenSanPham`
                     ORDER BY `TongDoanhThu` desc, `TongSoLuong` desc;";
 
