@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../AdminDemo.css" />
@@ -39,7 +40,7 @@
             font-size: 1.5rem;
             font-weight: 700;
             color: white;
-            background-color: rgb(65, 64, 64);
+            background-color: rgba(0,0,0,0.5);
             padding: 1rem;
             border-radius: 0.6rem;
             cursor: pointer;
@@ -75,11 +76,84 @@
             text-decoration: none;
             cursor: pointer;
         }
+        .boxtable {
+        margin-top: 1rem;
+        overflow-y: auto;
+        background-color: white; /* Thay đổi màu nền thành màu trắng */
+        height: 48rem;
+        border-radius: 0.3rem;
+    }
+    /* CSS cho modal chỉnh sửa */
+#editProductModal {
+    display: none; /* Ẩn modal mặc định */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    overflow: auto;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
     </style>
 </head>
 <body>
     <div id="root">
         <div>
+            <!-- Modal chỉnh sửa sản phẩm -->
+            <div id="editProductModal" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <h2>Chỉnh sửa sản phẩm</h2>
+                    <form id="editProductForm">
+                        <label for="productName">Tên Sản Phẩm:</label><br>
+                        <input type="text" id="productName" name="productName"><br>
+
+                        <label for="productPrice">Giá Tiền:</label><br>
+                        <input type="text" id="productPrice" name="productPrice"><br>
+
+                        <label for="alcoholContent">Nồng Độ Cồn:</label><br>
+                        <input type="text" id="alcoholContent" name="alcoholContent"><br>
+
+                        <label for="productVolume">Dung Tích:</label><br>
+                        <input type="text" id="productVolume" name="productVolume"><br>
+
+                        <label for="productOrigin">Xuất Xứ:</label><br>
+                        <input type="text" id="productOrigin" name="productOrigin"><br>
+
+                        <label for="productQuantity">Số Lượng:</label><br>
+                        <input type="text" id="productQuantity" name="productQuantity"><br>
+
+                        <button type="submit">Lưu</button>
+
+                        <button id="closeEditModal" type="button">Đóng</button>
+                    </form>
+                </div>
+            </div>
+
             <div class="App">
                 <div class="StaffLayout_wrapper__CegPk">
                     <?php require_once "../ManagerHeader.php" ?>
@@ -127,22 +201,19 @@
                                     </div>
                                     <div class="boxTable">
                                     <table>
-                                        <thead>
+                                    <thead>
                                             <tr>
                                                 <th>Mã Sản Phẩm</th>
-                                                <th>Hình Ảnh</th>
                                                 <th>Tên Sản Phẩm</th>
                                                 <th>Giá Tiền</th>
-                                                <th>Nồng Độ Cồn</th>
-                                                <th>Dung Tích</th>
+                                                <th>Nồng Độ Cồn (%)</th>
+                                                <th>Dung Tích (đơn vị: ml)</th>
                                                 <th>Xuất Xứ</th>
                                                 <th>Số Lượng</th>
                                                 <th>Thao Tác</th>
                                             </tr>
                                         </thead>
-                                        <tbody id="productTable">
-                                            <!-- Dữ liệu sản phẩm sẽ được thêm vào đây -->
-                                        </tbody>
+                                        <tbody id="tableBody"></tbody>
                                     </table>
                                     </div>
                                 </div>
@@ -187,152 +258,107 @@
         </div>
     </div>
     <script>
-// Get reference to the button that triggers modal
-var createProductBtn = document.getElementById('createProductBtn');
+var editingProductId = null;
 
-// Get reference to modal
-var modal = document.getElementById('createProductModal');
+function getAllSanPham(page, search) {
+    $.ajax({
+        url: 'http://localhost/Software-Technology-Project/Sources/BackEnd/ManagerBE/SanPhamBE.php',
+        type: 'GET',
+        dataType: "json",
+        data: {
+            page: page,
+            search: search
+        },
+        success: function(response) {
+            var data = response.data;
+            var tableBody = document.getElementById("tableBody");
+            var tableContent = "";
 
-// When the user clicks on the button, open the modal
-createProductBtn.addEventListener('click', function() {
-    modal.style.display = 'block';
-});
-
-// Handle form submission for creating a product
-var createProductForm = document.getElementById('createProductForm');
-createProductForm.addEventListener('submit', function(event) {
-    event.preventDefault(); // Prevent default form submission
-
-    // Get form input values
-    var productName = document.getElementById('productName').value;
-
-    // Check if any of the fields are empty
-    if (productName.trim() === '') {
-        alert('Vui lòng nhập tên sản phẩm.');
-        return; // Don't proceed further
-    }
-
-    // Check if product with the same name already exists
-    var productRows = document.querySelectorAll('#productTable tbody tr');
-    for (var i = 0; i < productRows.length; i++) {
-        var existingProductName = productRows[i].querySelector('td:nth-child(3)').textContent;
-        if (existingProductName.trim().toLowerCase() === productName.trim().toLowerCase()) {
-            alert('Sản phẩm đã tồn tại trong danh sách.');
-            return; // Don't proceed further
-        }
-    }
-
-    // Proceed with creating the product
-    var productID = document.getElementById('productID').value;
-    var productPrice = document.getElementById('productPrice').value;
-    var alcoholContent = document.getElementById('alcoholContent').value;
-    var productVolume = document.getElementById('productVolume').value;
-    var productOrigin = document.getElementById('productOrigin').value;
-    var productQuantity = document.getElementById('productQuantity').value;
-
-    // Check if any of the fields are empty
-    if (productID.trim() === '' || productPrice.trim() === '' || alcoholContent.trim() === '' || productVolume.trim() === '' || productOrigin.trim() === '' || productQuantity.trim() === '') {
-        alert('Vui lòng điền đầy đủ thông tin sản phẩm.');
-        return; // Don't proceed further
-    }
-
-    // Create new table row
-    var newRow = document.createElement('tr');
-    newRow.innerHTML = `
-        <td>${productID}</td>
-        <td><img src="product_image.jpg" alt="Hình Ảnh Sản Phẩm"></td>
-        <td>${productName}</td>
-        <td>${productPrice}</td>
-        <td>${alcoholContent}</td>
-        <td>${productVolume}</td>
-        <td>${productOrigin}</td>
-        <td>${productQuantity}</td>
-        <td><button>Edit</button></td>
-    `;
-
-    // Append the new row to the table
-    var productTable = document.getElementById('productTable');
-    productTable.appendChild(newRow);
-
-    // Close the modal
-    modal.style.display = 'none';
-
-    // Send data to server using AJAX
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'SanPhamBE.php', true);
-    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
-            // Response from server
-            var response = JSON.parse(xhr.responseText);
-            if (response.status === 200) {
-                alert('Sản phẩm đã được tạo thành công!');
-                // You can optionally reload or update the product list here
-            } else {
-                alert('Đã xảy ra lỗi: ' + response.message);
-            }
-        }
-    };
-    // Send the data as URL-encoded form data
-    xhr.send('productID=' + encodeURIComponent(productID) +
-             '&productName=' + encodeURIComponent(productName) +
-             '&productPrice=' + encodeURIComponent(productPrice) +
-             '&alcoholContent=' + encodeURIComponent(alcoholContent) +
-             '&productVolume=' + encodeURIComponent(productVolume) +
-             '&productOrigin=' + encodeURIComponent(productOrigin) +
-             '&productQuantity=' + encodeURIComponent(productQuantity));
-});
-
-// Get references to close button
-var closeButton = document.querySelector('#createProductModal .close');
-
-// When the user clicks on close button, close the modal
-closeButton.addEventListener('click', function() {
-    modal.style.display = 'none';
-});
-
-// When the user clicks anywhere outside of the modal, close it
-window.addEventListener('click', function(event) {
-    if (event.target == modal) {
-        modal.style.display = 'none';
-    }
-});    
-
-// Dựa vào dữ liệu sản phẩm từ server, thêm từng sản phẩm vào bảng
-// Gửi yêu cầu AJAX để lấy dữ liệu sản phẩm từ server
-var xhr = new XMLHttpRequest();
-xhr.open('GET', 'SanPhamBE.php', true);
-xhr.onreadystatechange = function() {
-    if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
-        // Xử lý dữ liệu trả về từ server
-        var products = JSON.parse(xhr.responseText);
-        if (products.length > 0) {
-            // Duyệt qua từng sản phẩm và thêm vào bảng
-            products.forEach(function(product) {
-                var newRow = document.createElement('tr');
-                newRow.innerHTML = `
-                    <td>${product.productID}</td>
-                    <td><img src="${product.imageURL}" alt="Hình Ảnh Sản Phẩm"></td>
-                    <td>${product.productName}</td>
-                    <td>${product.productPrice}</td>
-                    <td>${product.alcoholContent}</td>
-                    <td>${product.productVolume}</td>
-                    <td>${product.productOrigin}</td>
-                    <td>${product.productQuantity}</td>
-                    <td><button>Edit</button></td>
-                `;
-                var productTable = document.getElementById('productTable');
-                productTable.appendChild(newRow);
+            data.forEach(function(record, index) {
+                var trContent = `
+                    <tr>
+                        <td>${record.MaSanPham}</td>
+                        <td>${record.TenSanPham}</td>
+                        <td>${record.Gia}</td>
+                        <td>${record.NongDoCon}</td>
+                        <td>${record.TheTich}</td>
+                        <td>${record.XuatXu}</td>
+                        <td>${record.SoLuongConLai}</td>
+                        <td>
+                            ${record.TrangThai === 1 ?
+                                `<button onclick="toggleProduct(${record.MaSanPham}, ${record.TrangThai})">Khóa</button>` :
+                                `<button onclick="openEditModal(${record.MaSanPham})">Edit</button>`
+                            }
+                        </td>
+                    </tr>`;
+                tableContent += trContent;
             });
-        } else {
-            // Hiển thị thông báo nếu không có sản phẩm nào
-            alert('Không có sản phẩm nào được tìm thấy.');
+
+            tableBody.innerHTML = tableContent;
+        },
+        error: function(xhr, status, error) {
+            console.error('Lỗi khi gọi API: ', error);
+        }
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    getAllSanPham(1, '');
+});
+
+function toggleProduct(productId, productStatus) {
+    if (productStatus === 1) {
+        updateProductStatus(productId, 0);
+    } else {
+        updateProductStatus(productId, 1);
+    }
+}
+
+function updateProductStatus(productId, newStatus) {
+    console.log('Cập nhật trạng thái sản phẩm có ID', productId, 'thành', newStatus);
+    updateUIAfterStatusChange(productId, newStatus);
+}
+
+function updateUIAfterStatusChange(productId, newStatus) {
+    var button = document.querySelector(`button[data-product-id="${productId}"]`);
+    if (button) {
+        button.innerText = newStatus === 1 ? 'Khóa' : 'Mở';
+        if (newStatus === 1) {
+            button.setAttribute('onclick', `openEditModal(${productId})`);
         }
     }
-};
-xhr.send();
+}
+// Function to open the edit modal and populate it with product data
+// Function to open the edit modal and populate it with product data
+function openEditModal(productId) {
+    $.ajax({
+        url: 'http://localhost/Software-Technology-Project/Sources/BackEnd/ManagerBE/SanPhamBE.php',
+        type: 'GET',
+        dataType: 'json',
+        data: {
+            MaSanPham: productId
+        },
+        success: function(response) {
+            var productData = response.data;
+            $('#productId').val(productId);
+            $('#productName').val(productData.TenSanPham);
+            $('#productOrigin').val(productData.XuatXu);
+            $('#productBrand').val(productData.ThuongHieu);
+            $('#productVolume').val(productData.TheTich);
+            $('#alcoholContent').val(productData.NongDoCon);
+            $('#productPrice').val(productData.Gia);
+            $('#productQuantity').val(productData.SoLuongConLai);
+            $('#productImage').val(productData.AnhMinhHoa);
+            $('#editProductModal').css('display', 'block');
+        },
+        error: function(xhr, status, error) {
+            console.error('Error fetching product data: ', error);
+        }
+    });
+}
 
 </script>
+
 
 </body>
 </html>
