@@ -40,7 +40,43 @@
         $result = getAllSanPham($page, $search, $minTheTich, $maxTheTich, $minGia, $maxGia, $minNongDoCon, $maxNongDoCon, 1, $maLoaiSanPham);
     
         echo json_encode($result);
-    } else if(isset($_GET['search'])){
+    } 
+    
+    else if (isset($_GET['getManager'])){
+            // Kiểm tra và gán giá trị cho $page từ $_GET
+            $page = isset($_GET['page']) ? $_GET['page'] : 1;
+        
+            // Kiểm tra và gán giá trị cho $search từ $_GET
+            $search = isset($_GET['search']) ? $_GET['search'] : "";
+        
+            // Kiểm tra và gán giá trị cho $minGia từ $_GET
+            $minGia = isset($_GET['minGia']) ? $_GET['minGia'] : null;
+        
+            // Kiểm tra và gán giá trị cho $maxGia từ $_GET
+            $maxGia = isset($_GET['maxGia']) ? $_GET['maxGia'] : null;
+            
+            // Kiểm tra và gán giá trị cho $maLoaiSanPham từ $_GET
+            $maLoaiSanPham = $_GET['maLoaiSanPham'] !== '0' ? $_GET['maLoaiSanPham'] : null;
+
+            // Kiểm tra và gán giá trị cho $trangThai từ $_GET
+            $trangThai =  $_GET['trangThai'] != ""  ? $_GET['trangThai'] : null;
+
+        
+            $result = getAllSanPham($page, $search, null, null, $minGia, $maxGia, null, null, $trangThai, $maLoaiSanPham);
+        
+            echo json_encode($result);
+    }
+
+    else if (isset($_POST["changeState"])){
+        $maSanPham = $_POST["maSanPham"];
+        $trangThai = $_POST["trangThai"];
+
+        $result = updateTrangThaiSanPham($maSanPham, $trangThai);
+
+        echo json_encode($result);
+    }
+    
+    else if(isset($_GET['search'])){
         $search = $_GET['search'];
         $result = getAllSanPhamnotpagination($search);
         echo json_encode($result);
@@ -72,6 +108,24 @@
             $result = createSanPham($tenSanPham, $xuatXu, $thuongHieu, $gia, $theTich, $nongDoCon, $anhMinhHoa, $maLoaiSanPham);
             echo json_encode($result);
         }
+
+        if ($_POST['action'] == "update"){
+            $maSanPham = $_POST['maSanPham'];
+            $tenSanPham = $_POST['tenSanPham'];
+            $maLoaiSanPham = $_POST['maLoaiSanPham'];
+            $xuatXu = $_POST['xuatXu'];
+            $thuongHieu = $_POST['thuongHieu'];
+            $theTich = $_POST['theTich'];
+            $nongDoCon = $_POST['nongDoCon'];
+            $gia = $_POST['gia'];
+            $trangThai = $_POST['trangThai'];
+            $soLuongConLai = $_POST['soLuongConLai'];
+            $anhMinhHoa = $_POST['anhMinhHoa'];
+        
+            // Tiếp tục xử lý các giá trị khác ở đây
+            $result = updateSanPham($maSanPham, $tenSanPham, $xuatXu, $thuongHieu, $theTich, $nongDoCon, $gia, $soLuongConLai, $anhMinhHoa, $trangThai, $maLoaiSanPham);
+            echo json_encode($result);
+        }
     } else if (isset($_GET['MaSanPham'])){
         $maSanPham = $_GET['MaSanPham'];
         $result = getSanPhamByMaSanPham($maSanPham);
@@ -80,7 +134,14 @@
         $tenSanPham = $_GET["tenSanPham"];
         $result = isTenSanPhamExists($tenSanPham);
         echo json_encode($result);
-    }
+    } else if (isset($_GET['checkBelong'])){
+        $maSanPham = $_GET["maSanPham"];
+        $tenSanPham = $_GET["tenSanPham"];
+        $result = isTenSanPhamBelongToMaSanPham($maSanPham, $tenSanPham);
+        echo json_encode($result);
+    } 
+
+   
 
     function getAllSanPhamnotpagination($search = null){
         
@@ -138,13 +199,13 @@
         $connection = null;
     
         // Chuẩn bị câu truy vấn gốc
-        $query = "SELECT * FROM `SanPham`";
+        $query = "SELECT * FROM `SanPham` JOIN `LoaiSanPham` ON `SanPham`.`MaLoaiSanPham` = `LoaiSanPham`.`MaLoaiSanPham`";
     
         // Mảng chứa điều kiện
         $where_conditions = [];
     
         // Số phần tử mỗi trang
-        $entityPerPage = 16;
+        $entityPerPage = 12;
     
         // Tổng số trang
         $totalPages = null;
@@ -176,7 +237,7 @@
     
         // Lọc theo loại sản phẩm
         if (isset($maLoaiSanPham)) {
-            $where_conditions[] = "`MaLoaiSanPham` = $maLoaiSanPham";
+            $where_conditions[] = "`SanPham`.`MaLoaiSanPham` = $maLoaiSanPham";
         }
     
         // Kết nối các điều kiện lại với nhau (Nếu không có thì skip)
@@ -430,6 +491,42 @@
         }
     }
 
+    function updateTrangThaiSanPham($maSanPham, $trangThai) {
+        // Khởi tạo kết nối
+        $connection = MysqlConfig::getConnection();
+
+        $query = "UPDATE `SanPham` SET 
+                    `TrangThai` = :trangThai
+                WHERE `MaSanPham` = :maSanPham;";
+
+        try {
+            $statement = $connection->prepare($query);
+
+            if ($statement !== false) {
+                $statement->bindValue(':trangThai', $trangThai, PDO::PARAM_BOOL);
+                $statement->bindValue(':maSanPham', $maSanPham, PDO::PARAM_INT);
+
+                $statement->execute();
+
+                if ($statement->rowCount() > 0) {
+                    return (object) [
+                        "status" => 200,
+                        "message" => "Thành công",
+                    ];
+                } else {
+                    throw new PDOException("Không có bản ghi nào được cập nhật");
+                }
+            }
+        } catch (PDOException $e) {
+            return (object) [
+                "status" => 400,
+                "message" => $e->getMessage()
+            ];
+        } finally {
+            $connection = null;
+        }
+    }
+
     function updateSanPham($maSanPham, $tenSanPham, $xuatXu, $thuongHieu, $theTich, $nongDoCon, $gia, $soLuongConLai, $anhMinhHoa, $trangThai, $maLoaiSanPham) {
         // Khởi tạo kết nối
         $connection = MysqlConfig::getConnection();
@@ -519,32 +616,7 @@
             $connection = null;
         }
     }
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        // Get form data
-        $productName = $_POST['productName'];
-        $productPrice = $_POST['productPrice'];
-        $alcoholContent = $_POST['alcoholContent'];
-        $productVolume = $_POST['productVolume'];
-        $productOrigin = $_POST['productOrigin'];
-        $productQuantity = $_POST['productQuantity'];
-    
-        // Call createSanPham function to add product to database
-        $result = createSanPham($productName, $productOrigin, '', $productVolume, $alcoholContent, $productPrice, '', 1); // Replace '' and 1 with appropriate values for 'ThuongHieu' and 'MaLoaiSanPham'
-    
-        // Prepare response data
-        $response = array();
-        if ($result->status === 200) {
-            $response['status'] = 200;
-            $response['message'] = 'Thành công';
-        } else {
-            $response['status'] = 400;
-            $response['message'] = $result->message;
-        }
-    
-        // Send response as JSON
-        header('Content-type: application/json');
-        echo json_encode($response);
-    }
+ 
 
     function getAllSanPham2(){
         $connection = null;

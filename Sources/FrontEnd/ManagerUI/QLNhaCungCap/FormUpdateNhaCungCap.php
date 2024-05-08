@@ -156,10 +156,6 @@
                 return;
             }
         }
-        console.log("Mã: ", MaNCC.value);
-        console.log("Tên NCC: ", TenNCC.value);
-        console.log("SoDienThoai ", SoDienThoai.value);
-        console.log("Email: ", Email.value);
 
 
         //Bắt đầu cập nhật thông tin nhà cung cấp sau khi đã qua các bước xác nhận
