@@ -133,8 +133,10 @@ if (isset($_GET['MaPhieu'])) {
                                                         echo '<tr style="text-align: center;">
                                                                 <td style="padding: 0.5rem; name=MaSanPham[]">' . $tmp['MaSanPham'] . '</td>
                                                                 <td style="padding: 0.5rem;">' . $tmp['TenSanPham'] . '</td>
-                                                                <td style="padding: 0.5rem;"><input type="text" name="donGia[]"  onblur="validateDonGia(this)" value="' . number_format($tmp['DonGiaNhap'], 0, '.', ',') . '"style=" height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;" ></td>
-                                                                <td style="padding: 0.5rem;"><input type="text" name="soLuong[]"  onblur="validateSoLuong(this)" value="' . $tmp['SoLuong'] . '" style=" height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;"></td>
+                                                                <td style="padding: 0.5rem;">
+                                                                <input type="text" name="donGia[]" onblur="formatCurrency(this)" onfocus="clearFormat(this)" value="' . number_format($tmp['DonGiaNhap'], 0, '.', ',') . '"  style=" height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;" >
+                                                            </td>
+                                                             <td style="padding: 0.5rem;"><input type="text" name="soLuong[]"  onblur="validateSoLuong(this)" value="' . $tmp['SoLuong'] . '" style=" height: 3rem; padding: 0.5rem; width: 100%; background-color: white; font-weight: 700; margin-top: 0.5rem;text-align: right;"></td>
                                                             </tr>';
                                                     }
                                                 } else
@@ -240,6 +242,25 @@ if (isset($_GET['MaPhieu'])) {
 
 <script>
     // Function to handle form submission
+function formatCurrency(input) {
+    // Lấy giá trị nhập vào từ trường input
+    let value = input.value;
+    // Loại bỏ các dấu phân tách và ký tự không phải số
+    value = value.replace(/[^\d]/g, '');
+    // Định dạng lại giá trị thành định dạng tiền tệ
+    input.value = Number(value).toLocaleString('en-US');
+}
+function clearFormat(input) {
+    // Loại bỏ các dấu phân tách khi trường nhận trọng tâm
+    let value = input.value;
+    value = value.replace(/[,]/g, '');
+    input.value = value;
+}
+function clearFormat1(value) {
+    // Loại bỏ các dấu phân tách từ giá trị
+    return value.replace(/[,]/g, '');
+}
+
     function handleSubmit() {
         var maNhaCungCap = document.getElementById('manhacungcap').value;
         var userData = localStorage.getItem("key");
@@ -264,12 +285,13 @@ if (isset($_GET['MaPhieu'])) {
             var maSanPham = $(this).find('td:nth-child(1)').text().trim();
             var tenSanPham = $(this).find('td:nth-child(2)').text().trim();
             var donGia = $(this).find('td:nth-child(3) input').val().trim();
+            var dongia = clearFormat1(donGia);
             var soLuong = $(this).find('td:nth-child(4) input').val().trim();
 
             var productItem = {
                 'MaSanPham': maSanPham,
                 'TenSanPham': tenSanPham,
-                'DonGia': donGia,
+                'DonGia': dongia,
                 'SoLuong': soLuong
             };
 
@@ -291,11 +313,9 @@ if (isset($_GET['MaPhieu'])) {
                 'trangthai': trangthai,
                 'MaQuanLy': maQuanLy,
                 'MaPhieuNhapKho': maPNK,
-                'TotalValue': totalValue,
                 'ProductData': JSON.stringify(productData)
             },
             success: function(response) {
-
                 Swal.fire({
                     icon: 'success',
                     title: 'Thành công',
@@ -344,7 +364,7 @@ if (isset($_GET['MaPhieu'])) {
                 var priceCell = row.querySelector('td:nth-child(3) input');
                 if (quantityCell && priceCell) {
                     var quantity = parseInt(quantityCell.value);
-                    var price = parseFloat(priceCell.value);
+                    var price = clearFormat1(priceCell.value);
                     if (!isNaN(quantity) && !isNaN(price)) { // Kiểm tra nếu quantity và price là số hợp lệ
                         totalPrice += quantity * price;
                     }
