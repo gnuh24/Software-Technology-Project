@@ -205,7 +205,6 @@
 
             if (hoTen && soDienThoai && diaChi && maPhuongThuc && maDichVu && tongGiaTri && danhSachChiTietDonHang.length > 0) {
                 const diaChiGiaoHang = diaChi;
-                createDonHang(maTaiKhoan, tongGiaTri, maPhuongThuc, maDichVu, diaChiGiaoHang, danhSachChiTietDonHang);
                 Swal.fire({
                     title: 'Đặt hàng',
                     text: 'Bạn có chắc muốn đặt hàng?',
@@ -216,6 +215,9 @@
                     confirmButtonText: 'Đồng ý'
                 }).then((result) => {
                     if (result.isConfirmed) {
+
+                        createDonHang(maTaiKhoan, tongGiaTri, maPhuongThuc, maDichVu, diaChiGiaoHang, danhSachChiTietDonHang);
+
                         // Redirect to SignedProduct.php after placing the order
                         Swal.fire({
                             title: 'Đặt hàng thành công!',
