@@ -1,7 +1,4 @@
 <?php 
-    ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1);
-    error_reporting(E_ALL);
     require_once __DIR__ . "/../../Configure/MysqlConfig.php";
 
     if (isset($_GET['isDemoHome'])) {
@@ -10,7 +7,8 @@
     
         echo json_encode($result);
 
-    } else if (isset($_GET['isProductPage'])) {
+    } 
+    else if (isset($_GET['isProductPage'])) {
         // Kiểm tra và gán giá trị cho $page từ $_GET
         $page = isset($_GET['page']) ? $_GET['page'] : 1;
     
@@ -212,12 +210,6 @@
             if ($statement !== false) {
                 $statement->execute();
                 $result = $statement->fetchAll(PDO::FETCH_ASSOC);
-    
-                // In ra dữ liệu trước khi mã hóa thành JSON để kiểm tra
-                print_r($result);
-    
-                // Sử dụng hàm json_encode để chuyển đổi dữ liệu thành JSON
-                echo json_encode($result); // $result là dữ liệu cần trả về
     
                 return (object) [
                     "status" => 200,

@@ -331,6 +331,9 @@
                     maLoaiSanPham: maLoaiSanPham
                 },
                 success: function(response) {
+
+                    console.log(response);
+                    
                     var productContainer = $('#product .products');
                     if (response.data && response.data.length > 0) {
                         // Tạo biến lưu trữ nội dung HTML mới
@@ -428,7 +431,6 @@
                     isDemoHome: true
                 },
                 success: function(response) {
-                    console.log(response);
                     var categoryFilter = $('#category-filter');
                     var htmlContent = '';
 
