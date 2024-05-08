@@ -140,7 +140,7 @@
                                       <td class="Table_data_quyen_2">' . $record['TongGiaTri'] . '</td>
                                       <td class="Table_data_quyen_2">' . $record['Email'] . '</td>
                                       <td class="' . $trClass . '"><button type="button" onclick="confirmCancelOrder(' . $record['MaDonHang'] . ', \'' . $record['TrangThai'] . '\')">Hủy</button></td>';
-                                
+
                                     if ($order_statuses[$maDonHang] == 'Chờ Duyệt')
                                       echo '<td class="' . $trClass . '"><button type="button" onclick="confirmCancelOrder(' . $record['MaDonHang'] . ', \'' . $record['TrangThai'] . '\')">Hủy</button></td></tr>';
                                     else
@@ -154,7 +154,7 @@
                       </table>
                       <div id="pagination" class="pagination">
 
-                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -170,11 +170,6 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- Thêm thư viện SweetAlert2 -->
 
 <script>
-  var danhSachSanPham = <?php
-                        require_once "../../../BackEnd/ManagerBE/SanPhamBE.php";
-                        $danhSachSanPham = getAllSanPham2(1)->data;
-                        echo json_encode($danhSachSanPham); ?>;
-
   var udPage = 0;
   var udminNgayTao = 0;
   var udmaxNgayTao = 0;
@@ -209,19 +204,19 @@
 
   function confirmCancelOrder(MaDonHang, TrangThaiHienTai) {
     Swal.fire({
-        title: 'Xác nhận hủy đơn hàng',
-        text: 'Bạn có chắc chắn muốn hủy đơn hàng này?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Hủy đơn hàng',
-        cancelButtonText: 'Hủy bỏ',
-        reverseButtons: true
+      title: 'Xác nhận hủy đơn hàng',
+      text: 'Bạn có chắc chắn muốn hủy đơn hàng này?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Hủy đơn hàng',
+      cancelButtonText: 'Hủy bỏ',
+      reverseButtons: true
     }).then((result) => {
-        if (result.isConfirmed) {
-            changeOrderStatus(MaDonHang, 'Huy', TrangThaiHienTai);
-        }
+      if (result.isConfirmed) {
+        changeOrderStatus(MaDonHang, 'Huy', TrangThaiHienTai);
+      }
     });
-}
+  }
 
 
   function getTenTrangThai(order_statuses) {
@@ -358,11 +353,6 @@
     //Clear dữ liệu cũ
     clearTable();
 
-    danhSachSanPham = <?php
-                      require_once "../../../BackEnd/ManagerBE/SanPhamBE.php";
-                      $danhSachSanPham = getAllSanPham2(1)->data;
-                      echo json_encode($danhSachSanPham); ?>;
-
     udPage = page;
     udminNgayTao = minNgayTao;
     udmaxNgayTao = maxNgayTao;
@@ -431,7 +421,6 @@
           });
         }
         setTrangThaiDonHang(MaDonHang, TrangThai);
-        fetchDataAndUpdateTable(udPage, udminNgayTao, udmaxNgayTao, udtrangThai);
       },
       error: function(xhr, status, error) {
         console.error('Lỗi khi gọi API: ', error);
@@ -455,7 +444,6 @@
           if (!flagAllProductsAvailable) {
             return;
           }
-          console.log("bên trong",danhSachSanPham);
           var sanPham = getSanPhamByMaSanPham(danhSachSanPham, element.MaSanPham);
           if (sanPham.SoLuongConLai < element.SoLuong) {
             flagAllProductsAvailable = false;
@@ -470,10 +458,8 @@
             var maSanPham = element.MaSanPham;
             var soLuong = element.SoLuong;
             giamSoLuongSanPham(maSanPham, soLuong);
-            setTrangThaiDonHang(MaDonHang, TrangThai);
-            fetchDataAndUpdateTable(udPage, udminNgayTao, udmaxNgayTao, udtrangThai);
-
           });
+          setTrangThaiDonHang(MaDonHang, TrangThai);
         }
       },
       error: function(xhr, status, error) {
@@ -541,6 +527,10 @@
         Swal.fire({
           icon: 'success',
           text: `Cập nhật trạng thái ${MaDonHang} thành công.`
+        }).then((result1) => {
+          if (result1.isConfirmed) {
+             location.reload();
+          }
         });
       },
       error: function(xhr, status, error) {
@@ -562,22 +552,20 @@
 
   function changeOrderStatus(MaDonHang, TrangThai, TrangThaiHienTai) {
     if (TrangThai == "Huy") {
-        getChiTietDonHangByMaDonHangHuy(MaDonHang, TrangThai, TrangThaiHienTai);
+      getChiTietDonHangByMaDonHangHuy(MaDonHang, TrangThai, TrangThaiHienTai);
     } else {
-        TrangThai = nextState(TrangThai);
-        if (TrangThai == 'DaDuyet') {
-            danhSachSanPham = <?php
-                                require_once "../../../BackEnd/ManagerBE/SanPhamBE.php";
-                                $danhSachSanPham = getAllSanPham2()->data;
-                                echo json_encode($danhSachSanPham); ?>;
-            getChiTietDonHangByMaDonHangDaDuyet(MaDonHang, TrangThai, danhSachSanPham);
-        } else {
-            setTrangThaiDonHang(MaDonHang, TrangThai);
-        }
+      TrangThai = nextState(TrangThai);
+      if (TrangThai == 'DaDuyet') {
+        var danhSachSanPham = <?php
+                              require_once "../../../BackEnd/ManagerBE/SanPhamBE.php";
+                              $danhSachSanPham = getAllSanPham2()->data;
+                              echo json_encode($danhSachSanPham); ?>;
+        getChiTietDonHangByMaDonHangDaDuyet(MaDonHang, TrangThai, danhSachSanPham);
+      } else {
+        setTrangThaiDonHang(MaDonHang, TrangThai);
+      }
     }
-
-    fetchDataAndUpdateTable(udPage, udminNgayTao, udmaxNgayTao, udtrangThai);
-}
+  }
 
 
   // Example usage:
