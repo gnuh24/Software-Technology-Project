@@ -1,3 +1,5 @@
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <?php
 if (isset($_GET['MaNguoiDung'])) {
     $hoten = $_POST['hoten'];
@@ -12,23 +14,27 @@ if (isset($_GET['MaNguoiDung'])) {
     $nguoidung= getTaiKhoanByMaTaiKhoan($id)->data;
     $jsonNguoiDung = json_encode($nguoidung);
     if ($mess->status == '200') {
-        echo '<script> 
+        echo '
+        <script> 
         localStorage.removeItem("key");
         var data = localStorage.getItem("key");
         var jsonData = ' . $jsonNguoiDung . ';
         localStorage.setItem("key", JSON.stringify(jsonData));
-        Swal.fire({
-            title: "Thành công!",
-            text: "Cập nhật thông tin thành công!",
-            icon: "success",
-            confirmButtonText: "OK"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = "Profile.php";
-            }
+        document.addEventListener("DOMContentLoaded", function() {
+            Swal.fire({
+                title: "Thành công!",
+                text: "Cập nhật thông tin thành công!",
+                icon: "success",
+                confirmButtonText: "OK"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "Profile.php";
+                }
+            });
         });
         </script>';
     }
+    
     exit();     
 }
 ?>
@@ -43,6 +49,8 @@ if (isset($_GET['MaNguoiDung'])) {
     <link rel="stylesheet" href="../../../Resources/bootstrap-5.3.2-dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css" integrity="sha256-2XFplPlrFClt0bIdPgpz8H7ojnk10H69xRqd9+uTShA=" crossorigin="anonymous" />
     <title>Thông tin cá nhân</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </head>
 <body>
     <?php require_once "../Header/SignedHeader.php" ?>
