@@ -83,6 +83,9 @@
         if (!empty($quyen)) {
             $where_conditions[] = "`Quyen` = '$quyen' ";
         }
+
+
+
         // Kết nối các điều kiện lại với nhau (Nếu không có thì skip)
         if (!empty($where_conditions)) {
             $query .= " WHERE " . implode(" AND ", $where_conditions);
@@ -171,7 +174,6 @@
             $empty = false;
             $where_conditions[] .= "(`TenDangNhap`  LIKE '%" . $search . "%' OR 
                                     `Email`         LIKE '%" . $search . "%')";
-
         }
 
         // Thêm điều kiện về quyền
@@ -232,13 +234,14 @@
                     + Limit giới hạn số row lấy ra (Chặn đầu dưới)
                         -> Kết hợp cả 2 lại ta có công thức phân trang
     
-                */
+        */
     
 
         $current_page = isset($page) ? $page : 1;
         $start_from = ($current_page - 1) * $entityPerPage;
     
         $query .= " LIMIT $entityPerPage OFFSET $start_from";
+
     
         // Khởi tạo kết nối đến cơ sở dữ liệu
     
@@ -411,13 +414,15 @@
         // Khởi tạo kết nối
         $connection = MysqlConfig::getConnection();
 
+
+        //Truy vấn
         $query = "INSERT INTO `TaiKhoan` (`TenDangNhap`, `MatKhau`, `Quyen`) 
                                     VALUES (:tenDangNhap, :matKhau, :quyen)";
     
     
         try {
     
-            $statement = $connection->prepare($query);
+            $statement = $connection->prepare($query); 
         
             if ($statement  !== false) {
         
@@ -425,6 +430,7 @@
                 $statement->bindValue(':tenDangNhap', $tenDangNhap,        PDO::PARAM_STR);
                 $statement->bindValue(':matKhau'    , $matKhau,            PDO::PARAM_STR);
                 $statement->bindValue(':quyen'      , $quyen,              PDO::PARAM_STR);
+
         
                 // Thực hiện truy vấn
                 $statement = $statement->execute();

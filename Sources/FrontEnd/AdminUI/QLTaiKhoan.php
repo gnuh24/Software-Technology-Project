@@ -58,7 +58,9 @@
                                                             <th class="Table_th__hCkcg">Thao tác</th>
                                                         </tr>
                                                     </thead>
-                                                    <tbody id="tableBody"></tbody>
+                                                    <tbody id="tableBody">
+
+                                                    </tbody>
                                                 </table>
                                                 <div class="pagination"></div>
                                             </div>
@@ -85,6 +87,10 @@
                 window.location.href = '../../FrontEnd/MemberUI/Login/LoginUI.php';
             });
         }
+
+        // Khởi tạo trang hiện tại
+        var currentPage = 1;
+        fetchDataAndUpdateTable(currentPage, '', '');
     });
 
     // Hàm để xóa hết các dòng trong bảng
@@ -95,7 +101,7 @@
 
     // Hàm getAllTaiKhoan
     function getAllTaiKhoan(page, search, quyen) {
-        $.ajax({
+        $.ajax({ 
             url: '../../BackEnd/AdminBE/TaiKhoanBE.php',
             type: 'GET',
             dataType: "json",
@@ -105,6 +111,7 @@
                 quyen: quyen
             },
             success: function (response) {
+            
                 var data = response.data;
                 var tableBody = document.getElementById("tableBody"); // Lấy thẻ tbody của bảng
                 var tableContent = ""; // Chuỗi chứa nội dung mới của tbody
@@ -158,6 +165,8 @@
                 });
                 // Thiết lập lại nội dung của tbody bằng chuỗi tableContent
                 tableBody.innerHTML = tableContent;
+
+
                 // Tạo phân trang
                 createPagination(page, response.totalPages);
             },
@@ -166,16 +175,17 @@
             }
         });
     }
+
+
     // Hàm để gọi getAllTaiKhoan và cập nhật dữ liệu và phân trang
     function fetchDataAndUpdateTable(page, search, quyen) {
         //Clear dữ liệu cũ
         clearTable();
+
         // Gọi hàm getAllTaiKhoan và truyền các giá trị tương ứng
         getAllTaiKhoan(page, search, quyen);
     }
-    // Khởi tạo trang hiện tại
-    var currentPage = 1;
-    fetchDataAndUpdateTable(currentPage, '', '');
+
     // Hàm tạo nút phân trang
     function createPagination(currentPage, totalPages) {
         var paginationContainer = document.querySelector('.pagination');
@@ -198,10 +208,17 @@
                     fetchDataAndUpdateTable(index + 1, searchValue, quyenValue); // Thêm 1 vào index để chuyển đổi về trang 1-indexed
                 });
             });
+            
             // Đánh dấu trang hiện tại
             paginationContainer.querySelector('.pageButton:nth-child(' + currentPage + ')').classList.add('active'); // Sửa lại để chỉ chọn trang hiện tại
         }
     }
+
+
+
+
+
+
     // Hàm xử lý sự kiện khi select Quyen thay đổi
     document.querySelector('#selectQuyen').addEventListener('change', function () {
         var searchValue = document.querySelector('.Admin_input__LtEE-').value;

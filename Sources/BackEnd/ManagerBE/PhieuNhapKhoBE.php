@@ -6,7 +6,9 @@ if (isset($_GET['page'])) {
     $datenhapkho = isset($_GET['datenhapkho']) ? $_GET['datenhapkho'] : null;
     $result = getAllphieunhapkho($page, $datenhapkho);
     echo json_encode($result);
-}function getAllphieunhapkho($page, $datenhapkho = null)
+}
+
+function getAllphieunhapkho($page, $datenhapkho = null)
 {
     $connection = MysqlConfig::getConnection();
     $query = "SELECT MaPhieu, NgayNhapKho, pnk.MaNCC, TongGiaTri, pnk.MaQuanLy, TenNCC, nguoidung.HoTen, pnk.TrangThai AS PhieuTrangThai 

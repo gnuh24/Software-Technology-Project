@@ -59,9 +59,28 @@
             $result = giamSoLuongSanPham($maSanPham, $soLuongGiam);
             echo json_encode($result);
         }
+
+        if ($_POST['action'] == "create"){
+            $tenSanPham = $_POST['tenSanPham'];
+            $maLoaiSanPham = $_POST['maLoaiSanPham'];
+            $xuatXu = $_POST['xuatXu'];
+            $thuongHieu = $_POST['thuongHieu'];
+            $theTich = $_POST['theTich'];
+            $nongDoCon = $_POST['nongDoCon'];
+            $gia = $_POST['gia'];
+            $anhMinhHoa = $_POST['anhMinhHoa'];
+        
+            // Tiếp tục xử lý các giá trị khác ở đây
+            $result = createSanPham($tenSanPham, $xuatXu, $thuongHieu, $gia, $theTich, $nongDoCon, $anhMinhHoa, $maLoaiSanPham);
+            echo json_encode($result);
+        }
     } else if (isset($_GET['MaSanPham'])){
         $maSanPham = $_GET['MaSanPham'];
         $result = getSanPhamByMaSanPham($maSanPham);
+        echo json_encode($result);
+    } else if (isset($_GET['checkExists'])){
+        $tenSanPham = $_GET["tenSanPham"];
+        $result = isTenSanPhamExists($tenSanPham);
         echo json_encode($result);
     }
 

@@ -28,6 +28,3 @@ class MysqlConfig
     }
   }
 }
-// TODO: test connect
-// TODO: $checkConnect = new MysqlConfig();
-// TODO: $checkConnect->getConnection();

@@ -166,7 +166,7 @@
                                 <div class="wrapper">
                                     <div>
                                         <h2>Sản Phẩm</h2>
-                                        <button id="createProductBtn">Tạo Sản Phẩm</button>
+                                        <button id="createProductBtn" onclick="toCreateForm()">Tạo Sản Phẩm</button>
                                     </div>
                                     <div class="boxFeature">
                                         <div style="position: relative">
@@ -258,6 +258,11 @@
         </div>
     </div>
     <script>
+
+function toCreateForm(){
+    window.location.href = "FormCreateSanPham.php";
+}
+
 var editingProductId = null;
 
 function getAllSanPham(page, search) {
