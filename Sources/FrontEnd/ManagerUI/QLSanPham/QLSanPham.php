@@ -165,7 +165,7 @@
 
                 tableBody.innerHTML = tableContent;
 
-                createPagination(currentPage, response.totalPages) 
+                createPagination(page, response.totalPages); 
             },
             error: function(xhr, status, error) {
                 console.error('Lỗi khi gọi API: ', error);
